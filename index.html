@@ -403,6 +403,43 @@
     .person .avatar { width: 96px; height: 96px; font-size: 2.2rem; margin: 0 auto 1.25rem; box-shadow: 0 0 0 5px var(--paper), 0 0 0 6px var(--gold-soft); }
     .person strong { display: block; font-family: var(--serif); font-size: 1.5rem; font-weight: 500; }
     .person span { color: var(--gold); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; }
+    .person p { font-size: 0.92rem; color: var(--mauve); margin: 0.9rem 0 1.1rem; line-height: 1.6; }
+    .person img.avatar { width: 120px; height: 120px; }
+    .person .btn { padding: 0.6rem 1.1rem; }
+
+    /* Photo gallery + lightbox */
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .gallery figure { margin: 0; }
+    .gallery-open {
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: 1px solid var(--blush-2);
+      background: none;
+      cursor: zoom-in;
+      overflow: hidden;
+    }
+    .gallery-open img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      transition: transform 0.8s var(--ease);
+    }
+    .gallery-open:hover img { transform: scale(1.04); }
+    .gallery figcaption { margin-top: 0.7rem; font-family: var(--serif); font-style: italic; font-size: 1.1rem; color: var(--mauve); }
+
+    .lightbox {
+      border: 1px solid var(--gold);
+      padding: 1rem;
+      max-width: min(1100px, 94vw);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .lightbox::backdrop { background: rgba(74, 15, 44, 0.75); backdrop-filter: blur(4px); }
+    .lightbox img { display: block; max-width: 100%; max-height: 78vh; margin: 0 auto; }
+    .lightbox-close { float: right; margin-bottom: 0.75rem; }
+    .lightbox-caption { clear: both; margin: 0.75rem 0 0; text-align: center; font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: var(--mauve); }
 
     /* =========================================================
        PAGE: SCHEDULE
@@ -904,7 +941,9 @@ const COURSE = {
    Each lecture is one object. A lecture page is a list of SECTIONS,
    drawn top to bottom. Each section has a "type":
 
-     "people"   → guest speaker cards (name + role)
+     "people"   → guest speaker cards (name, role, optional photo,
+                  description and LinkedIn link)
+     "gallery"  → photos that open bigger when clicked
      "cards"    → clickable cards that open to show more detail
                   (optional "label" = bold word before each detail)
      "stats"    → key numbers that count up when you open the tab
@@ -928,12 +967,31 @@ const GUEST_1 = {
     {
       type: "people",
       title: "Meet the guest speakers",
-      intro: "LaunchLab (ISS)",
-      // add surnames, job titles or LinkedIn links if you have them
+      intro: "The LaunchLab team (ISS), who showed us how to build and launch a website with AI tools.",
       items: [
-        { name: "Yibo",    role: "LaunchLab" },
-        { name: "Nirvan",  role: "LaunchLab" },
-        { name: "Rishabh", role: "LaunchLab" }
+        { name: "Yibo Yang", role: "LaunchLab", photo: "images/yibo-yang.jpg",
+          linkedin: "https://www.linkedin.com/in/yiboyang8/",
+          description: "Co-presented LaunchLab's vibe coding workshop at ESSEC: how Claude Design, Claude Code, GitHub and Vercel fit together to take an idea from a description to a live website." },
+        { name: "Rishabh Modi", role: "LaunchLab", photo: "images/rishabh-modi.jpg",
+          linkedin: "https://www.linkedin.com/in/rishabh-modi-2b0b06307/",
+          description: "Co-presented the workshop and its hands-on task: building a course website with AI tools, storing it on GitHub and putting it live with Vercel." },
+        { name: "Nirvan Anand", role: "LaunchLab", photo: "images/nirvan-anand.jpg",
+          linkedin: "https://www.linkedin.com/in/nirvan-anand-597133407/",
+          description: "Presented \"What is Claude Code?\": an agentic coding system that reads whole projects, runs commands and debugs failures, so builders can describe features in plain language." }
+      ]
+    },
+
+    {
+      type: "gallery",
+      title: "The session in pictures",
+      intro: "LaunchLab at ESSEC Asia-Pacific, 9 October 2026. Click a photo to enlarge it.",
+      items: [
+        { src: "images/launchlab-team.jpg",
+          alt: "Yibo Yang, Rishabh Modi and Nirvan Anand standing in front of the slide \"LaunchLab: Claude Design, Claude Code, GitHub, and Vercel\"",
+          caption: "Yibo, Rishabh and Nirvan opening the session" },
+        { src: "images/launchlab-presenting.jpg",
+          alt: "Nirvan Anand presenting the slide \"What is Claude Code?\" while Yibo Yang and Rishabh Modi listen",
+          caption: "Nirvan explaining what Claude Code is" }
       ]
     },
 
@@ -1345,7 +1403,7 @@ const LECTURE_2 = {
 const SESSIONS = [
   { tabLabel: "Guest 1 · LaunchLab", date: "2026-10-09",
     title: "Vibe Coding: Claude Design, Claude Code, GitHub & Vercel",
-    speaker: "Yibo, Nirvan & Rishabh · LaunchLab (guest speakers)",
+    speaker: "Yibo Yang, Rishabh Modi & Nirvan Anand · LaunchLab (guest speakers)",
     data: GUEST_1 },
   { tabLabel: "Session 1", date: "2026-10-03",
     title: "Digital Marketing Platforms in the AI Era",
@@ -1880,18 +1938,78 @@ function renderPeople(section) {
   const grid = el("div", "people");
   section.items.forEach(person => {
     const box = el("div", "person");
-    const avatar = el("div", "avatar", person.name.charAt(0));
-    avatar.setAttribute("aria-hidden", "true");
+    // A photo if there is one, otherwise a circle with their first initial
+    let avatar;
+    if (person.photo) {
+      avatar = el("img", "avatar");
+      avatar.src = person.photo;
+      avatar.alt = "Photo of " + person.name;
+      avatar.loading = "lazy";
+    } else {
+      avatar = el("div", "avatar", person.name.charAt(0));
+      avatar.setAttribute("aria-hidden", "true");
+    }
     box.append(avatar, el("strong", "", person.name), el("span", "", person.role));
+    if (person.description) box.append(el("p", "", person.description));
+    if (person.linkedin) {
+      const link = linkButton("LinkedIn", person.linkedin, false, true);
+      link.setAttribute("aria-label", person.name + " on LinkedIn (opens in a new tab)");
+      box.append(link);
+    }
     grid.append(box);
   });
   card.append(grid);
   return card;
 }
 
+/* ---- "gallery": photos that open bigger when clicked ----
+   One shared <dialog> element is used as the "lightbox".
+   dialog.showModal() opens it on top of the page; Esc or the
+   close button closes it, and focus returns to the photo. */
+function renderGallery(section) {
+  const card = makeCard(section.title, section.intro);
+  const grid = el("div", "gallery");
+  section.items.forEach(item => {
+    const figure = el("figure");
+    const button = el("button", "gallery-open");
+    button.setAttribute("aria-label", "Enlarge photo: " + item.caption);
+    const img = el("img");
+    img.src = item.src;
+    img.alt = item.alt;
+    img.loading = "lazy";
+    button.append(img);
+    // EVENT LISTENER: clicking a photo opens it in the lightbox
+    button.addEventListener("click", () => openLightbox(item));
+    figure.append(button, el("figcaption", "", item.caption));
+    grid.append(figure);
+  });
+  card.append(grid);
+  return card;
+}
+
+function openLightbox(item) {
+  let dialog = document.getElementById("lightbox");
+  if (!dialog) {                     // build it the first time it's needed
+    dialog = el("dialog", "lightbox");
+    dialog.id = "lightbox";
+    const close = el("button", "btn lightbox-close", "Close");
+    close.addEventListener("click", () => dialog.close());
+    // Clicking the dark area around the photo also closes it
+    dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+    dialog.append(close, el("img"), el("p", "lightbox-caption"));
+    document.body.append(dialog);
+  }
+  const img = dialog.querySelector("img");
+  img.src = item.src;
+  img.alt = item.alt;
+  dialog.querySelector(".lightbox-caption").textContent = item.caption;
+  dialog.showModal();
+}
+
 // Maps each section "type" to the function that draws it
 const RENDERERS = {
   people: renderPeople,
+  gallery: renderGallery,
   cards: renderCards,
   stats: renderStats,
   compare: renderCompare,
