@@ -1,0 +1,4 @@
+# macOS system files
+.DS_Store
+# Local Claude Code preview settings (not part of the website)
+.claude/

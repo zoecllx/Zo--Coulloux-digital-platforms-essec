@@ -1,0 +1,2670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Platforms Test Drive – Zoe Coulloux</title>
+
+  <!-- Fonts: an elegant serif for headings, a refined sans-serif for text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- =========================================================
+       CSS
+       All colours and fonts live in :root as CSS variables, so
+       the whole look can be changed in one place.
+       ========================================================= -->
+  <style>
+    :root {
+      /* --- Luxury pink palette --- */
+      --ivory:     #fdf1f5;   /* page background: soft blush pink */
+      --paper:     #fffafc;   /* cards: pink-tinted white */
+      --blush:     #fbe1ea;   /* soft pink tint */
+      --blush-2:   #f3c6d6;   /* borders, tracks */
+      --rose:      #e58fae;   /* soft pink accent */
+      --rose-deep: #c2336a;   /* main accent: raspberry pink */
+      --gold:      #b8925a;   /* champagne gold: hairlines, labels */
+      --gold-soft: #e3c99a;
+      --ink:       #4a0f2c;   /* deep berry: text, banner, buttons */
+      --berry:     #7d1c4a;   /* lighter berry for gradients */
+      --mauve:     #8a5670;   /* secondary text */
+      --white:     #ffffff;
+
+      /* --- Feedback colours (muted, still clear) --- */
+      --correct:    #3f7a5f;
+      --correct-bg: #eaf3ee;
+      --wrong:      #a83e52;
+      --wrong-bg:   #f9e9ec;
+
+      /* --- Type --- */
+      --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+      --sans:  "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+      /* --- Shape & motion --- */
+      --radius: 4px;            /* luxury = crisp, barely rounded corners */
+      --hairline: 1px solid var(--blush-2);
+      --shadow: 0 1px 2px rgba(122, 28, 74, 0.05), 0 14px 36px rgba(194, 51, 106, 0.08);
+      --focus: 0 0 0 2px var(--paper), 0 0 0 4px var(--gold);
+      --speed: 0.35s;
+      --ease: cubic-bezier(.22, .61, .36, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      font-weight: 300;
+      font-size: 1.02rem;
+      background: var(--ivory);
+      color: var(--ink);
+      line-height: 1.75;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--rose-deep); text-underline-offset: 3px; }
+    strong { font-weight: 500; }
+
+    /* Visible keyboard focus on every interactive element */
+    :focus-visible { outline: none; box-shadow: var(--focus); }
+
+    /* "Skip to content" link: hidden until a keyboard user presses Tab */
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -3rem;
+      background: var(--ink);
+      color: var(--ivory);
+      padding: 0.5rem 1rem;
+      z-index: 20;
+      transition: top var(--speed);
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* Headings use the serif */
+    h1, h2, h3, h4 { font-family: var(--serif); font-weight: 500; letter-spacing: 0.01em; color: var(--ink); }
+    h2 { font-size: clamp(1.9rem, 4.5vw, 2.7rem); margin: 0.5rem 0 0.6rem; line-height: 1.1; }
+    h3 { font-size: clamp(1.45rem, 3vw, 1.75rem); margin: 0 0 0.35rem; line-height: 1.2; }
+    h4 { font-size: 1.3rem; }
+
+    /* Small-caps label used above headings */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--gold);
+      font-family: var(--sans);
+      font-weight: 500;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+    }
+    .eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
+
+    .muted { color: var(--mauve); }
+    .card-intro { color: var(--mauve); margin: 0 0 1.5rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1.75rem; color: var(--mauve); font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* =========================================================
+       MAIN MENU (sticky bar at the top)
+       ========================================================= */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(253, 241, 245, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: var(--hairline);
+    }
+    .nav-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: 0.04em;
+    }
+    .brand span { color: var(--gold); font-style: italic; }
+
+    .menu { display: flex; gap: 0.25rem; list-style: none; margin: 0; padding: 0; }
+    .menu a {
+      display: block;
+      position: relative;
+      padding: 0.4rem 0.75rem;
+      color: var(--mauve);
+      font-size: 0.74rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color var(--speed);
+    }
+    /* A thin gold line grows under the link on hover */
+    .menu a::after {
+      content: "";
+      position: absolute;
+      left: 0.75rem;
+      right: 0.75rem;
+      bottom: 0.1rem;
+      height: 1px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transition: transform var(--speed) var(--ease);
+    }
+    .menu a:hover { color: var(--ink); }
+    .menu a:hover::after { transform: scaleX(1); }
+    /* aria-current="page" marks the link of the page you're on */
+    .menu a[aria-current="page"] { color: var(--ink); }
+    .menu a[aria-current="page"]::after { transform: scaleX(1); }
+
+    /* The Menu button only appears on small screens */
+    .menu-toggle {
+      display: none;
+      font: inherit;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      background: none;
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      padding: 0.45rem 1rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1000px) {
+      .menu-toggle { display: block; }
+      .nav-inner { flex-wrap: wrap; }
+      .menu {
+        display: none;               /* closed by default on phones */
+        flex-direction: column;
+        width: 100%;
+        padding: 0.5rem 0;
+      }
+      .menu a { padding: 0.7rem 0; }
+      .menu a::after { left: 0; right: auto; width: 40px; }
+      .menu.is-open { display: flex; animation: fadeUp 0.3s var(--ease); }
+    }
+
+    /* =========================================================
+       HEADER BANNER (changes title on each page)
+       ========================================================= */
+    .banner {
+      position: relative;
+      background:
+        radial-gradient(ellipse at 15% 0%, rgba(255, 158, 196, 0.45), transparent 55%),
+        radial-gradient(ellipse at 90% 100%, rgba(227, 201, 154, 0.30), transparent 50%),
+        linear-gradient(135deg, var(--ink), var(--berry) 55%, var(--rose-deep));
+      color: var(--ivory);
+      padding: clamp(3.5rem, 9vw, 6rem) 1.25rem clamp(5.5rem, 11vw, 8rem);
+      text-align: center;
+    }
+    /* Decorative ornament above the title */
+    .banner::before {
+      content: "✦";
+      display: block;
+      color: var(--gold-soft);
+      font-size: 0.85rem;
+      letter-spacing: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .banner h1 {
+      margin: 0;
+      color: var(--ivory);
+      font-size: clamp(2.4rem, 7vw, 4.5rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+    }
+    .banner p {
+      margin: 1.25rem auto 0;
+      max-width: 640px;
+      color: var(--gold-soft);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      line-height: 1.9;
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1120px;
+      margin: -3.5rem auto 3rem;   /* pulls the content up over the banner */
+      padding: 0 1.25rem;
+      position: relative;          /* sits above the banner, not behind it */
+      z-index: 1;
+    }
+
+    /* Pages: only one is visible at a time */
+    .page[hidden] { display: none; }
+    .page { animation: fadeUp 0.6s var(--ease); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =========================================================
+       SHARED BUILDING BLOCKS
+       ========================================================= */
+    .card {
+      background: var(--paper);
+      border: var(--hairline);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(1.5rem, 5vw, 3rem);
+      margin-bottom: 1.5rem;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .grid-2 > .card { margin-bottom: 0; }
+
+    ol, ul { padding-left: 1.2rem; }
+    li::marker { color: var(--gold); }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--sans);
+      font-size: 0.74rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      border: 1px solid var(--ink);
+      border-radius: 0;
+      padding: 0.85rem 1.5rem;
+      cursor: pointer;
+      background: transparent;
+      color: var(--ink);
+      text-decoration: none;
+      transition: background var(--speed) var(--ease), color var(--speed) var(--ease), border-color var(--speed);
+    }
+    .btn:hover { background: var(--ink); color: var(--ivory); }
+    .btn-primary { background: var(--ink); color: var(--ivory); }
+    .btn-primary:hover { background: var(--rose-deep); border-color: var(--rose-deep); }
+    .btn[aria-pressed="true"] { background: var(--ink); color: var(--ivory); }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 0.5rem 0 0; }
+    .chips li {
+      border: 1px solid var(--gold-soft);
+      padding: 0.3rem 0.9rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+    }
+
+    .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+    .card-head > div { flex: 1 1 240px; }
+
+    /* =========================================================
+       PAGE: HOME
+       ========================================================= */
+    .explore {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);   /* 6 cards = a neat 3 × 2 grid */
+      gap: 1px;                         /* 1px gaps show the border colour = fine grid lines */
+      background: var(--blush-2);
+      border: var(--hairline);
+    }
+    .explore a {
+      display: block;
+      background: var(--paper);
+      padding: 2rem 1.75rem;
+      color: var(--ink);
+      text-decoration: none;
+      transition: background var(--speed) var(--ease);
+    }
+    .explore a:hover { background: var(--blush); }
+    .explore .num { font-family: var(--serif); font-style: italic; color: var(--gold); font-size: 1.1rem; }
+    .explore strong { display: block; font-family: var(--serif); font-weight: 500; font-size: 1.6rem; margin: 0.4rem 0 0.3rem; }
+    .explore span.muted { display: block; font-size: 0.9rem; }
+    @media (max-width: 860px) { .explore { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .explore { grid-template-columns: 1fr; } }
+    .explore .arrow { display: inline-block; margin-top: 0.75rem; color: var(--rose-deep); transition: transform var(--speed) var(--ease); }
+    .explore a:hover .arrow { transform: translateX(6px); }
+
+    /* =========================================================
+       PAGE: ABOUT ME
+       ========================================================= */
+    .profile { display: flex; gap: 2.5rem; align-items: center; flex-wrap: wrap; }
+    .avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: linear-gradient(145deg, var(--rose), var(--rose-deep));
+      color: var(--paper);
+      display: grid;
+      place-items: center;
+      font-family: var(--serif);
+      font-size: 3rem;
+      font-weight: 400;
+      font-style: italic;
+      border: 1px solid var(--gold-soft);
+      box-shadow: 0 0 0 8px var(--paper), 0 0 0 9px var(--gold-soft);
+      object-fit: cover;
+    }
+    .profile > div { flex: 1 1 280px; }
+
+    .timeline { list-style: none; margin: 0; padding: 0 0 0 1.5rem; border-left: 1px solid var(--gold-soft); }
+    .timeline li { position: relative; padding-bottom: 1.5rem; }
+    .timeline li::before {
+      content: "";
+      position: absolute;
+      left: calc(-1.5rem - 4px);
+      top: 0.55rem;
+      width: 7px;
+      height: 7px;
+      transform: rotate(45deg);          /* a small diamond */
+      background: var(--gold);
+    }
+    .timeline .when { font-size: 0.72rem; color: var(--gold); letter-spacing: 0.18em; text-transform: uppercase; }
+    .timeline .what { font-family: var(--serif); font-size: 1.3rem; font-weight: 500; }
+    .timeline p { margin: 0.2rem 0 0; color: var(--mauve); font-size: 0.95rem; }
+
+    /* Grading bars on the course page */
+    .grade + .grade { margin-top: 1.5rem; }
+    .grade-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+    .grade-pct { font-family: var(--serif); font-size: 1.8rem; color: var(--rose-deep); }
+    .grade-bar { height: 2px; background: var(--blush-2); margin-top: 0.4rem; }
+    .grade-bar span { display: block; height: 100%; background: var(--gold); }
+    .grade p { margin: 0.4rem 0 0; font-size: 0.92rem; }
+
+    /* Guest speaker cards ("people" section) */
+    .people { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1.5rem; }
+    .person { text-align: center; padding: 1.5rem 1rem; }
+    .person .avatar { width: 96px; height: 96px; font-size: 2.2rem; margin: 0 auto 1.25rem; box-shadow: 0 0 0 5px var(--paper), 0 0 0 6px var(--gold-soft); }
+    .person strong { display: block; font-family: var(--serif); font-size: 1.5rem; font-weight: 500; }
+    .person span { color: var(--gold); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; }
+
+    /* =========================================================
+       PAGE: SCHEDULE
+       ========================================================= */
+    .schedule { list-style: none; margin: 0; padding: 0; border-top: var(--hairline); }
+    .schedule li {
+      display: grid;
+      grid-template-columns: 130px 1fr auto;
+      gap: 1.5rem;
+      align-items: center;
+      padding: 1.4rem 0;
+      border-bottom: var(--hairline);
+      transition: background var(--speed);
+    }
+    .schedule li:hover { background: linear-gradient(90deg, transparent, var(--blush), transparent); }
+    .schedule .date { font-family: var(--serif); font-size: 1.25rem; font-style: italic; color: var(--rose-deep); }
+    .schedule .title { font-family: var(--serif); font-size: 1.4rem; font-weight: 500; color: var(--ink); text-decoration: none; }
+    .schedule .title:hover { color: var(--rose-deep); }
+    .schedule .speaker { color: var(--mauve); font-size: 0.88rem; }
+    .status {
+      font-size: 0.66rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      padding: 0.3rem 0.8rem;
+      color: var(--mauve);
+      border: 1px solid var(--blush-2);
+      white-space: nowrap;
+    }
+    .done .status { color: var(--gold); border-color: var(--gold-soft); }
+    .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+    @media (max-width: 560px) {
+      .schedule li { grid-template-columns: 1fr; gap: 0.3rem; }
+    }
+
+    /* =========================================================
+       SUB-TABS (Guest lectures + Games)
+       ========================================================= */
+    .tablist {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      background: var(--paper);
+      border: var(--hairline);
+      box-shadow: var(--shadow);
+    }
+    .tab {
+      flex: 1 0 auto;
+      position: relative;
+      border: none;
+      border-right: var(--hairline);
+      background: none;
+      color: var(--mauve);
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 1.1rem 1.4rem;
+      cursor: pointer;
+      transition: color var(--speed), background var(--speed);
+    }
+    .tab:last-child { border-right: none; }
+    .tab:hover { color: var(--ink); background: var(--ivory); }
+    .tab::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transition: transform var(--speed) var(--ease);
+    }
+    .tab[aria-selected="true"] { color: var(--ink); font-weight: 500; }
+    .tab[aria-selected="true"]::after { transform: scaleX(1); }
+    .tab .tab-soon { font-size: 0.9em; color: var(--rose); text-transform: none; letter-spacing: 0.05em; font-style: italic; }
+    .panel { margin-top: 1.5rem; animation: fadeUp 0.5s var(--ease); }
+    .panel[hidden] { display: none; }
+
+    /* Lecture section: expandable cards */
+    .concepts { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1px; background: var(--blush-2); border: var(--hairline); }
+    .concept { background: var(--paper); transition: background var(--speed); }
+    .concept:hover { background: var(--ivory); }
+    .concept-toggle {
+      width: 100%;
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--ink);
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 1.2rem 1.4rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      line-height: 1.3;
+    }
+    .concept-toggle .icon { color: var(--gold); font-family: var(--sans); font-weight: 300; transition: transform var(--speed) var(--ease); flex-shrink: 0; }
+    .concept-toggle[aria-expanded="true"] .icon { transform: rotate(45deg); }
+    .concept-body { padding: 0 1.4rem 1.3rem; color: var(--mauve); font-size: 0.93rem; }
+    .concept-body[hidden] { display: none; }
+    .concept-body:not([hidden]) { animation: fadeUp 0.35s var(--ease); }
+    .concept-body strong { color: var(--ink); }
+
+    /* Lecture section: stats */
+    .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--blush-2); border: var(--hairline); }
+    .stat { background: linear-gradient(180deg, var(--paper), var(--blush)); padding: 1.6rem 1.4rem; }
+    .stat-number { font-family: var(--serif); font-size: 2.6rem; font-weight: 400; color: var(--rose-deep); line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
+    .stat-label { font-size: 0.9rem; margin-top: 0.6rem; color: var(--ink); }
+    .stat-note  { color: var(--gold); font-size: 0.78rem; margin-top: 0.3rem; letter-spacing: 0.04em; }
+
+    /* Lecture section: before/after switch */
+    .switch { display: inline-flex; border: 1px solid var(--ink); }
+    .switch .btn { border: none; }
+    .compare-list { list-style: none; padding: 0; margin: 1.75rem 0 0; border-top: var(--hairline); }
+    .compare-list li {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: var(--hairline);
+      animation: fadeUp 0.45s var(--ease) both;
+    }
+    .compare-list li span { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--gold); padding-top: 0.3rem; }
+    .compare-list.after li { color: var(--ink); }
+    @media (max-width: 560px) { .compare-list li { grid-template-columns: 1fr; gap: 0.2rem; } }
+
+    /* Lecture section: my analysis */
+    .analysis-block + .analysis-block { margin-top: 1.75rem; }
+    .analysis-block h4 { margin: 0 0 0.4rem; color: var(--rose-deep); }
+    .analysis-block p { margin: 0 0 0.6rem; }
+    .placeholder {
+      border-left: 1px solid var(--gold);
+      padding: 0.3rem 0 0.3rem 1.25rem;
+      color: var(--mauve);
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-style: italic;
+    }
+
+    .quote {
+      background:
+        radial-gradient(ellipse at 100% 0%, rgba(255, 158, 196, 0.4), transparent 60%),
+        linear-gradient(135deg, var(--ink), var(--berry));
+      border: none;
+      color: var(--ivory);
+      text-align: center;
+    }
+    .quote .eyebrow { color: var(--gold-soft); }
+    .quote .eyebrow::after { content: ""; width: 28px; height: 1px; background: currentColor; }
+    .quote p { font-family: var(--serif); font-style: italic; font-size: clamp(1.5rem, 3.5vw, 2.1rem); line-height: 1.35; max-width: 760px; margin: 1rem auto 0; }
+
+    /* "Coming soon": three gold diamonds gently fading */
+    .soon { text-align: center; }
+    .soon-dots { display: flex; justify-content: center; gap: 1rem; margin: 2rem 0 0.5rem; }
+    .soon-dots span {
+      width: 8px; height: 8px;
+      transform: rotate(45deg);
+      background: var(--gold);
+      animation: shimmer 1.8s ease-in-out infinite;
+    }
+    .soon-dots span:nth-child(2) { animation-delay: 0.3s; }
+    .soon-dots span:nth-child(3) { animation-delay: 0.6s; }
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.2; }
+      50%      { opacity: 1; }
+    }
+
+    /* =========================================================
+       PAGE: GAMES
+       ========================================================= */
+    .game { min-height: 340px; }
+    .game-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .score-pill { font-family: var(--serif); font-size: 1.2rem; font-style: italic; color: var(--rose-deep); }
+    .score-pill.bump { animation: bump 0.5s var(--ease); }
+    @keyframes bump { 50% { transform: scale(1.15); color: var(--gold); } }
+
+    .progress { height: 1px; background: var(--blush-2); margin-bottom: 2rem; }
+    .progress span { display: block; height: 100%; background: var(--gold); transition: width 0.6s var(--ease); }
+
+    .stat-guess { font-family: var(--serif); font-size: clamp(2.4rem, 7vw, 3.4rem); font-weight: 400; color: var(--rose-deep); margin: 0; line-height: 1.1; }
+
+    /* Answer buttons */
+    .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; margin: 1.75rem 0; }
+    .option {
+      font-family: var(--sans);
+      font-size: 0.98rem;
+      font-weight: 400;
+      text-align: left;
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--blush-2);
+      padding: 1.05rem 1.25rem;
+      cursor: pointer;
+      transition: border-color var(--speed), background var(--speed);
+    }
+    .option:hover:not(:disabled) { border-color: var(--gold); background: var(--ivory); }
+    .option:disabled { cursor: default; }
+    .option.is-correct { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); }
+    .option.is-wrong   { border-color: var(--wrong);   background: var(--wrong-bg); color: var(--wrong); animation: shake 0.35s; }
+    .option.is-dimmed  { opacity: 0.45; }
+    .options.two-up { grid-template-columns: 1fr 1fr; }
+    .options.two-up .option { text-align: center; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.22em; padding: 1.3rem; }
+    @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+    @media (max-width: 520px) { .options.two-up { grid-template-columns: 1fr; } }
+
+    /* Bonus question */
+    .text-answer { display: flex; gap: 0.75rem; flex-wrap: wrap; margin: 1.75rem 0; }
+    .text-answer input {
+      flex: 1 1 240px;
+      font: inherit;
+      color: var(--ink);
+      background: transparent;
+      padding: 0.7rem 0;
+      border: none;
+      border-bottom: 1px solid var(--ink);
+    }
+    .text-answer input:focus-visible { box-shadow: none; border-bottom-color: var(--gold); }
+
+    /* Feedback after answering */
+    .feedback { border-left: 2px solid; padding: 0.6rem 0 0.6rem 1.25rem; margin-bottom: 1.5rem; animation: fadeUp 0.4s var(--ease); }
+    .feedback:empty { display: none; }
+    .feedback strong { font-family: var(--serif); font-size: 1.25rem; }
+    .feedback.good { border-color: var(--correct); color: var(--correct); }
+    .feedback.bad  { border-color: var(--wrong); color: var(--wrong); }
+    .feedback p { margin: 0.2rem 0 0; color: var(--mauve); }
+
+    /* Results screen */
+    .center { text-align: center; }
+    .center .eyebrow::after { content: ""; width: 28px; height: 1px; background: currentColor; }
+    .badge {
+      width: 150px; height: 150px; margin: 1.5rem auto;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 25%, var(--rose-deep), var(--ink));
+      color: var(--gold-soft);
+      display: grid; place-items: center;
+      font-size: 1.6rem;
+      letter-spacing: 0.3rem;
+      border: 1px solid var(--gold);
+      box-shadow: 0 0 0 8px var(--paper), 0 0 0 9px var(--gold-soft), var(--shadow);
+      animation: pop 0.9s var(--ease);
+    }
+    @keyframes pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .badge-name { font-family: var(--serif); font-size: 1.9rem; font-style: italic; color: var(--rose-deep); margin: 0.5rem 0 0; }
+    .big-score { font-family: var(--serif); font-size: 3.2rem; font-weight: 400; margin: 0; line-height: 1.1; }
+    .round-breakdown { list-style: none; padding: 0; margin: 1.5rem auto; max-width: 420px; border-top: var(--hairline); }
+    .round-breakdown li { padding: 0.55rem 0; border-bottom: var(--hairline); font-size: 0.9rem; }
+    .takeaway { border-top: 1px solid var(--gold-soft); border-bottom: 1px solid var(--gold-soft); padding: 1.5rem 0; margin: 2rem auto; max-width: 620px; }
+    .takeaway strong { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.22em; color: var(--gold); font-weight: 500; }
+    .takeaway p { margin: 0.5rem 0 0; font-family: var(--serif); font-style: italic; font-size: 1.4rem; line-height: 1.4; }
+
+    /* =========================================================
+       PAGE: CONTACT
+       ========================================================= */
+    .contact-list { list-style: none; padding: 0; margin: 0; border-top: var(--hairline); }
+    .contact-list li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 1.1rem 0;
+      border-bottom: var(--hairline);
+    }
+    .contact-list .icon { color: var(--gold); }
+    .contact-list .label { font-size: 0.68rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.2em; }
+    .contact-list .value { font-family: var(--serif); font-size: 1.25rem; word-break: break-word; }
+    .contact-list li > div { flex: 1 1 160px; }
+
+    form label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--mauve); margin: 1.4rem 0 0.2rem; }
+    form input, form textarea {
+      width: 100%;
+      font: inherit;
+      color: var(--ink);
+      padding: 0.6rem 0;
+      border: none;
+      border-bottom: 1px solid var(--blush-2);
+      background: transparent;
+      transition: border-color var(--speed);
+    }
+    form input:focus-visible, form textarea:focus-visible { box-shadow: none; border-bottom-color: var(--gold); }
+    form textarea { min-height: 120px; resize: vertical; }
+    .form-msg { margin-top: 1rem; font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: var(--rose-deep); }
+
+    /* Small pop-up message ("Copied") */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1.5rem;
+      transform: translate(-50%, 200%);
+      background: var(--ink);
+      color: var(--ivory);
+      padding: 0.8rem 1.6rem;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      border: 1px solid var(--gold);
+      transition: transform 0.45s var(--ease);
+      z-index: 30;
+    }
+    .toast.show { transform: translate(-50%, 0); }
+
+    /* ---------- Footer ---------- */
+    footer {
+      text-align: center;
+      padding: 3rem 1.25rem;
+      background: linear-gradient(135deg, var(--ink), var(--berry));
+      color: var(--gold-soft);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      line-height: 2.2;
+    }
+    footer::before { content: "✦"; display: block; margin-bottom: 0.75rem; color: var(--gold); }
+    footer a { color: var(--ivory); text-decoration: none; border-bottom: 1px solid var(--gold); }
+
+    /* Respect users who prefer less motion */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===== MAIN MENU =====
+       The links use "#page-name". JavaScript listens for the URL hash
+       changing and shows the matching page (see section 10 of the script). -->
+  <nav class="site-nav" aria-label="Main menu">
+    <div class="nav-inner">
+      <a class="brand" href="#home">Zoe <span>·</span> Digital Platforms</a>
+      <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="menu">Menu</button>
+      <ul class="menu" id="menu">
+        <li><a href="#home">Welcome</a></li>
+        <li><a href="#about">About me</a></li>
+        <li><a href="#course">The course</a></li>
+        <li><a href="#schedule">Schedule</a></li>
+        <li><a href="#lectures">Guest lectures</a></li>
+        <li><a href="#games">Games</a></li>
+        <li><a href="#contact">Contact me</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Banner: its title and subtitle change for each page -->
+  <header class="banner">
+    <h1 id="banner-title"></h1>
+    <p id="banner-subtitle"></p>
+  </header>
+
+  <!-- Each page is an empty <section>; JavaScript fills them in -->
+  <main id="main" tabindex="-1">
+    <section class="page" id="page-home"     aria-labelledby="banner-title"></section>
+    <section class="page" id="page-about"    aria-labelledby="banner-title" hidden></section>
+    <section class="page" id="page-course"   aria-labelledby="banner-title" hidden></section>
+    <section class="page" id="page-schedule" aria-labelledby="banner-title" hidden></section>
+    <section class="page" id="page-lectures" aria-labelledby="banner-title" hidden></section>
+    <section class="page" id="page-games"    aria-labelledby="banner-title" hidden></section>
+    <section class="page" id="page-contact"  aria-labelledby="banner-title" hidden></section>
+  </main>
+
+  <footer>
+    <div>Digital Platforms Test Drive · MSc Marketing Management &amp; Digital · ESSEC Business School</div>
+    <div>Built by <span id="author-name"></span> · <a id="footer-linkedin" href="#" target="_blank" rel="noopener">LinkedIn</a></div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =================================================================
+   1. ABOUT ME  (your profile + CV)
+   -----------------------------------------------------------------
+   Everything written in [square brackets] is a placeholder:
+   replace it with your own information.
+   ================================================================= */
+const PROFILE = {
+  name: "Zoe Coulloux",
+  initials: "ZC",
+  photo: "",               // e.g. "photo.jpg" (put the file next to index.html). Empty = initials circle.
+  headline: "MSc Marketing Management & Digital student · ESSEC Business School, Asia-Pacific campus",
+  location: "Singapore",
+  bio: [
+    "[Write 2–3 sentences about yourself: your background, what drew you to digital marketing, and what you want to do next.]"
+  ],
+  linkedin: "https://www.linkedin.com/in/zoecoulloux/",
+  email: "[your.email@example.com]",
+  cvFile: "cv.pdf",        // put your CV PDF next to index.html with this name
+
+  education: [
+    { when: "2026 – 2027", what: "MSc Marketing Management & Digital",
+      where: "ESSEC Business School, Singapore", detail: "[Key courses, projects or achievements]" },
+    { when: "[Years]", what: "[Previous degree]",
+      where: "[School, city]", detail: "[Specialisation, honours]" }
+  ],
+  experience: [
+    { when: "[Dates]", what: "[Job title]",
+      where: "[Company, city]", detail: "[What you did and the results you achieved]" },
+    { when: "[Dates]", what: "[Internship title]",
+      where: "[Company, city]", detail: "[What you did and the results you achieved]" }
+  ],
+  skills: ["Digital marketing", "Social media", "HTML", "CSS", "JavaScript", "[Skill]", "[Skill]"],
+  languages: ["[French – native]", "[English – fluent]", "[Other language – level]"],
+  interests: ["[Interest]", "[Interest]", "[Interest]"]
+};
+
+
+/* =================================================================
+   2. THE COURSE
+   ================================================================= */
+const COURSE = {
+  name: "Digital Platforms Test Drive",
+  programme: "MSc Marketing Management & Digital",
+  school: "ESSEC Business School, Asia-Pacific campus (Singapore)",
+  professor: "Madina Kalyayeva",
+  semester: "Autumn 2026",
+  tagline: "Master the tools, drive the results.",
+  description: [
+    "Digital Platforms Test Drive builds a solid foundation in digital marketing strategy and the ability to adapt to fast-changing digital landscapes, where AI now runs through every platform.",
+    "Sessions are co-led with agencies and platform partners, and mix lectures and cases with hands-on work. Guest sessions such as LaunchLab's vibe coding workshop also teach us to build with AI tools: this website is one of the results."
+  ],
+  structure: [
+    "Sessions with platform representatives",
+    "Lectures & cases",
+    "Practical applications: in-class focus sessions (assignments and reflections submitted via Moodle)",
+    "Final project"
+  ],
+  objectives: [
+    "Understand audience segmentation",
+    "Know how to target campaigns: test, tweak, improve",
+    "Develop expertise in using each platform's unique tools",
+    "Design holistic approaches to promo campaigns",
+    "Measure success and report on it",
+    "Use AI tools for content, planning & optimisation"
+  ],
+  grading: [
+    { label: "Practical application (focus sessions)", percent: 30,
+      detail: "Platform case presentations on assigned tasks; homework and reflections via Moodle" },
+    { label: "Class participation", percent: 20, detail: "" },
+    { label: "Final project", percent: 50,
+      detail: "A multi-platform campaign showing platform selection, integration and overall strategy" }
+  ],
+  professorFacts: [
+    "15+ years in brand, marketing & communications leadership across global markets",
+    "3× Managing Director: M&C Saatchi Group, R.S.V.P, Tilt Agency",
+    "Based in Singapore since 2012, with deep Southeast Asia market expertise",
+    "Singapore Business Review Top 10 Hottest Ad Executives & Marketers",
+    "2026 Visionary Leader Award, Top 100 Business Leaders Awards Asia"
+  ],
+  skills: ["HTML structure", "CSS & variables", "Responsive design", "JavaScript events", "DOM manipulation", "Accessibility", "Claude Design", "Claude Code", "GitHub", "Vercel"]
+};
+
+
+/* =================================================================
+   3. LECTURE DATA
+   -----------------------------------------------------------------
+   Each lecture is one object. A lecture page is a list of SECTIONS,
+   drawn top to bottom. Each section has a "type":
+
+     "people"   → guest speaker cards (name + role)
+     "cards"    → clickable cards that open to show more detail
+                  (optional "label" = bold word before each detail)
+     "stats"    → key numbers that count up when you open the tab
+     "compare"  → a Before / After toggle switch
+     "analysis" → YOUR writing. Leave "text" empty ([]) and a dashed
+                  box with the guiding question shows instead.
+     "quote"    → one highlighted key takeaway
+
+   To write your analysis, type paragraphs inside the "text" arrays:
+     text: ["First paragraph.", "Second paragraph."]
+   ================================================================= */
+
+/* ---------- GUEST 1: LaunchLab – Vibe Coding (9 Oct 2026) ---------- */
+const GUEST_1 = {
+  summary: "Our first guest speakers, the LaunchLab team, showed us how to go from an idea to a live website " +
+           "with AI: design the front end in Claude Design, build it with Claude Code, store it on GitHub " +
+           "and deploy it with Vercel. They also introduced logins and databases with Supabase, and set " +
+           "the task of building this website.",
+
+  sections: [
+    {
+      type: "people",
+      title: "Meet the guest speakers",
+      intro: "LaunchLab (ISS)",
+      // add surnames, job titles or LinkedIn links if you have them
+      items: [
+        { name: "Yibo",    role: "LaunchLab" },
+        { name: "Nirvan",  role: "LaunchLab" },
+        { name: "Rishabh", role: "LaunchLab" }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "The whole workflow",
+      intro: "Three steps from idea to live website. Click each step.",
+      items: [
+        { name: "Design: Claude Design",
+          detail: "Build the visual shell of your site by describing how it should look, without any code. When it's done, use Share → \"Handoff to Claude Code…\" (easy to miss in the menu!)." },
+        { name: "Build: Claude Code",
+          detail: "An agentic coding system that reads your whole project, runs commands and fixes errors. It turns the handed-off design into real, working files." },
+        { name: "Deploy: localhost, tiiny.host or Vercel",
+          detail: "Test on localhost, then go live. For tiiny.host, ask Claude Code to zip your files with index.html at the top level. Vercel publishes straight from GitHub." }
+      ]
+    },
+
+    {
+      type: "compare",
+      title: "The art of prompting",
+      intro: "Switch between a vague prompt and a structured one.",
+      labels: ["Bad prompting", "Good prompting"],
+      items: [
+        { topic: "The prompt",
+          before: "\"Create a website for my course.\"",
+          after:  "Give the AI a role, a goal, an audience, the pages, a style and the output you expect." },
+        { topic: "Role",
+          before: "Not given.",
+          after:  "\"You are an expert educational web designer and full-stack developer.\"" },
+        { topic: "Goal & audience",
+          before: "Only \"modern website for my coding course\".",
+          after:  "A responsive site for a 15-lesson course, for students with little or no coding experience." },
+        { topic: "Pages & features",
+          before: "\"A homepage and lessons.\"",
+          after:  "Landing, curriculum, lesson template, about and resources pages; clear call-to-action buttons; mobile-first; easy navigation." },
+        { topic: "Style & output",
+          before: "Not given.",
+          after:  "Modern, playful, light background, bold headings; deliver the folder structure, code, a reusable template and an explanation, easy to expand later." }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "What Claude Code can do",
+      intro: "The three capabilities presented in the session.",
+      items: [
+        { name: "Routines",
+          detail: "Repeated background workflows in your project, e.g. \"Check this folder for errors every hour\" or \"clean the files, test the code, then generate a report\"." },
+        { name: "Refactoring",
+          detail: "Rename a variable everywhere, reorganise files or make code easier to read, without changing what it does." },
+        { name: "Session context",
+          detail: "It remembers the commands run, earlier errors, files changed and what you were trying to fix, so it can explain or roll back." }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "GitHub key terms",
+      intro: "GitHub lets you store, share and collaborate on code. Click a term to see its meaning.",
+      items: [
+        { name: "Repository", detail: "The place on GitHub that holds all your project files and their history." },
+        { name: "Fork",   detail: "Your own copy of someone else's repo on your GitHub account, so you can change it without affecting the original." },
+        { name: "Clone",  detail: "Copy a repo from GitHub down to your computer to edit the files locally." },
+        { name: "Commit", detail: "Save a snapshot of your changes with a short note. It's saved locally, NOT on GitHub yet." },
+        { name: "Push",   detail: "Send your saved commits up to GitHub so the online copy is up to date." },
+        { name: "Pull Request (PR)", detail: "Propose your changes and ask teammates to review them before they join the main project." },
+        { name: "Merge",  detail: "Approve a pull request and combine its changes into the main version." }
+      ]
+    },
+
+    {
+      type: "compare",
+      title: "Push vs Pull Request",
+      intro: "Two ways to get your changes onto GitHub.",
+      labels: ["Push", "Pull Request"],
+      items: [
+        { topic: "Action",
+          before: "Uploads your commits straight to the repo: no waiting, no approval.",
+          after:  "Proposes your changes and asks teammates to look before anything is merged." },
+        { topic: "Review",
+          before: "None: changes go live immediately on the branch you push to.",
+          after:  "Others can comment, suggest edits, and approve or reject." },
+        { topic: "Use when",
+          before: "Working solo or on your own branch, and confident in your changes.",
+          after:  "Working on a team or contributing to someone else's project." }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "Which file do I open?",
+      intro: "The three files of a website. Try to answer before you click!",
+      items: [
+        { name: "…to change the text on my main button?",
+          detail: "index.html: the words and structure, every heading, button and paragraph people read." },
+        { name: "…to make that button pink?",
+          detail: "styles.css: the look: colours, fonts, spacing, and how it changes on a phone vs a laptop." },
+        { name: "…to make it do something when clicked?",
+          detail: "script.js: the behaviour: what happens when someone clicks, types or hits submit." }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "Two things a static site still can't do",
+      intro: "And how a backend like Supabase fixes them.",
+      items: [
+        { name: "1. It forgets everyone",
+          detail: "Close the tab of a Wordle clone and it has no idea who you were. Sign-up adds a row to a user table (email + scrambled password); log-in checks it and gives your browser a token, a temporary \"this is me\" sticker; log-out throws the token away." },
+        { name: "2. It knows only its own files",
+          detail: "It can't show anything live (weather, prices…), only what was typed into the code. Getting live data, like logging in, is an API call: a request to another computer and an answer back." },
+        { name: "Supabase",
+          detail: "An open-source backend-as-a-service: authentication, verification and a user database, with usage statistics. Connects closely with GitHub, Vercel and Lovable." }
+      ]
+    },
+
+    {
+      type: "analysis",
+      title: "My analysis",
+      blocks: [
+        { heading: "Key insights",
+          prompt: "What did you learn about building with AI tools that you didn't know before?",
+          text: [] },
+        { heading: "How I used it",
+          prompt: "How did you use Claude Design, Claude Code, GitHub or Vercel to build this website?",
+          text: [] },
+        { heading: "Why it matters for marketers",
+          prompt: "How can vibe coding help a marketer (landing pages, prototypes, campaign microsites…)?",
+          text: [] },
+        { heading: "Limits & risks",
+          prompt: "What should you still check yourself when AI writes your code?",
+          text: [] }
+      ]
+    },
+
+    {
+      type: "quote",
+      text: "GitHub stores your code. Vercel turns it into a website that updates every time you push."
+    }
+  ]
+};
+
+/* ---------- SESSION 1: Digital Marketing Platforms in the AI Era (3 Oct 2026) ---------- */
+const LECTURE_1 = {
+  summary: "An overview of the 10 types of digital marketing platforms, illustrated with real campaigns " +
+           "from Singapore and Southeast Asia, and how AI is changing targeting, search, creative " +
+           "production and ad placements.",
+
+  sections: [
+    {
+      type: "cards",
+      title: "The 10 types of digital marketing platforms",
+      intro: "Click a platform type to see the campaign example from the lecture.",
+      label: "Example: ",
+      items: [
+        { name: "Social Media Marketing",
+          detail: "Agoda's 2025 Singapore flight ads, made in-house with GenAI (Veo, Runway, Kling)." },
+        { name: "Influencer & Creator Marketing",
+          detail: "La Roche-Posay beauty influencers hosting live Instagram tutorials in Singapore." },
+        { name: "Content Marketing & GenAI Production",
+          detail: "Cathay Pacific's blog of travel guides to Asian destinations." },
+        { name: "Email, CRM & Messaging",
+          detail: "Zalora's \"Wishlist Reminders\"." },
+        { name: "Search: SEO, SEM & GEO",
+          detail: "Lazada Google Ads targeting \"best Ramadan discounts\" in Indonesia." },
+        { name: "Programmatic & Retail Media",
+          detail: "WPP Media x GrabAds using anonymised transaction + location signals across 6 SEA markets." },
+        { name: "Affiliate & Social Commerce",
+          detail: "Guardian's Singapore beauty influencers embedding referral links in vlogs." },
+        { name: "Mobile Marketing & Super-apps",
+          detail: "Nestlé x Lazada piloting the LazzieChat AI shopping assistant." },
+        { name: "Marketing Automation & AI Agents",
+          detail: "Singapore Airlines x Salesforce Agentforce for customer service." },
+        { name: "Marketing Analytics & Measurement",
+          detail: "Lazada using Adobe Analytics across Southeast Asia." }
+      ]
+    },
+
+    {
+      type: "stats",
+      title: "Singapore 2026 in numbers",
+      intro: "Key figures from the lecture.",
+      // value = the number to count up to; prefix/suffix/decimals control how it's shown
+      items: [
+        { value: 5.33, decimals: 2, suffix: "M", label: "Social media users", note: "90.6% of the population" },
+        { value: 95.3, decimals: 1, suffix: "%", label: "Adults (18+) on social media" },
+        { value: 17,   prefix: "~", suffix: "h", label: "Weekly time on social", note: "across 7.4 platforms" },
+        { value: 1,    suffix: " in 3", label: "Use ChatGPT monthly" },
+        { value: 75,   suffix: "%+", label: "Of AI referrals come from ChatGPT" },
+        { value: 71.1, decimals: 1, suffix: "%", label: "Worried about what's real vs fake online" },
+        { value: 9.79, decimals: 2, suffix: "M", label: "Mobile connections", note: "166% of the population" },
+        { value: 119,  prefix: "US$", suffix: "M", label: "SG influencer marketing spend 2025", note: "+12.9%" },
+        { value: 32,   suffix: "%", label: "Video & live commerce share of SEA e-commerce GMV", note: "up from 20% (2025)" },
+        { value: 8,    suffix: "%", label: "Click rate with an AI summary", note: "vs 15% without (Pew, 2025)" }
+      ]
+    },
+
+    {
+      type: "compare",
+      title: "How AI is changing marketing",
+      intro: "Switch between the old way and the AI shift.",
+      labels: ["Before AI", "The AI Shift"],
+      items: [
+        { topic: "Targeting",
+          before: "Picking audiences by location, job title, interests, age.",
+          after:  "Meta Advantage+, Google PMax, TikTok Smart+ find the audience; your creative is the targeting." },
+        { topic: "Search",
+          before: "Search engines list links users click.",
+          after:  "AI Overviews and ChatGPT answer first; brands compete to be cited (GEO)." },
+        { topic: "Creative",
+          before: "One ad made per campaign.",
+          after:  "GenAI turns one idea into hundreds of ad versions." },
+        { topic: "Ad placements",
+          before: "Ads only in feeds and search results.",
+          after:  "Ads in Google AI Overviews (SG, Dec 2025) and ChatGPT Ads (SG, Sep 2026)." },
+        { topic: "Measurement",
+          before: "7 benchmarking metrics.",
+          after:  "An 8th metric: AI Visibility (share of AI answers mentioning your brand)." }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "The 8 benchmarking metrics",
+      intro: "How to measure a multichannel approach, from most to least used. Number 8 is new for the AI era.",
+      items: [
+        { name: "Transactional",  detail: "Individual KPIs: sales, revenue and conversion rates." },
+        { name: "Competitive",    detail: "Market share, share of voice and share of wallet." },
+        { name: "Engagement",     detail: "Social interactions, email open rates and click-throughs (return on engagement)." },
+        { name: "Perceptual",     detail: "Customer satisfaction score, customer effort score and Net Promoter Score." },
+        { name: "Pipeline",       detail: "Lead quality, time taken to close, cost per lead." },
+        { name: "Relationship",   detail: "Customer lifetime value." },
+        { name: "Awareness",      detail: "Aided awareness, unaided awareness and earned reach." },
+        { name: "AI Visibility ", detail: "Share of AI answers that mention your brand, AI-assistant referral traffic, and sentiment in AI summaries." }
+      ]
+    },
+
+    {
+      type: "analysis",
+      title: "My analysis",
+      blocks: [
+        { heading: "Key insights",
+          prompt: "What are the 2–3 most important ideas from this lecture, in your own words?",
+          text: [] },
+        { heading: "What surprised me",
+          prompt: "Which example or statistic changed how you think about digital platforms?",
+          text: [] },
+        { heading: "Implications for brands",
+          prompt: "What should a marketer in Singapore / SEA do differently because of this?",
+          text: [] },
+        { heading: "Critical view",
+          prompt: "What are the limits or risks (trust, privacy, dependence on platforms' algorithms)?",
+          text: [] },
+        { heading: "Questions I still have",
+          prompt: "What would you like to ask the speaker or explore further?",
+          text: [] }
+      ]
+    },
+
+    {
+      type: "quote",
+      text: "Platforms evolve quickly. Stay up to date and adapt to new tools in an AI-driven industry."
+    }
+  ]
+};
+
+/* ---------- SESSION 2: Digital Marketing Tools & Their Use for Marketers (9 Oct 2026) ---------- */
+const LECTURE_2 = {
+  summary: "To navigate social media well, advertisers combine many tools and platforms to enhance, simplify, " +
+           "synchronise and measure their work. This session mapped the martech landscape in 2026, the four " +
+           "types of tools plus the new layer of AI copilots and agents, and each social channel's own ad tools.",
+
+  sections: [
+    {
+      type: "stats",
+      title: "Martech in 2026: peak tools, AI everywhere",
+      intro: "From the 2026 Marketing Technology Landscape (chiefmartec.com) and TikTok in Southeast Asia.",
+      items: [
+        { value: 15505, suffix: "", label: "Martech products in 2026", note: "only +0.79%, slowest growth in 15 years" },
+        { value: 1488, label: "Products added in one year", note: "vs 1,367 removed: high churn" },
+        { value: 21.4, decimals: 1, prefix: "+", suffix: "%", label: "CMS & web experience", note: "fastest-growing category" },
+        { value: 19.9, decimals: 1, prefix: "+", suffix: "%", label: "E-commerce platforms" },
+        { value: 11.3, decimals: 1, prefix: "+", suffix: "%", label: "Analytics" },
+        { value: 460, suffix: "M+", label: "TikTok users in SEA", note: "Nov 2025; Indonesia 160M" },
+        { value: 45.6, decimals: 1, prefix: "US$", suffix: "B", label: "TikTok Shop SEA GMV 2025", note: "doubled (Momentum Works)" },
+        { value: 1, suffix: "M+", label: "Businesses using Meta Business Agent", note: "launched Jun 2026" }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "Types of tools out there",
+      intro: "Four types of tools, plus a new AI layer on top. Click each one.",
+      items: [
+        { name: "1. Point tools",
+          detail: "Address one marketing function. Pros: quick to set up, often best in class. Cons: can split reporting and add vendors. Ex: Meltwater, Brand24, Mailchimp." },
+        { name: "2. Platforms",
+          detail: "Cover a broad range of needs in 1–2 areas, with APIs for custom apps and integrations. Pros: automate and integrate tasks. Cons: dependence on one platform, longer set-up. Ex: Salesforce Data 360." },
+        { name: "3. Suites",
+          detail: "Several products from one provider, already integrated. Pros: lower total cost, fewer support teams. Cons: add-ons may not be best in class; harder to add outside tools. Ex: Oracle Eloqua, Adobe Marketo Engage, HubSpot (now with Breeze AI agents)." },
+        { name: "4. Hubs",
+          detail: "A central portal that unifies collaboration, analytics, data integration and operations across existing systems." },
+        { name: "5. The new layer: AI copilots & agents",
+          detail: "Copilots (ChatGPT, Claude, Gemini, Copilot) help you work faster; agents (Salesforce Agentforce, Meta Business Agent, Google Ask Advisor) plan and act across tools. Pros: speed, 24/7, personalisation at scale. Cons: less transparency, brand-safety and privacy risks, vendor lock-in." }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "What these tools help us achieve",
+      intro: "The nine benefits covered in the session.",
+      items: [
+        { name: "Enhanced campaign management", detail: "Plan, run and monitor campaigns across channels consistently and efficiently." },
+        { name: "Scalability & flexibility", detail: "From local campaigns to global outreach, for any size of business." },
+        { name: "Multichannel integration", detail: "Email, social, mobile and web working together for a seamless experience." },
+        { name: "Personalisation at scale", detail: "AI and targeting deliver personalised creative and messages to each audience." },
+        { name: "Real-time optimisation", detail: "Live metrics let you adjust campaigns and test creatives as they run." },
+        { name: "Automation & efficiency", detail: "Tools and AI agents handle scheduling, segmentation, reporting and creative versions." },
+        { name: "Improved collaboration", detail: "Hubs and suites help teams share workflows and ideas." },
+        { name: "Brand consistency", detail: "One platform keeps messaging, design and tone consistent." },
+        { name: "Security, compliance & testing", detail: "Data-protection features, plus A/B testing to find what resonates." }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "Social media channels' own tools",
+      intro: "Each platform's ad tools and their AI features.",
+      label: "Key features: ",
+      items: [
+        { name: "TikTok for Business",
+          detail: "Symphony (AI creative that makes and translates videos), Spark Ads (boost creators' organic posts), Smart+ & GMV Max (AI targeting, bids and creative; GMV Max for TikTok Shop)." },
+        { name: "Meta Ads Manager & Business Suite",
+          detail: "Advantage+ audience, creative and campaign budget (AI finds the audience and allocates budget), A/B testing, and Business Agent selling on WhatsApp, Instagram and Messenger." },
+        { name: "LinkedIn Campaign Manager",
+          detail: "Targeting by job title, industry and company size; Sponsored Content & Thought Leader Ads, Lead Gen Forms, Message Ads, and Accelerate for AI campaigns." },
+        { name: "YouTube Ads (Google Ads)",
+          detail: "Skippable in-stream ads (skip after 5 sec), Demand Gen AI campaigns across YouTube, Shorts, Discover & Gmail, and Peak Points, where Gemini places ads after a video's most engaging moments." },
+        { name: "X (Twitter Ads)",
+          detail: "Grok writes ad copy and visuals from your URL, Promoted Posts, Custom Audiences for retargeting, and image, carousel and video formats." },
+        { name: "Also on the radar",
+          detail: "Threads ads (Jan 2026), Pinterest Performance+, Reddit, ChatGPT Ads (SG & SEA since 23 Sep 2026), retail media (Shopee, Lazada, TikTok Shop, GrabAds), and Xiaohongshu & WeChat (Session 6)." }
+      ]
+    },
+
+    {
+      type: "compare",
+      title: "Case study: TikTok \"What Makes You Tic?\"",
+      intro: "South Africa, 2020: switch between the challenge and the campaign.",
+      labels: ["The challenge", "The campaign & results"],
+      items: [
+        { topic: "Brief",
+          before: "TikTok needed more South Africans to download the app.",
+          after:  "One simple thought: make people curious, with the line \"What makes you Tic?\"" },
+        { topic: "Perception",
+          before: "Many saw TikTok as only for young people lip-syncing and dancing.",
+          after:  "Interests ending in \"-tic\" (romantic, artistic, cinematic, exotic, aesthetic) paired with diverse TikTok videos." },
+        { topic: "Channels",
+          before: "TikTok struggled to reach wider audiences.",
+          after:  "Ran on TV and on other social apps such as Facebook and Instagram." },
+        { topic: "Results",
+          before: "-",
+          after:  "100k+ new users, 1M+ views in under 2 weeks, Creative Circle best campaign of July 2020." }
+      ]
+    },
+
+    {
+      type: "analysis",
+      title: "My analysis",
+      blocks: [
+        { heading: "Key insights",
+          prompt: "What are the 2–3 most important ideas from this lecture, in your own words?",
+          text: [] },
+        { heading: "Point tool, platform, suite or hub?",
+          prompt: "For a brand you know, which type of tool would you choose, and why?",
+          text: [] },
+        { heading: "AI agents: opportunity or risk?",
+          prompt: "What do marketers gain and lose when AI agents run campaigns?",
+          text: [] },
+        { heading: "Discussion question",
+          prompt: "On TikTok today, what is harder to prove: reach or incremental sales?",
+          text: [] }
+      ]
+    },
+
+    {
+      type: "quote",
+      text: "Pick tools that share clean data with each other, as AI is only as good as what it can connect to. Test small, measure incrementality, then scale."
+    }
+  ]
+};
+
+/* -----------------------------------------------------------------
+   PASTE THE NEXT LECTURE HERE
+   Copy LECTURE_1, rename it LECTURE_2, and change the text.
+   You can delete, reorder or repeat any section type.
+   ----------------------------------------------------------------- */
+
+
+/* =================================================================
+   4. THE SESSIONS LIST
+   -----------------------------------------------------------------
+   One entry per guest lecture. This single list feeds BOTH the
+   Schedule page and the Guest lectures tabs.
+   - date: "YYYY-MM-DD", or "" if not known yet
+   - data: a lecture object → full analysis page
+           null             → "Coming soon"
+   ================================================================= */
+const SESSIONS = [
+  { tabLabel: "Guest 1 · LaunchLab", date: "2026-10-09",
+    title: "Vibe Coding: Claude Design, Claude Code, GitHub & Vercel",
+    speaker: "Yibo, Nirvan & Rishabh · LaunchLab (guest speakers)",
+    data: GUEST_1 },
+  { tabLabel: "Session 1", date: "2026-10-03",
+    title: "Digital Marketing Platforms in the AI Era",
+    speaker: "Madina Kalyayeva, ESSEC Business School",
+    data: LECTURE_1 },
+  { tabLabel: "Session 2", date: "2026-10-09",
+    title: "Digital Marketing Tools & Their Use for Marketers",
+    speaker: "Madina Kalyayeva, ESSEC Business School",
+    data: LECTURE_2 },
+  { tabLabel: "Guest 2", date: "", title: "Guest speaker session", speaker: "To be announced", data: null },
+  { tabLabel: "Guest 3", date: "", title: "Guest speaker session", speaker: "To be announced", data: null }
+];
+
+
+/* =================================================================
+   5. GAMES (one quiz per session)
+   -----------------------------------------------------------------
+   Each game has ROUNDS. A round's "type" tells the game engine
+   (section 8) how to show its questions:
+
+     "match"       → multiple choice: the right "answer" + 3 wrong
+                     options picked at random from round.choices
+     "higherLower" → shows a "guess"; the player picks Higher or Lower
+     "sort"        → the player puts each statement into one of round.buckets
+     "text"        → the player types an answer; "accept" lists the
+                     lowercase keywords that count as correct
+
+   Every question has an "explain", shown after the player answers.
+   "session" links the game to its lecture (SESSIONS[0] = first tab).
+   ================================================================= */
+
+// Badges shared by all games: the first one whose "min" (% score) you reach
+const BADGES = [
+  { min: 80, name: "AI-Era Marketing Pro", icon: "✦✦✦" },
+  { min: 50, name: "Campaign Strategist",  icon: "✦✦" },
+  { min: 0,  name: "Platform Rookie",      icon: "✦" }
+];
+
+const GAME_GUEST_1 = {
+  session: SESSIONS[0],
+  tabLabel: "LaunchLab",
+  intro: "Three rounds on building and deploying a website with AI, plus a bonus question.",
+  takeaway: "Design → Build → Deploy: GitHub stores your code, Vercel turns it into a live website.",
+  rounds: [
+    {
+      type: "sort",
+      title: "Which file do I open?",
+      instructions: "Pick the file you'd edit to make each change.",
+      buckets: ["index.html", "styles.css", "script.js"],
+      questions: [
+        { prompt: "Change the text on the main button",       answer: "index.html", explain: "HTML holds the words and structure people read." },
+        { prompt: "Make the button pink",                     answer: "styles.css", explain: "CSS controls the look: colours, fonts, spacing." },
+        { prompt: "Make the button do something when clicked", answer: "script.js", explain: "JavaScript controls behaviour: clicks, typing, submitting." },
+        { prompt: "Add a new paragraph about the course",     answer: "index.html", explain: "New content goes in the HTML." },
+        { prompt: "Change how the page looks on a phone",     answer: "styles.css", explain: "Responsive layout is done with CSS (media queries)." },
+        { prompt: "Show a message when a form is submitted",  answer: "script.js", explain: "Reacting to a submit event is JavaScript." }
+      ]
+    },
+    {
+      type: "match",
+      title: "GitHub Vocabulary",
+      instructions: "Match each definition to the right GitHub term.",
+      choices: ["Repository", "Fork", "Clone", "Commit", "Push", "Pull Request", "Merge"],
+      questions: [
+        { prompt: "Save a snapshot of your changes with a short note, locally on your computer", answer: "Commit",
+          explain: "A commit is saved locally, NOT on GitHub yet." },
+        { prompt: "Send your saved commits up to GitHub", answer: "Push",
+          explain: "Pushing updates the online copy." },
+        { prompt: "Make your own copy of someone else's repo on your GitHub account", answer: "Fork",
+          explain: "You can change a fork without affecting the original." },
+        { prompt: "Copy a repo from GitHub down to your computer", answer: "Clone",
+          explain: "Cloning lets you edit the files locally." },
+        { prompt: "Propose your changes and ask teammates to review them", answer: "Pull Request",
+          explain: "Others can comment, suggest edits and approve." },
+        { prompt: "Approve changes and combine them into the main version", answer: "Merge",
+          explain: "Merging happens after a pull request is approved." },
+        { prompt: "The place that keeps all your project files and their history", answer: "Repository",
+          explain: "Often shortened to \"repo\"." }
+      ]
+    },
+    {
+      type: "sort",
+      title: "Push or Pull Request?",
+      instructions: "Which would you use in each situation?",
+      buckets: ["Push", "Pull Request"],
+      questions: [
+        { prompt: "You're working alone on your own website and you're confident in your change", answer: "Push",
+          explain: "Solo work on your own branch: push directly." },
+        { prompt: "You want to add a fix to a classmate's group project", answer: "Pull Request",
+          explain: "Contributing to someone else's project: ask for review first." },
+        { prompt: "Your team wants to discuss a change before it goes live", answer: "Pull Request",
+          explain: "PRs allow comments, suggestions and approval." },
+        { prompt: "You need the change live right away, no approval needed", answer: "Push",
+          explain: "A push goes live immediately on the branch." }
+      ]
+    },
+    {
+      type: "text",
+      title: "Bonus Question",
+      instructions: "One last one, worth a bonus point!",
+      questions: [
+        { prompt: "Which service connects to your GitHub repo and turns it into a live website every time you push?",
+          accept: ["vercel"], answer: "Vercel",
+          hint: "Hint: it starts with V, and it's similar to tiiny.host.",
+          explain: "Vercel builds and hosts your site, and gives every pull request its own preview link." }
+      ]
+    }
+  ]
+};
+
+const GAME_SESSION_1 = {
+  session: SESSIONS[1],
+  tabLabel: "Session 1",
+  intro: "Three rounds on platforms, Singapore stats and the AI shift, plus a bonus question.",
+  takeaway: "Platforms evolve quickly. Stay up to date and adapt to new tools in an AI-driven industry.",
+  rounds: [
+    {
+      type: "match",
+      title: "Platform Matchmaker",
+      instructions: "Match each real campaign to the type of digital marketing platform it uses.",
+      choices: [
+        "Social Media Marketing", "Influencer & Creator Marketing", "Content Marketing & GenAI Production",
+        "Email, CRM & Messaging", "Search: SEO, SEM & GEO", "Programmatic & Retail Media",
+        "Affiliate & Social Commerce", "Mobile Marketing & Super-apps",
+        "Marketing Automation & AI Agents", "Marketing Analytics & Measurement"
+      ],
+      questions: [
+        { prompt: "Agoda's 2025 Singapore flight ads, made in-house with GenAI (Veo, Runway, Kling)",
+          answer: "Social Media Marketing", explain: "Made with GenAI, but run as paid social on YouTube, Meta and TikTok." },
+        { prompt: "La Roche-Posay beauty influencers hosting live Instagram tutorials in Singapore",
+          answer: "Influencer & Creator Marketing", explain: "Trusted creators showing the product live." },
+        { prompt: "Cathay Pacific's blog of travel guides to Asian destinations",
+          answer: "Content Marketing & GenAI Production", explain: "Useful content inspires travellers organically." },
+        { prompt: "Zalora's \"Wishlist Reminders\"",
+          answer: "Email, CRM & Messaging", explain: "CRM data (your wishlist) brings you back to buy." },
+        { prompt: "Lazada Google Ads targeting \"best Ramadan discounts\" in Indonesia",
+          answer: "Search: SEO, SEM & GEO", explain: "Paid search reaches people when they search." },
+        { prompt: "WPP Media x GrabAds using anonymised transaction + location signals across 6 SEA markets",
+          answer: "Programmatic & Retail Media", explain: "Retail media puts ads next to real purchase data." },
+        { prompt: "Guardian's Singapore beauty influencers embedding referral links in vlogs",
+          answer: "Affiliate & Social Commerce", explain: "Referral links that track sales = affiliate." },
+        { prompt: "Nestlé x Lazada piloting the LazzieChat AI shopping assistant",
+          answer: "Mobile Marketing & Super-apps", explain: "An AI assistant inside the Lazada app." },
+        { prompt: "Singapore Airlines x Salesforce Agentforce for customer service",
+          answer: "Marketing Automation & AI Agents", explain: "AI agents handle customer service at scale." },
+        { prompt: "Lazada using Adobe Analytics across Southeast Asia",
+          answer: "Marketing Analytics & Measurement", explain: "Enterprise analytics to measure campaigns." }
+      ]
+    },
+    {
+      type: "higherLower",
+      title: "Higher or Lower: Singapore 2026",
+      instructions: "Is the real number higher or lower than our guess?",
+      questions: [
+        { prompt: "Social media users in Singapore", guess: "4.1 million",
+          answer: "Higher", explain: "5.33 million: 90.6% of the population." },
+        { prompt: "Adults (18+) using social media", guess: "99%",
+          answer: "Lower", explain: "95.3% of adults." },
+        { prompt: "Weekly time spent on social media", guess: "25 hours",
+          answer: "Lower", explain: "About 17 hours a week, across 7.4 platforms." },
+        { prompt: "Singaporeans using ChatGPT every month", guess: "1 in 5",
+          answer: "Higher", explain: "1 in 3 Singaporeans." },
+        { prompt: "Share of AI referrals coming from ChatGPT", guess: "50%",
+          answer: "Higher", explain: "75%+." },
+        { prompt: "Online adults worried about what's real vs fake", guess: "85%",
+          answer: "Lower", explain: "71.1%, so label AI content and protect authenticity." },
+        { prompt: "Mobile connections as a share of the population", guess: "100%",
+          answer: "Higher", explain: "9.79M connections: 166% of the population." },
+        { prompt: "Singapore influencer marketing spend in 2025", guess: "US$200M",
+          answer: "Lower", explain: "US$119M, up 12.9%." },
+        { prompt: "Video & live commerce share of SEA platform e-commerce GMV (2025)", guess: "25%",
+          answer: "Higher", explain: "32% (US$49.7B), up from 20%." },
+        { prompt: "Click rate on search results that show an AI summary", guess: "15%",
+          answer: "Lower", explain: "8% with an AI summary vs 15% without (Pew, 2025)." }
+      ]
+    },
+    {
+      type: "sort",
+      title: "Old Way vs AI Way",
+      instructions: "Is it how marketing worked before AI, or part of the AI shift?",
+      buckets: ["Before AI", "The AI Shift"],
+      questions: [
+        { prompt: "Picking audiences by location, job title, interests and age",
+          answer: "Before AI", explain: "Marketers chose the targeting by hand." },
+        { prompt: "Meta Advantage+, Google PMax and TikTok Smart+ find the audience; your creative is the targeting",
+          answer: "The AI Shift", explain: "The algorithm finds the audience from the creative." },
+        { prompt: "Search engines list links that users click",
+          answer: "Before AI", explain: "The classic list of links." },
+        { prompt: "AI Overviews and ChatGPT answer first; brands compete to be cited (GEO)",
+          answer: "The AI Shift", explain: "Generative Engine Optimisation." },
+        { prompt: "One ad made per campaign",
+          answer: "Before AI", explain: "Production was slow and expensive." },
+        { prompt: "GenAI turns one idea into hundreds of ad versions",
+          answer: "The AI Shift", explain: "Veo, Runway, Kling, Firefly, TikTok Symphony…" },
+        { prompt: "Ads only in feeds and search results",
+          answer: "Before AI", explain: "The old ad placements." },
+        { prompt: "Ads in Google AI Overviews (SG, Dec 2025) and ChatGPT Ads (SG, Sep 2026)",
+          answer: "The AI Shift", explain: "AI answers are new ad space." }
+      ]
+    },
+    {
+      type: "text",
+      title: "Bonus Question",
+      instructions: "One last one, worth a bonus point!",
+      questions: [
+        { prompt: "Name the 8th benchmarking metric added for the AI era.",
+          accept: ["ai visibility", "visibility"], answer: "AI Visibility",
+          hint: "Hint: it's about how often AI tools mention your brand.",
+          explain: "AI Visibility: share of AI answers mentioning your brand, AI referral traffic and sentiment in AI summaries." }
+      ]
+    }
+  ]
+};
+
+const GAME_SESSION_2 = {
+  session: SESSIONS[2],
+  tabLabel: "Session 2",
+  intro: "Three rounds on types of tools, platform ad features and martech stats, plus a bonus question.",
+  takeaway: "Pick tools that share clean data with each other, as AI is only as good as what it can connect to.",
+  rounds: [
+    {
+      type: "match",
+      title: "Name That Tool Type",
+      instructions: "Is it a point tool, a platform, a suite, or an AI copilot/agent?",
+      choices: ["Point tool", "Platform", "Suite", "Hub", "AI copilot / agent"],
+      questions: [
+        { prompt: "Mailchimp (email marketing)", answer: "Point tool",
+          explain: "One specific function, often best in class." },
+        { prompt: "Brand24 or Meltwater (social listening)", answer: "Point tool",
+          explain: "Built for one task: listening." },
+        { prompt: "Salesforce Data 360 (customer data platform)", answer: "Platform",
+          explain: "Broad features in 1–2 areas, extendable through APIs." },
+        { prompt: "Adobe Marketo Engage or Oracle Eloqua", answer: "Suite",
+          explain: "Several products from one provider, integrated together." },
+        { prompt: "HubSpot, now with Breeze AI agents", answer: "Suite",
+          explain: "A suite that is adding AI agents." },
+        { prompt: "Salesforce Agentforce or Google Ask Advisor", answer: "AI copilot / agent",
+          explain: "Agents take a goal, plan the steps and act across tools." },
+        { prompt: "A central portal unifying collaboration, analytics, data integration and operations", answer: "Hub",
+          explain: "Hubs connect your existing systems in one place." }
+      ]
+    },
+    {
+      type: "match",
+      title: "Whose Ad Tool Is It?",
+      instructions: "Match each AI feature to its platform.",
+      choices: ["TikTok", "Meta", "LinkedIn", "YouTube (Google)", "X"],
+      questions: [
+        { prompt: "Symphony: AI that makes and translates videos", answer: "TikTok",
+          explain: "TikTok's AI creative suite." },
+        { prompt: "Spark Ads: boost creators' organic posts", answer: "TikTok",
+          explain: "Turns creator content into ads." },
+        { prompt: "Advantage+: AI finds the audience and allocates budget", answer: "Meta",
+          explain: "Meta's automated campaigns." },
+        { prompt: "Business Agent: an AI that sells on WhatsApp, Instagram and Messenger", answer: "Meta",
+          explain: "Launched June 2026, used by 1M+ businesses." },
+        { prompt: "Lead Gen Forms: capture leads without leaving the app", answer: "LinkedIn",
+          explain: "A LinkedIn Campaign Manager feature." },
+        { prompt: "Thought Leader Ads: promote employees' posts", answer: "LinkedIn",
+          explain: "Brand and employee posts in the feed." },
+        { prompt: "Peak Points: Gemini places ads after a video's most engaging moments", answer: "YouTube (Google)",
+          explain: "Uses Google's Gemini AI." },
+        { prompt: "Grok writes ad copy and visuals from your URL", answer: "X",
+          explain: "Grok inside X Ads Manager." }
+      ]
+    },
+    {
+      type: "higherLower",
+      title: "Higher or Lower: Martech 2026",
+      instructions: "Is the real number higher or lower than our guess?",
+      questions: [
+        { prompt: "Martech products on the 2026 landscape", guess: "10,000",
+          answer: "Higher", explain: "15,505 products: \"peak martech\"." },
+        { prompt: "Growth in the number of martech products in a year", guess: "5%",
+          answer: "Lower", explain: "Just 0.79%, the slowest in 15 years." },
+        { prompt: "Growth of CMS & web experience tools", guess: "10%",
+          answer: "Higher", explain: "+21.4%, the fastest-growing category." },
+        { prompt: "TikTok users in Southeast Asia", guess: "600 million",
+          answer: "Lower", explain: "460M+ (Nov 2025)." },
+        { prompt: "TikTok Shop's SEA GMV in 2025", guess: "US$30B",
+          answer: "Higher", explain: "US$45.6B, double the year before." },
+        { prompt: "New users from TikTok's \"What Makes You Tic?\" campaign", guess: "50,000",
+          answer: "Higher", explain: "Over 100k new users, and 1M+ views in under 2 weeks." }
+      ]
+    },
+    {
+      type: "text",
+      title: "Bonus Question",
+      instructions: "One last one, worth a bonus point!",
+      questions: [
+        { prompt: "Which martech category grew fastest in 2026 (+21.4%)?",
+          accept: ["cms", "web experience", "content management"], answer: "CMS & web experience",
+          hint: "Hint: it's what you use to build and manage websites.",
+          explain: "CMS & web experience grew +21.4%, ahead of e-commerce platforms (+19.9%) and analytics (+11.3%)." }
+      ]
+    }
+  ]
+};
+
+// New game? Copy one of the blocks above, then add it to this list:
+const GAMES = [GAME_GUEST_1, GAME_SESSION_1, GAME_SESSION_2];
+
+
+/* =================================================================
+   6. HELPERS
+   ================================================================= */
+
+// Creates an HTML element with an optional class and text
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// Creates a white card with an optional title and intro line
+function makeCard(title, intro) {
+  const card = el("section", "card");
+  if (title) card.append(el("h3", "", title));
+  if (intro) card.append(el("p", "card-intro", intro));
+  return card;
+}
+
+// Creates a link that looks like a button
+function linkButton(text, href, primary, newTab) {
+  const a = el("a", primary ? "btn btn-primary" : "btn", text);
+  a.href = href;
+  if (newTab) { a.target = "_blank"; a.rel = "noopener"; }
+  return a;
+}
+
+// Creates <ul class="chips"> from an array of words
+function chips(words) {
+  const ul = el("ul", "chips");
+  words.forEach(w => ul.append(el("li", "", w)));
+  return ul;
+}
+
+// "2026-10-03" → "3 Oct 2026"; "" → "Date TBC"
+function formatDate(iso) {
+  if (!iso) return "Date TBC";
+  return new Date(iso + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+// Shows a small pop-up message at the bottom of the screen for 2 seconds
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.classList.remove("show"), 2000);
+}
+
+
+/* =================================================================
+   7. LECTURE SECTION RENDERERS
+   -----------------------------------------------------------------
+   One function per section type. Each receives the section data and
+   returns a finished card element.
+   ================================================================= */
+
+/* ---- "cards": click to open/close ---- */
+function renderCards(section) {
+  const card = makeCard(section.title, section.intro);
+
+  // Header row: titles on the left, "Open all" button on the right
+  const head = el("div", "card-head");
+  const titles = el("div");
+  titles.append(...card.childNodes);
+  const allBtn = el("button", "btn", "Open all");
+  allBtn.setAttribute("aria-pressed", "false");
+  head.append(titles, allBtn);
+  card.append(head);
+
+  const grid = el("div", "concepts");
+  const toggles = [];
+
+  section.items.forEach((item, i) => {
+    const box = el("div", "concept");
+    const toggle = el("button", "concept-toggle");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.append(el("span", "", (i + 1) + ". " + item.name), el("span", "icon", "+"));
+
+    const body = el("div", "concept-body");
+    body.hidden = true;
+    // section.label (optional) is a bold word shown before the detail, e.g. "Example: "
+    if (section.label) body.append(el("strong", "", section.label));
+    body.append(document.createTextNode(item.detail));
+
+    // EVENT LISTENER: clicking a card flips it open/closed.
+    // aria-expanded tells screen readers whether it's open.
+    toggle.addEventListener("click", () => {
+      const isOpen = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!isOpen));
+      body.hidden = isOpen;
+    });
+
+    box.append(toggle, body);
+    grid.append(box);
+    toggles.push(toggle);
+  });
+
+  allBtn.addEventListener("click", () => {
+    const openAll = allBtn.getAttribute("aria-pressed") === "false";
+    toggles.forEach(t => {
+      t.setAttribute("aria-expanded", String(openAll));
+      t.nextElementSibling.hidden = !openAll;
+    });
+    allBtn.setAttribute("aria-pressed", String(openAll));
+    allBtn.textContent = openAll ? "Close all" : "Open all";
+  });
+
+  card.append(grid);
+  return card;
+}
+
+/* ---- "stats": numbers that count up ---- */
+function renderStats(section) {
+  const card = makeCard(section.title, section.intro);
+  const grid = el("div", "stats");
+
+  section.items.forEach(item => {
+    const box = el("div", "stat");
+    const number = el("div", "stat-number");
+    // Save the stat on the element so countUp() can find it later
+    number.dataset.value = item.value;
+    number.dataset.decimals = item.decimals || 0;
+    number.dataset.prefix = item.prefix || "";
+    number.dataset.suffix = item.suffix || "";
+    number.textContent = formatStat(item.value, item);
+    box.append(number, el("div", "stat-label", item.label));
+    if (item.note) box.append(el("div", "stat-note", item.note));
+    grid.append(box);
+  });
+
+  card.append(grid);
+  return card;
+}
+
+function formatStat(n, opts) {
+  const d = Number(opts.decimals || 0);
+  // toLocaleString adds thousands separators: 15505 → "15,505"
+  const number = Number(n).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+  return (opts.prefix || "") + number + (opts.suffix || "");
+}
+
+// Animates every .stat-number inside an element from 0 to its value
+function countUp(container) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  container.querySelectorAll(".stat-number").forEach(node => {
+    const d = node.dataset;
+    const target = Number(d.value);
+    const start = performance.now();
+    const duration = 900;  // milliseconds
+
+    // requestAnimationFrame runs this function on every screen refresh
+    function frame(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);   // slows down at the end
+      node.textContent = formatStat(target * eased,
+        { prefix: d.prefix, suffix: d.suffix, decimals: Number(d.decimals) });
+      if (progress < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
+/* ---- "compare": Before / After switch ---- */
+function renderCompare(section) {
+  const card = makeCard(section.title, section.intro);
+
+  const switcher = el("div", "switch");
+  switcher.setAttribute("role", "group");
+  switcher.setAttribute("aria-label", "Choose a view");
+  const list = el("ul", "compare-list");
+  list.setAttribute("aria-live", "polite");
+
+  // Redraws the list for "before" or "after"
+  function show(view) {
+    list.innerHTML = "";
+    list.className = "compare-list " + view;
+    section.items.forEach((item, i) => {
+      const li = el("li");
+      li.style.animationDelay = i * 60 + "ms";   // items appear one after another
+      li.append(el("span", "", item.topic), document.createTextNode(item[view]));
+      list.append(li);
+    });
+    buttons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === view)));
+  }
+
+  const buttons = ["before", "after"].map((view, i) => {
+    const b = el("button", "btn", section.labels[i]);
+    b.dataset.view = view;
+    // EVENT LISTENER: each switch button shows its view
+    b.addEventListener("click", () => show(view));
+    switcher.append(b);
+    return b;
+  });
+
+  card.append(switcher, list);
+  show("before");
+  return card;
+}
+
+/* ---- "analysis": your own writing ---- */
+function renderAnalysis(section) {
+  const card = makeCard(section.title);
+  section.blocks.forEach(block => {
+    const wrap = el("div", "analysis-block");
+    wrap.append(el("h4", "", block.heading));
+    if (block.text.length) {
+      block.text.forEach(paragraph => wrap.append(el("p", "", paragraph)));
+    } else {
+      // Nothing written yet: show the guiding question in a dashed box
+      wrap.append(el("div", "placeholder", "" + block.prompt));
+    }
+    card.append(wrap);
+  });
+  return card;
+}
+
+/* ---- "quote": highlighted takeaway ---- */
+function renderQuote(section) {
+  const card = el("section", "card quote");
+  card.append(el("span", "eyebrow", "Key takeaway"), el("p", "", section.text));
+  return card;
+}
+
+/* ---- "people": guest speaker cards ---- */
+function renderPeople(section) {
+  const card = makeCard(section.title, section.intro);
+  const grid = el("div", "people");
+  section.items.forEach(person => {
+    const box = el("div", "person");
+    const avatar = el("div", "avatar", person.name.charAt(0));
+    avatar.setAttribute("aria-hidden", "true");
+    box.append(avatar, el("strong", "", person.name), el("span", "", person.role));
+    grid.append(box);
+  });
+  card.append(grid);
+  return card;
+}
+
+// Maps each section "type" to the function that draws it
+const RENDERERS = {
+  people: renderPeople,
+  cards: renderCards,
+  stats: renderStats,
+  compare: renderCompare,
+  analysis: renderAnalysis,
+  quote: renderQuote
+};
+
+
+/* =================================================================
+   8. PAGE BUILDERS
+   -----------------------------------------------------------------
+   One function per page in the main menu. Each fills its <section>.
+   PAGES (section 9) says which banner text and builder go with
+   each menu link.
+   ================================================================= */
+
+/* ---------- Welcome ---------- */
+function buildHome(page) {
+  const intro = makeCard();
+  intro.append(
+    el("span", "eyebrow", COURSE.semester + " · " + COURSE.programme),
+    el("h2", "", "Welcome to my course website"),
+  );
+  COURSE.description.forEach(p => intro.append(el("p", "", p)));
+  const meta = el("div", "meta");
+  meta.append(
+    el("span", "", "" + COURSE.school),
+    el("span", "", "Taught by " + COURSE.professor),
+    el("span", "", "" + COURSE.tagline)
+  );
+  intro.append(meta);
+  const row = el("div", "btn-row");
+  row.append(linkButton("Read my lecture analyses →", "#lectures", true), linkButton("About the course", "#course"));
+  intro.append(row);
+  page.append(intro);
+
+  // Spotlight on the first guest speakers
+  const guest = SESSIONS[0];
+  const spot = makeCard();
+  spot.append(
+    el("span", "eyebrow", "Latest guest session · " + formatDate(guest.date)),
+    el("h3", "", guest.title),
+    el("p", "muted", guest.speaker),
+    el("p", "", guest.data.summary)
+  );
+  const spotRow = el("div", "btn-row");
+  spotRow.append(linkButton("Meet the guest speakers →", "#lectures/1", true));
+  spot.append(spotRow);
+  page.append(spot);
+
+  // Shortcut cards to every other page
+  const explore = el("div", "explore");
+  [
+    { href: "#about",    title: "About me",       text: "My background, CV and LinkedIn." },
+    { href: "#course",   title: "The course",     text: "What Digital Platforms Test Drive covers." },
+    { href: "#schedule", title: "Schedule",       text: "All guest lecture dates at a glance." },
+    { href: "#lectures", title: "Guest lectures", text: "My notes and analysis of each session." },
+    { href: "#games",    title: "Games",          text: "Test yourself with one quiz per session." },
+    { href: "#contact",  title: "Contact me",     text: "Get in touch or connect on LinkedIn." }
+  ].forEach(item => {
+    const a = el("a");
+    a.href = item.href;
+    const number = el("span", "num", String(explore.children.length + 1).padStart(2, "0"));   // "01", "02"…
+    a.append(number, el("strong", "", item.title), el("span", "muted", item.text), el("span", "arrow", "→"));
+    explore.append(a);
+  });
+  page.append(explore);
+}
+
+/* ---------- About me ---------- */
+function buildAbout(page) {
+  // Profile card: photo, name, bio, buttons
+  const profileCard = makeCard();
+  const profile = el("div", "profile");
+  let avatar;
+  if (PROFILE.photo) {
+    avatar = el("img", "avatar");
+    avatar.src = PROFILE.photo;
+    avatar.alt = "Photo of " + PROFILE.name;
+  } else {
+    avatar = el("div", "avatar", PROFILE.initials);
+    avatar.setAttribute("aria-hidden", "true");
+  }
+  const text = el("div");
+  text.append(el("h2", "", PROFILE.name), el("p", "muted", PROFILE.headline + " · " + PROFILE.location));
+  PROFILE.bio.forEach(p => text.append(el("p", "", p)));
+  const row = el("div", "btn-row");
+  row.append(
+    linkButton("LinkedIn", PROFILE.linkedin, true, true),
+    linkButton("Download my CV", PROFILE.cvFile, false, true),
+    linkButton("Contact me", "#contact")
+  );
+  text.append(row);
+  profile.append(avatar, text);
+  profileCard.append(profile);
+  page.append(profileCard);
+
+  // Education + experience side by side
+  const grid = el("div", "grid-2");
+  grid.append(timelineCard("Education", PROFILE.education), timelineCard("Experience", PROFILE.experience));
+  page.append(grid);
+
+  // Skills, languages, interests
+  const extras = el("div", "grid-2");
+  extras.style.marginTop = "1.25rem";
+  [["Skills", PROFILE.skills], ["Languages", PROFILE.languages], ["Interests", PROFILE.interests]]
+    .forEach(([title, list]) => {
+      const card = makeCard(title);
+      card.append(chips(list));
+      extras.append(card);
+    });
+  page.append(extras);
+}
+
+function timelineCard(title, items) {
+  const card = makeCard(title);
+  const ul = el("ul", "timeline");
+  items.forEach(item => {
+    const li = el("li");
+    li.append(el("div", "when", item.when), el("div", "what", item.what), el("div", "muted", item.where));
+    if (item.detail) li.append(el("p", "", item.detail));
+    ul.append(li);
+  });
+  card.append(ul);
+  return card;
+}
+
+/* ---------- The course ---------- */
+function buildCourse(page) {
+  const main = makeCard();
+  main.append(el("span", "eyebrow", COURSE.programme), el("h2", "", COURSE.name));
+  COURSE.description.forEach(p => main.append(el("p", "", p)));
+  const meta = el("div", "meta");
+  meta.append(
+    el("span", "", "" + COURSE.professor),
+    el("span", "", "" + COURSE.school),
+    el("span", "", "" + COURSE.semester)
+  );
+  main.append(meta);
+  page.append(main);
+
+  // Helper: a card with a numbered list
+  function listCard(title, items) {
+    const card = makeCard(title);
+    const ol = el("ol");
+    items.forEach(text => ol.append(el("li", "", text)));
+    card.append(ol);
+    return card;
+  }
+
+  const grid = el("div", "grid-2");
+  grid.append(listCard("Course structure", COURSE.structure), listCard("Outcomes", COURSE.objectives));
+  page.append(grid);
+
+  // Grading: each bar's width is set from its percentage
+  const grading = makeCard("Grading");
+  grading.style.marginTop = "1.25rem";
+  COURSE.grading.forEach(g => {
+    const row = el("div", "grade");
+    const top = el("div", "grade-top");
+    top.append(el("strong", "", g.label), el("span", "grade-pct", g.percent + "%"));
+    const bar = el("div", "grade-bar");
+    const fill = el("span");
+    fill.style.width = g.percent + "%";
+    bar.append(fill);
+    row.append(top, bar);
+    if (g.detail) row.append(el("p", "muted", g.detail));
+    grading.append(row);
+  });
+  page.append(grading);
+
+  const grid2 = el("div", "grid-2");
+  const prof = makeCard("" + COURSE.professor, "Course lecturer, ranked #1 lecturer at ESSEC Asia");
+  const ul = el("ul");
+  COURSE.professorFacts.forEach(f => ul.append(el("li", "", f)));
+  prof.append(ul);
+  const code = makeCard("What we build with", "The skills and tools used to make this website:");
+  code.append(chips(COURSE.skills));
+  grid2.append(prof, code);
+  page.append(grid2);
+}
+
+/* ---------- Schedule ---------- */
+function buildSchedule(page) {
+  const card = makeCard("All sessions", "In date order. Click a session to read my analysis.");
+
+  // Filter buttons: All / Done / Upcoming
+  const filters = el("div", "filters");
+  filters.setAttribute("role", "group");
+  filters.setAttribute("aria-label", "Filter sessions");
+  const list = el("ol", "schedule");
+  const today = new Date().toISOString().slice(0, 10);   // "YYYY-MM-DD"
+
+  // A session is "done" if its date is today or in the past
+  // Sort by date (sessions without a date go last), but remember each
+  // session's position in SESSIONS so the link opens the right tab
+  const ordered = SESSIONS
+    .map((s, index) => ({ s, index }))
+    .sort((a, b) => (a.s.date || "9999").localeCompare(b.s.date || "9999"));
+
+  const rows = ordered.map(({ s, index }) => {
+    const done = s.date !== "" && s.date <= today;
+    const li = el("li", done ? "done" : "");
+    const info = el("div");
+    const titleLink = el("a", "title", s.title);
+    titleLink.href = "#lectures/" + (index + 1);    // opens that lecture's tab
+    info.append(titleLink, el("div", "speaker", s.tabLabel + " · " + s.speaker));
+    li.append(el("div", "date", formatDate(s.date)), info,
+              el("span", "status", done ? "Done" : s.date ? "Upcoming" : "TBC"));
+    list.append(li);
+    return { li, done };
+  });
+
+  const buttons = [["all", "All"], ["done", "Done"], ["upcoming", "Upcoming"]].map(([key, label]) => {
+    const b = el("button", "btn", label);
+    b.setAttribute("aria-pressed", String(key === "all"));   // "All" starts selected
+    // EVENT LISTENER: show only the rows that match the filter
+    b.addEventListener("click", () => {
+      rows.forEach(r => {
+        r.li.hidden = (key === "done" && !r.done) || (key === "upcoming" && r.done);
+      });
+      buttons.forEach(other => other.setAttribute("aria-pressed", String(other === b)));
+    });
+    filters.append(b);
+    return b;
+  });
+
+  card.append(filters, list);
+  page.append(card);
+}
+
+/* ---------- Reusable sub-tabs ----------
+   Used by both the Guest lectures page and the Games page.
+   How the sub-tabs work:
+   1. One <button role="tab"> and one panel per entry.
+   2. Clicking a tab changes the URL to "#<page>/<number>", and the
+      navigation code (section 10) then calls select(index).
+   3. select() sets aria-selected on that tab and removes "hidden"
+      from its panel; the other panels get "hidden".
+   4. Arrow keys / Home / End move between tabs.
+   options = { page, hashName, label, entries, tabLabel(entry), isSoon(entry), render(panel, entry), onSelect(panel) } */
+function createTabSet(options) {
+  const tabs = [];
+  const panels = [];
+  const tablist = el("div", "tablist");
+  tablist.setAttribute("role", "tablist");
+  tablist.setAttribute("aria-label", options.label);
+  const panelsBox = el("div");
+  options.page.append(tablist, panelsBox);
+
+  options.entries.forEach((entry, index) => {
+    const id = options.hashName + "-" + index;      // e.g. "games-0"
+    const tab = el("button", "tab", options.tabLabel(entry));
+    tab.id = "tab-" + id;
+    tab.setAttribute("role", "tab");
+    tab.setAttribute("aria-controls", "panel-" + id);
+    if (options.isSoon && options.isSoon(entry)) tab.append(el("span", "tab-soon", " · soon"));
+    // EVENT LISTENER: clicking the tab updates the URL, which opens the panel
+    tab.addEventListener("click", () => { location.hash = options.hashName + "/" + (index + 1); });
+    tablist.append(tab);
+    tabs.push(tab);
+
+    const panel = el("div", "panel");
+    panel.id = "panel-" + id;
+    panel.setAttribute("role", "tabpanel");
+    panel.setAttribute("aria-labelledby", tab.id);
+    panelsBox.append(panel);
+    panels.push(panel);
+    options.render(panel, entry);
+  });
+
+  tablist.addEventListener("keydown", (event) => {
+    const current = tabs.indexOf(document.activeElement);
+    if (current === -1) return;
+    let next = null;
+    if (event.key === "ArrowRight") next = (current + 1) % tabs.length;
+    if (event.key === "ArrowLeft")  next = (current - 1 + tabs.length) % tabs.length;
+    if (event.key === "Home") next = 0;
+    if (event.key === "End")  next = tabs.length - 1;
+    if (next !== null) {
+      event.preventDefault();
+      location.hash = options.hashName + "/" + (next + 1);
+      tabs[next].focus();
+    }
+  });
+
+  return {
+    count: tabs.length,
+    select(index) {
+      tabs.forEach((tab, i) => {
+        const isActive = i === index;
+        tab.setAttribute("aria-selected", String(isActive));
+        tab.tabIndex = isActive ? 0 : -1;   // only the active tab is in the Tab-key order
+        panels[i].hidden = !isActive;
+      });
+      if (options.onSelect) options.onSelect(panels[index]);
+    }
+  };
+}
+
+// Pages that have sub-tabs register them here, e.g. TABSETS.lectures
+const TABSETS = {};
+
+/* ---------- Guest lectures ---------- */
+function buildLectures(page) {
+  TABSETS.lectures = createTabSet({
+    page,
+    hashName: "lectures",
+    label: "Guest lectures",
+    entries: SESSIONS,
+    tabLabel: s => s.tabLabel,
+    isSoon: s => !s.data,
+    render: (panel, s) => s.data ? renderLecture(panel, s) : renderComingSoon(panel, s),
+    onSelect: panel => countUp(panel)        // replay the number animation
+  });
+}
+
+function renderLecture(panel, session) {
+  const intro = makeCard();
+  intro.append(
+    el("span", "eyebrow", session.tabLabel + " · " + formatDate(session.date)),
+    el("h2", "", session.title)
+  );
+  const meta = el("div", "meta");
+  meta.append(el("span", "", "" + session.speaker), el("span", "", "" + formatDate(session.date)));
+  intro.append(meta, el("p", "", session.data.summary));
+
+  // If this session has a game, add a button to play it
+  const gameIndex = GAMES.findIndex(g => g.session === session);
+  if (gameIndex !== -1) {
+    const row = el("div", "btn-row");
+    row.append(linkButton("Play the quiz for this session", "#games/" + (gameIndex + 1), true));
+    intro.append(row);
+  }
+  panel.append(intro);
+
+  session.data.sections.forEach(section => {
+    const render = RENDERERS[section.type];
+    if (render) panel.append(render(section));
+    else console.warn("Unknown section type:", section.type);
+  });
+}
+
+function renderComingSoon(panel, session) {
+  const card = el("section", "card soon");
+  card.append(
+    el("span", "eyebrow", session.tabLabel + " · " + formatDate(session.date)),
+    el("h2", "", "Coming soon – guest speaker session"),
+    el("p", "muted", "My analysis of this lecture will appear here.")
+  );
+  const dots = el("div", "soon-dots");
+  dots.setAttribute("aria-hidden", "true");
+  dots.append(el("span"), el("span"), el("span"));
+  card.append(dots);
+  panel.append(card);
+}
+
+/* ---------- Games ---------- */
+function buildGames(page) {
+  TABSETS.games = createTabSet({
+    page,
+    hashName: "games",
+    label: "Games",
+    entries: GAMES,
+    tabLabel: g => g.tabLabel,
+    render: (panel, game) => createGame(panel, game)
+  });
+}
+
+// Shuffles a copy of an array (Fisher–Yates shuffle)
+function shuffle(array) {
+  const copy = array.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+/* ---------- The game engine ----------
+   createGame() works for ANY game object from section 5.
+
+   STATE: each game keeps its own "state" object, so you can switch
+   tabs and come back without losing your progress.
+     state.round       → which round we're on (0, 1, 2…)
+     state.question    → which question inside that round
+     state.score       → total points so far
+     state.roundScores → points per round (for the final screen)
+     state.answered    → true once the current question is answered
+                         (stops double-clicking for extra points)
+     state.order       → the shuffled questions of each round
+
+   SCREEN FLOW: start → round intro → questions → next round → … → results */
+function createGame(panel, game) {
+  const session = game.session;
+  const maxScore = game.rounds.reduce((sum, r) => sum + r.questions.length, 0);
+  let state;
+
+  // Puts everything back to the beginning (used by Start and Play again)
+  function resetState() {
+    state = {
+      round: 0,
+      question: 0,
+      score: 0,
+      roundScores: game.rounds.map(() => 0),
+      answered: false,
+      order: game.rounds.map(r => shuffle(r.questions))   // new order on each play
+    };
+  }
+
+  // Each screen starts with one fresh white card
+  function newScreen(extraClass) {
+    panel.innerHTML = "";
+    const card = el("section", "card game" + (extraClass ? " " + extraClass : ""));
+    panel.append(card);
+    return card;
+  }
+
+  // Moves keyboard focus to the heading so screen readers announce the new screen
+  function focusHeading(heading) {
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+  }
+
+  /* ----- Screen: Start ----- */
+  function renderStart() {
+    const card = newScreen();
+    card.append(
+      el("span", "eyebrow", session.tabLabel + " · " + formatDate(session.date)),
+      el("h2", "", session.title),
+      el("p", "muted", game.intro)
+    );
+    const list = el("ol");
+    game.rounds.forEach(r => list.append(el("li", "", r.title)));
+    card.append(list);
+
+    const row = el("div", "btn-row");
+    const startBtn = el("button", "btn btn-primary", "Start the game ▶");
+    // EVENT LISTENER: Start resets the state and opens round 1
+    startBtn.addEventListener("click", () => { resetState(); renderRoundIntro(); });
+    const notesIndex = SESSIONS.indexOf(session);
+    row.append(startBtn, linkButton("Revise the lecture first", "#lectures/" + (notesIndex + 1)));
+    card.append(row);
+  }
+
+  /* ----- Screen: Round intro ----- */
+  function renderRoundIntro() {
+    const card = newScreen();
+    const round = game.rounds[state.round];
+    const isBonus = round.type === "text";
+    const heading = el("h2", "", round.title);
+    const count = round.questions.length;
+    card.append(
+      el("span", "eyebrow", isBonus ? "Bonus" : "Round " + (state.round + 1)),
+      heading,
+      el("p", "muted", round.instructions),
+      el("p", "", count + (count === 1 ? " question" : " questions") + " · Score so far: " + state.score)
+    );
+    const goBtn = el("button", "btn btn-primary", "Let's go");
+    goBtn.addEventListener("click", renderQuestion);
+    card.append(goBtn);
+    focusHeading(heading);
+  }
+
+  /* ----- Screen: One question ----- */
+  function renderQuestion() {
+    const card = newScreen();
+    state.answered = false;
+    const round = game.rounds[state.round];
+    const q = state.order[state.round][state.question];
+
+    // Top bar: round + question number, and the score
+    const top = el("div", "game-top");
+    const scorePill = el("span", "score-pill", "Score: " + state.score);
+    top.append(el("span", "eyebrow", round.title + " · " + (state.question + 1) + "/" + round.questions.length), scorePill);
+    card.append(top);
+
+    // Progress bar through the whole game
+    const done = game.rounds.slice(0, state.round).reduce((s, r) => s + r.questions.length, 0) + state.question;
+    const progress = el("div", "progress");
+    const bar = el("span");
+    bar.style.width = (done / maxScore) * 100 + "%";
+    progress.append(bar);
+    card.append(progress);
+
+    const heading = el("h3", "", q.prompt);
+    card.append(heading);
+    if (round.type === "higherLower") {
+      card.append(el("p", "muted", "Is the real figure higher or lower than…"), el("p", "stat-guess", q.guess));
+    }
+
+    // Feedback box: aria-live makes screen readers read it out
+    const feedback = el("div", "feedback");
+    feedback.setAttribute("aria-live", "polite");
+
+    // "Next" button, hidden until the player answers
+    const isLastQ = state.question === round.questions.length - 1;
+    const isLastRound = state.round === game.rounds.length - 1;
+    const nextBtn = el("button", "btn btn-primary",
+      !isLastQ ? "Next question →" : isLastRound ? "See my results " : "Next round →");
+    nextBtn.hidden = true;
+    nextBtn.addEventListener("click", goNext);
+
+    const ui = { q, feedback, nextBtn, scorePill };
+
+    if (round.type === "text") {
+      card.append(textAnswer(ui));
+    } else {
+      // Work out which answer buttons to show
+      let options;
+      if (round.type === "match") {
+        const wrong = shuffle(round.choices.filter(c => c !== q.answer)).slice(0, 3);
+        options = shuffle([q.answer, ...wrong]);
+      } else if (round.type === "higherLower") {
+        options = ["Higher", "Lower"];
+      } else {
+        options = round.buckets;      // "sort"
+      }
+
+      const box = el("div", options.length === 2 ? "options two-up" : "options");
+      const buttons = options.map(value => {
+        const btn = el("button", "option", value);
+        btn.dataset.value = value;
+        // EVENT LISTENER: each answer button checks the answer when clicked
+        btn.addEventListener("click", () => checkAnswer(value === q.answer, ui, buttons, btn));
+        box.append(btn);
+        return btn;
+      });
+      card.append(box);
+    }
+
+    card.append(feedback, nextBtn);
+    focusHeading(heading);
+  }
+
+  /* ----- Bonus: typed answer ----- */
+  function textAnswer(ui) {
+    const form = el("form", "text-answer");
+    const input = el("input");
+    input.type = "text";
+    input.placeholder = "Type your answer…";
+    input.autocomplete = "off";
+    input.setAttribute("aria-label", "Your answer");
+    const submit = el("button", "btn btn-primary", "Check");
+    submit.type = "submit";
+    const hintBtn = el("button", "btn", "Hint");
+    hintBtn.type = "button";
+    form.append(input, submit, hintBtn);
+
+    hintBtn.addEventListener("click", () => {
+      ui.feedback.className = "feedback";
+      ui.feedback.textContent = ui.q.hint;
+    });
+
+    // EVENT LISTENER: "submit" fires on button click AND on pressing Enter
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();                     // stop the page from reloading
+      if (state.answered || !input.value.trim()) return;
+      const guess = input.value.trim().toLowerCase();
+      const correct = ui.q.accept.some(word => guess.includes(word));
+      input.disabled = submit.disabled = hintBtn.disabled = true;
+      checkAnswer(correct, ui, [], null);
+    });
+    return form;
+  }
+
+  /* ----- Checking an answer ----- */
+  function checkAnswer(isCorrect, ui, buttons, clicked) {
+    if (state.answered) return;     // ignore extra clicks
+    state.answered = true;
+
+    if (isCorrect) {
+      state.score++;
+      state.roundScores[state.round]++;
+      ui.scorePill.textContent = "Score: " + state.score;
+      ui.scorePill.classList.add("bump");
+    }
+
+    // Green for the right answer, red for a wrong pick, faded for the rest
+    buttons.forEach(btn => {
+      btn.disabled = true;
+      if (btn.dataset.value === ui.q.answer) btn.classList.add("is-correct");
+      else if (btn === clicked) btn.classList.add("is-wrong");
+      else btn.classList.add("is-dimmed");
+    });
+
+    ui.feedback.className = "feedback " + (isCorrect ? "good" : "bad");
+    ui.feedback.innerHTML = "";
+    ui.feedback.append(
+      el("strong", "", isCorrect ? "Correct!" : "Not quite. Answer: " + ui.q.answer),
+      el("p", "", ui.q.explain)
+    );
+    ui.nextBtn.hidden = false;
+    ui.nextBtn.focus();
+  }
+
+  /* ----- Moving forward ----- */
+  function goNext() {
+    const round = game.rounds[state.round];
+    if (state.question < round.questions.length - 1) {
+      state.question++;                       // next question, same round
+      renderQuestion();
+    } else if (state.round < game.rounds.length - 1) {
+      state.round++;                          // next round
+      state.question = 0;
+      renderRoundIntro();
+    } else {
+      renderResults();                        // game over
+    }
+  }
+
+  /* ----- Screen: Results ----- */
+  function renderResults() {
+    const card = newScreen("center");
+    const percent = Math.round((state.score / maxScore) * 100);
+    const badge = BADGES.find(b => percent >= b.min);
+
+    const heading = el("h2", "", "Game complete!");
+    const badgeCircle = el("div", "badge", badge.icon);
+    badgeCircle.setAttribute("aria-hidden", "true");
+    card.append(
+      el("span", "eyebrow", game.tabLabel + " · Results"),
+      heading,
+      badgeCircle,
+      el("p", "badge-name", badge.name),
+      el("p", "big-score", state.score + " / " + maxScore),
+      el("p", "muted", percent + "% correct")
+    );
+
+    const list = el("ul", "round-breakdown");
+    game.rounds.forEach((r, i) =>
+      list.append(el("li", "", r.title + ": " + state.roundScores[i] + "/" + r.questions.length)));
+    card.append(list);
+
+    const takeaway = el("div", "takeaway");
+    takeaway.append(el("strong", "", "Key takeaway"), el("p", "", game.takeaway));
+    card.append(takeaway);
+
+    const row = el("div", "btn-row");
+    row.style.justifyContent = "center";
+    const again = el("button", "btn btn-primary", "Play again ↻");
+    // EVENT LISTENER: Play again resets the state and goes back to round 1
+    again.addEventListener("click", () => { resetState(); renderRoundIntro(); });
+    row.append(again);
+    const nextGame = GAMES.indexOf(game) + 1;
+    if (nextGame < GAMES.length) row.append(linkButton("Next game →", "#games/" + (nextGame + 1)));
+    card.append(row);
+    focusHeading(heading);
+  }
+
+  resetState();
+  renderStart();
+}
+
+/* ---------- Contact me ---------- */
+function buildContact(page) {
+  const grid = el("div", "grid-2");
+
+  // Left: direct contact details
+  const details = makeCard("Get in touch", "I'm happy to connect about digital marketing, internships or this course.");
+  const list = el("ul", "contact-list");
+
+  const emailItem = contactItem("", "Email", PROFILE.email);
+  const copyBtn = el("button", "btn", "Copy");
+  // EVENT LISTENER: copies the email address to the clipboard
+  copyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(PROFILE.email);
+      showToast("Email copied ");
+    } catch {
+      showToast("Couldn't copy, please select the address instead");
+    }
+  });
+  emailItem.append(copyBtn);
+
+  const linkedinItem = contactItem("", "LinkedIn", "linkedin.com/in/zoecoulloux");
+  linkedinItem.append(linkButton("Open", PROFILE.linkedin, false, true));
+
+  list.append(emailItem, linkedinItem, contactItem("", "Based in", PROFILE.location));
+  details.append(list);
+
+  // Right: message form. It opens the visitor's own email app
+  // with the message ready to send (no server needed).
+  const formCard = makeCard("Send me a message");
+  const form = el("form");
+  form.noValidate = true;     // we check the fields ourselves below
+  form.innerHTML = `
+    <label for="c-name">Your name</label>
+    <input id="c-name" name="name" autocomplete="name" required>
+    <label for="c-subject">Subject</label>
+    <input id="c-subject" name="subject" required>
+    <label for="c-message">Message</label>
+    <textarea id="c-message" name="message" required></textarea>
+    <div class="btn-row"><button class="btn btn-primary" type="submit">Open in my email app </button></div>
+    <p class="form-msg" role="status" aria-live="polite"></p>`;
+
+  // EVENT LISTENER: "submit" fires on button click AND on pressing Enter
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();                     // stop the page from reloading
+    const msg = form.querySelector(".form-msg");
+    const name = form.querySelector("#c-name").value.trim();
+    const subject = form.querySelector("#c-subject").value.trim();
+    const message = form.querySelector("#c-message").value.trim();
+    if (!name || !subject || !message) {
+      msg.textContent = "Please fill in all three fields.";
+      return;
+    }
+    // mailto: link with the subject and message filled in
+    const body = message + "\n\n— " + name;
+    window.location.href = "mailto:" + PROFILE.email +
+      "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    msg.textContent = "Your email app should open now. Thank you! ";
+  });
+
+  formCard.append(form);
+  grid.append(details, formCard);
+  page.append(grid);
+}
+
+function contactItem(icon, label, value) {
+  const li = el("li");
+  const text = el("div");
+  text.append(el("div", "label", label), el("div", "value", value));
+  li.append(el("span", "icon", icon), text);
+  li.firstChild.setAttribute("aria-hidden", "true");
+  return li;
+}
+
+
+/* =================================================================
+   9. BUILD ALL PAGES ONCE
+   ================================================================= */
+const PAGES = {
+  home:     { build: buildHome,     title: "Digital Platforms Test Drive",
+              subtitle: "My guest lecture notes · MSc Marketing Management & Digital · ESSEC Business School" },
+  about:    { build: buildAbout,    title: "About me",
+              subtitle: "Who I am, what I've done and where I'm going" },
+  course:   { build: buildCourse,   title: "The course",
+              subtitle: COURSE.name + " · " + COURSE.programme },
+  schedule: { build: buildSchedule, title: "Schedule",
+              subtitle: "Guest lectures this semester" },
+  lectures: { build: buildLectures, title: "Guest lectures",
+              subtitle: "My notes and analysis of each session" },
+  games:    { build: buildGames,    title: "Games",
+              subtitle: "One quiz per session to test what we learned" },
+  contact:  { build: buildContact,  title: "Contact me",
+              subtitle: "Let's connect" }
+};
+
+Object.keys(PAGES).forEach(name => PAGES[name].build(document.getElementById("page-" + name)));
+
+
+/* =================================================================
+   10. NAVIGATION (hash routing)
+   -----------------------------------------------------------------
+   The menu links change the part of the URL after "#", e.g.
+   index.html#about. The browser then fires a "hashchange" event,
+   and showPage() displays the matching page. Bonus: the browser's
+   Back button works, and you can share a link to one page.
+
+   "#lectures/2" opens the Guest lectures page on its 2nd tab,
+   "#games/3" opens the Games page on its 3rd game.
+   ================================================================= */
+const menuLinks = document.querySelectorAll(".menu a");
+const menu = document.getElementById("menu");
+const menuToggle = document.getElementById("menu-toggle");
+
+function showPage() {
+  // "#lectures/2" → name = "lectures", sub = "2"
+  const [name, sub] = location.hash.slice(1).split("/");
+  const pageName = PAGES[name] ? name : "home";
+
+  // Show one page, hide the others
+  Object.keys(PAGES).forEach(key => {
+    document.getElementById("page-" + key).hidden = key !== pageName;
+  });
+
+  // Highlight the current menu link
+  menuLinks.forEach(link => {
+    if (link.getAttribute("href") === "#" + pageName) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+
+  // Update the banner and the browser tab title
+  document.getElementById("banner-title").textContent = PAGES[pageName].title;
+  document.getElementById("banner-subtitle").textContent = PAGES[pageName].subtitle;
+  document.title = PAGES[pageName].title + " – " + PROFILE.name;
+
+  // Pages with sub-tabs: "#games/2" opens tab number 2
+  const tabSet = TABSETS[pageName];
+  if (tabSet) {
+    const index = Math.min(Math.max((parseInt(sub, 10) || 1) - 1, 0), tabSet.count - 1);
+    tabSet.select(index);
+  }
+
+  // Close the phone menu and go back to the top
+  menu.classList.remove("is-open");
+  menuToggle.setAttribute("aria-expanded", "false");
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+// EVENT LISTENER: runs every time the URL hash changes
+window.addEventListener("hashchange", showPage);
+
+// EVENT LISTENER: the button opens/closes the menu on phones
+menuToggle.addEventListener("click", () => {
+  const open = menu.classList.toggle("is-open");
+  menuToggle.setAttribute("aria-expanded", String(open));
+});
+
+
+/* =================================================================
+   11. START-UP
+   ================================================================= */
+document.getElementById("author-name").textContent = PROFILE.name;
+document.getElementById("footer-linkedin").href = PROFILE.linkedin;
+showPage();
+</script>
+</body>
+</html>
