@@ -53,6 +53,10 @@
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
 
+    /* Anything with the "hidden" attribute stays hidden, even if another
+       rule gives it display: grid or flex (e.g. the schedule filter) */
+    [hidden] { display: none !important; }
+
     body {
       margin: 0;
       font-family: var(--sans);
