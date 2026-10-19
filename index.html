@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Digital Platforms Test Drive – Zoe Coulloux</title>
+  <title>Digital Platforms Test Drive – Zoé Coulloux</title>
 
   <!-- Fonts: an elegant serif for headings, a refined sans-serif for text -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -378,8 +378,11 @@
       background: var(--gold);
     }
     .timeline .when { font-size: 0.72rem; color: var(--gold); letter-spacing: 0.18em; text-transform: uppercase; }
-    .timeline .what { font-family: var(--serif); font-size: 1.3rem; font-weight: 500; }
+    .timeline .what { font-family: var(--serif); font-size: 1.3rem; font-weight: 500; line-height: 1.25; margin: 0.15rem 0; }
     .timeline p { margin: 0.2rem 0 0; color: var(--mauve); font-size: 0.95rem; }
+    .timeline .points { list-style: none; padding: 0; margin: 0.4rem 0 0; }
+    .timeline .points li { padding: 0 0 0.15rem 1rem; position: relative; font-size: 0.92rem; color: var(--mauve); }
+    .timeline .points li::before { content: "–"; position: absolute; left: 0; top: 0; width: auto; height: auto; background: none; transform: none; color: var(--gold); }
 
     /* Grading bars on the course page */
     .grade + .grade { margin-top: 1.5rem; }
@@ -732,7 +735,7 @@
        changing and shows the matching page (see section 10 of the script). -->
   <nav class="site-nav" aria-label="Main menu">
     <div class="nav-inner">
-      <a class="brand" href="#home">Zoe <span>·</span> Digital Platforms</a>
+      <a class="brand" href="#home">Zoé <span>·</span> Digital Platforms</a>
       <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="menu">Menu</button>
       <ul class="menu" id="menu">
         <li><a href="#home">Welcome</a></li>
@@ -774,37 +777,72 @@
 /* =================================================================
    1. ABOUT ME  (your profile + CV)
    -----------------------------------------------------------------
-   Everything written in [square brackets] is a placeholder:
-   replace it with your own information.
+   "points" are the bullet points shown under each job or degree.
+   Phone numbers are deliberately NOT on the site: it is public.
    ================================================================= */
 const PROFILE = {
-  name: "Zoe Coulloux",
+  name: "Zoé Coulloux",
   initials: "ZC",
   photo: "",               // e.g. "photo.jpg" (put the file next to index.html). Empty = initials circle.
-  headline: "MSc Marketing Management & Digital student · ESSEC Business School, Asia-Pacific campus",
+  headline: "MSc Marketing Management & Digital, ESSEC",
+  focus: "Strategic Marketing · Consulting · Influence · Creation",
   location: "Singapore",
   bio: [
-    "[Write 2–3 sentences about yourself: your background, what drew you to digital marketing, and what you want to do next.]"
+    "ESCP graduate pursuing the MSc in Marketing Management & Digital at ESSEC Singapore, with a dual specialisation in Digital & Luxury.",
+    "Content creator and community builder at heart: from leading influence campaigns at Storyz to presiding over the ESCP European Society in London."
   ],
   linkedin: "https://www.linkedin.com/in/zoecoulloux/",
-  email: "[your.email@example.com]",
-  cvFile: "cv.pdf",        // put your CV PDF next to index.html with this name
+  email: "b00840492@essec.edu",
+  cvFile: "",              // optional: "cv.pdf" next to index.html adds a "Download my CV" button
 
   education: [
-    { when: "2026 – 2027", what: "MSc Marketing Management & Digital",
-      where: "ESSEC Business School, Singapore", detail: "[Key courses, projects or achievements]" },
-    { when: "[Years]", what: "[Previous degree]",
-      where: "[School, city]", detail: "[Specialisation, honours]" }
+    { when: "Sept 2026 – present", what: "MSc in Marketing Management & Digital",
+      where: "ESSEC Business School · Singapore",
+      points: ["Dual specialisation in Digital & Luxury",
+               "Social media marketing, negotiations, how brands grow, consumer behaviour, market research"] },
+    { when: "2025 – present", what: "Bachelor in Information & Communication",
+      where: "Université Paris 2 Panthéon-Assas · Paris",
+      points: ["Cultural industries, digital ethics, political communication, journalistic writing (3rd year)"] },
+    { when: "2022 – 2025", what: "Bachelor in Management, graduated with Honours",
+      where: "ESCP Business School · Paris, Madrid, London",
+      points: ["Marketing, digital transformation, effective creativity, CSR, law, HR",
+               "Junior consulting project for the International School of Boston: strategic marketing plan to improve the school's positioning"] },
+    { when: "2019 – 2022", what: "Baccalauréat général, Mention Bien",
+      where: "Lycée Jean-Baptiste Say · Paris",
+      points: ["Maths, economics, English literature (LLCE); class representative"] }
   ],
   experience: [
-    { when: "[Dates]", what: "[Job title]",
-      where: "[Company, city]", detail: "[What you did and the results you achieved]" },
-    { when: "[Dates]", what: "[Internship title]",
-      where: "[Company, city]", detail: "[What you did and the results you achieved]" }
+    { when: "Feb 2026 – Jul 2026", what: "Intern, Right Hand of the CEO",
+      where: "Storyz · Paris",
+      points: ["Led content production and editorial strategy for influence campaigns",
+               "Structured the influence division: offering, positioning, internal processes",
+               "Analysed profitability and optimised the campaign value chain"] },
+    { when: "May 2025 – Jul 2025", what: "Communications Intern",
+      where: "Opéra national de Paris · Paris",
+      points: ["Digital communication strategy in a sensitive context: image management & public engagement",
+               "Digital performance analysis and content optimisation recommendations",
+               "Cross-departmental coordination in a demanding institutional environment"] },
+    { when: "May 2024 – Jul 2024", what: "Communications Intern",
+      where: "Carbon Credit Registry · Paris",
+      points: ["Created communication materials aligned with the development strategy",
+               "Strategic positioning study in a fast-structuring technical market",
+               "Competitive analysis of the European agricultural carbon credit market"] }
   ],
-  skills: ["Digital marketing", "Social media", "HTML", "CSS", "JavaScript", "[Skill]", "[Skill]"],
-  languages: ["[French – native]", "[English – fluent]", "[Other language – level]"],
-  interests: ["[Interest]", "[Interest]", "[Interest]"]
+  activities: [
+    { when: "ESCP · London", what: "President, ESCP European Society",
+      where: "Event organisation & team management" },
+    { when: "London", what: "Communications team, NABI Art Society", where: "" },
+    { when: "ESCP", what: "Ambassador for the open days", where: "" },
+    { when: "Since 2020", what: "Volunteer tutor in maths & English", where: "" },
+    { when: "Volunteering", what: "Volunteer, Fake Hair Don't Care", where: "" }
+  ],
+  skills: ["Digital communication strategy", "Influence marketing", "Data analysis & market research",
+           "Project management & coordination", "Event organisation & logistics", "Priority management"],
+  tools: ["Figma", "Canva", "Notion", "YouTube Studio", "Qualtrics", "Kolsquare", "Emplifi", "Microsoft Office",
+          "HTML", "CSS", "JavaScript", "Claude Code", "GitHub", "Vercel"],
+  languages: ["French, native", "English, bilingual", "Spanish, intermediate (B1)", "German, basic (A2)"],
+  certifications: ["Inside LVMH", "Pix"],
+  interests: ["Influence", "Music & musicals", "Travel", "Art", "Sustainability", "Baking & cooking"]
 };
 
 
@@ -1932,14 +1970,17 @@ function buildAbout(page) {
     avatar.setAttribute("aria-hidden", "true");
   }
   const text = el("div");
-  text.append(el("h2", "", PROFILE.name), el("p", "muted", PROFILE.headline + " · " + PROFILE.location));
+  text.append(
+    el("span", "eyebrow", PROFILE.focus),
+    el("h2", "", PROFILE.name),
+    el("p", "muted", PROFILE.headline + " · " + PROFILE.location)
+  );
   PROFILE.bio.forEach(p => text.append(el("p", "", p)));
   const row = el("div", "btn-row");
-  row.append(
-    linkButton("LinkedIn", PROFILE.linkedin, true, true),
-    linkButton("Download my CV", PROFILE.cvFile, false, true),
-    linkButton("Contact me", "#contact")
-  );
+  row.append(linkButton("LinkedIn", PROFILE.linkedin, true, true));
+  // The CV button only appears if a CV file is set in PROFILE
+  if (PROFILE.cvFile) row.append(linkButton("Download my CV", PROFILE.cvFile, false, true));
+  row.append(linkButton("Contact me", "#contact"));
   text.append(row);
   profile.append(avatar, text);
   profileCard.append(profile);
@@ -1950,10 +1991,15 @@ function buildAbout(page) {
   grid.append(timelineCard("Education", PROFILE.education), timelineCard("Experience", PROFILE.experience));
   page.append(grid);
 
-  // Skills, languages, interests
+  // Activities, then skills, tools, languages, certifications, interests
+  const activities = timelineCard("Activities & volunteering", PROFILE.activities);
+  activities.style.marginTop = "1.5rem";
+  page.append(activities);
+
   const extras = el("div", "grid-2");
-  extras.style.marginTop = "1.25rem";
-  [["Skills", PROFILE.skills], ["Languages", PROFILE.languages], ["Interests", PROFILE.interests]]
+  extras.style.marginTop = "1.5rem";
+  [["Skills", PROFILE.skills], ["Tools", PROFILE.tools], ["Languages", PROFILE.languages],
+   ["Certifications", PROFILE.certifications], ["Interests", PROFILE.interests]]
     .forEach(([title, list]) => {
       const card = makeCard(title);
       card.append(chips(list));
@@ -1967,8 +2013,14 @@ function timelineCard(title, items) {
   const ul = el("ul", "timeline");
   items.forEach(item => {
     const li = el("li");
-    li.append(el("div", "when", item.when), el("div", "what", item.what), el("div", "muted", item.where));
-    if (item.detail) li.append(el("p", "", item.detail));
+    li.append(el("div", "when", item.when), el("div", "what", item.what));
+    if (item.where) li.append(el("div", "muted", item.where));
+    // Bullet points under the entry (optional)
+    if (item.points) {
+      const points = el("ul", "points");
+      item.points.forEach(p => points.append(el("li", "", p)));
+      li.append(points);
+    }
     ul.append(li);
   });
   card.append(ul);
