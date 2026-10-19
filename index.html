@@ -476,7 +476,7 @@
     }
 
     /* =========================================================
-       SUB-TABS (Guest lectures + Games)
+       SUB-TABS (Sessions + Games)
        ========================================================= */
     .tablist {
       display: flex;
@@ -503,6 +503,32 @@
       transition: color var(--speed), background var(--speed);
     }
     .tab:last-child { border-right: none; }
+
+    /* The two big tabs on the Sessions page */
+    .group-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;                          /* 1px gap = a fine dividing line */
+      background: var(--blush-2);
+      border: var(--hairline);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+    .group-tab {
+      text-align: left;
+      border: none;
+      background: var(--paper);
+      color: var(--ink);
+      padding: clamp(1.1rem, 3vw, 1.6rem) clamp(1.1rem, 3vw, 1.8rem);
+      cursor: pointer;
+      transition: background var(--speed) var(--ease), color var(--speed);
+    }
+    .group-tab:hover { background: var(--blush); }
+    .group-name { display: block; font-family: var(--serif); font-size: clamp(1.5rem, 4vw, 2.1rem); line-height: 1.1; }
+    .group-note { display: block; margin-top: 0.4rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--mauve); }
+    .group-tab[aria-selected="true"] { background: linear-gradient(135deg, var(--ink), var(--berry)); color: var(--ivory); }
+    .group-tab[aria-selected="true"] .group-note { color: var(--gold-soft); }
+    @media (max-width: 520px) { .group-tabs { grid-template-columns: 1fr; } }
     .tab:hover { color: var(--ink); background: var(--ivory); }
     .tab::after {
       content: "";
@@ -784,7 +810,7 @@
         <li><a href="#about">About me</a></li>
         <li><a href="#course">The course</a></li>
         <li><a href="#schedule">Schedule</a></li>
-        <li><a href="#lectures">Guest lectures</a></li>
+        <li><a href="#lectures">Sessions</a></li>
         <li><a href="#games">Games</a></li>
         <li><a href="#contact">Contact me</a></li>
       </ul>
@@ -1394,27 +1420,35 @@ const LECTURE_2 = {
 /* =================================================================
    4. THE SESSIONS LIST
    -----------------------------------------------------------------
-   One entry per guest lecture. This single list feeds BOTH the
-   Schedule page and the Guest lectures tabs.
+   One entry per session. This single list feeds BOTH the
+   Schedule page and the tabs on the Sessions page.
+   - kind: "lecture" (course lecture) or "guest" (guest speaker)
+           → decides which of the two big tabs it appears under
    - date: "YYYY-MM-DD", or "" if not known yet
    - data: a lecture object → full analysis page
            null             → "Coming soon"
    ================================================================= */
 const SESSIONS = [
-  { tabLabel: "Guest 1 · LaunchLab", date: "2026-10-09",
+  { kind: "guest", tabLabel: "Guest 1 · LaunchLab", date: "2026-10-09",
     title: "Vibe Coding: Claude Design, Claude Code, GitHub & Vercel",
     speaker: "Yibo Yang, Rishabh Modi & Nirvan Anand · LaunchLab (guest speakers)",
     data: GUEST_1 },
-  { tabLabel: "Session 1", date: "2026-10-03",
+  { kind: "lecture", tabLabel: "Session 1", date: "2026-10-03",
     title: "Digital Marketing Platforms in the AI Era",
     speaker: "Madina Kalyayeva, ESSEC Business School",
     data: LECTURE_1 },
-  { tabLabel: "Session 2", date: "2026-10-09",
+  { kind: "lecture", tabLabel: "Session 2", date: "2026-10-09",
     title: "Digital Marketing Tools & Their Use for Marketers",
     speaker: "Madina Kalyayeva, ESSEC Business School",
     data: LECTURE_2 },
-  { tabLabel: "Guest 2", date: "", title: "Guest speaker session", speaker: "To be announced", data: null },
-  { tabLabel: "Guest 3", date: "", title: "Guest speaker session", speaker: "To be announced", data: null }
+  { kind: "guest", tabLabel: "Guest 2", date: "", title: "Guest speaker session", speaker: "To be announced", data: null },
+  { kind: "guest", tabLabel: "Guest 3", date: "", title: "Guest speaker session", speaker: "To be announced", data: null }
+];
+
+// The two big tabs on the Sessions page, in the order they appear
+const SESSION_GROUPS = [
+  { kind: "lecture", label: "Lectures",       note: "with Madina Kalyayeva" },
+  { kind: "guest",   label: "Guest lectures", note: "with industry guest speakers" }
 ];
 
 
@@ -2065,8 +2099,8 @@ function buildHome(page) {
   [
     { href: "#about",    title: "About me",       text: "My background, CV and LinkedIn." },
     { href: "#course",   title: "The course",     text: "What Digital Platforms Test Drive covers." },
-    { href: "#schedule", title: "Schedule",       text: "All guest lecture dates at a glance." },
-    { href: "#lectures", title: "Guest lectures", text: "My notes and analysis of each session." },
+    { href: "#schedule", title: "Schedule",       text: "All session dates at a glance." },
+    { href: "#lectures", title: "Sessions",       text: "Lectures and guest lectures, with my analysis." },
     { href: "#games",    title: "Games",          text: "Test yourself with one quiz per session." },
     { href: "#contact",  title: "Contact me",     text: "Get in touch or connect on LinkedIn." }
   ].forEach(item => {
@@ -2256,7 +2290,7 @@ function buildSchedule(page) {
 }
 
 /* ---------- Reusable sub-tabs ----------
-   Used by both the Guest lectures page and the Games page.
+   Used by both the Sessions page and the Games page.
    How the sub-tabs work:
    1. One <button role="tab"> and one panel per entry.
    2. Clicking a tab changes the URL to "#<page>/<number>", and the
@@ -2264,7 +2298,9 @@ function buildSchedule(page) {
    3. select() sets aria-selected on that tab and removes "hidden"
       from its panel; the other panels get "hidden".
    4. Arrow keys / Home / End move between tabs.
-   options = { page, hashName, label, entries, tabLabel(entry), isSoon(entry), render(panel, entry), onSelect(panel) } */
+   options = { page, hashName, label, entries, tabLabel(entry), isSoon(entry), render(panel, entry), onSelect(panel),
+               idPrefix (optional: keeps ids unique when a page has two tab sets),
+               hashNumber(entry, index) (optional: the number written in the URL, default index + 1) } */
 function createTabSet(options) {
   const tabs = [];
   const panels = [];
@@ -2274,15 +2310,18 @@ function createTabSet(options) {
   const panelsBox = el("div");
   options.page.append(tablist, panelsBox);
 
+  const prefix = options.idPrefix || options.hashName;
+  const hashNumber = options.hashNumber || ((entry, index) => index + 1);
+
   options.entries.forEach((entry, index) => {
-    const id = options.hashName + "-" + index;      // e.g. "games-0"
+    const id = prefix + "-" + index;                // e.g. "games-0"
     const tab = el("button", "tab", options.tabLabel(entry));
     tab.id = "tab-" + id;
     tab.setAttribute("role", "tab");
     tab.setAttribute("aria-controls", "panel-" + id);
     if (options.isSoon && options.isSoon(entry)) tab.append(el("span", "tab-soon", " · soon"));
     // EVENT LISTENER: clicking the tab updates the URL, which opens the panel
-    tab.addEventListener("click", () => { location.hash = options.hashName + "/" + (index + 1); });
+    tab.addEventListener("click", () => { location.hash = options.hashName + "/" + hashNumber(entry, index); });
     tablist.append(tab);
     tabs.push(tab);
 
@@ -2305,7 +2344,7 @@ function createTabSet(options) {
     if (event.key === "End")  next = tabs.length - 1;
     if (next !== null) {
       event.preventDefault();
-      location.hash = options.hashName + "/" + (next + 1);
+      location.hash = options.hashName + "/" + hashNumber(options.entries[next], next);
       tabs[next].focus();
     }
   });
@@ -2327,18 +2366,82 @@ function createTabSet(options) {
 // Pages that have sub-tabs register them here, e.g. TABSETS.lectures
 const TABSETS = {};
 
-/* ---------- Guest lectures ---------- */
+/* ---------- Sessions page: two big tabs (Lectures / Guest lectures) ----------
+   Level 1: one big tab per SESSION_GROUPS entry.
+   Level 2: inside each group, a normal row of session tabs (createTabSet).
+   The URL always uses the session's position in SESSIONS, so
+   "#lectures/3" opens Session 2 wherever it is: Schedule and Games
+   links keep working. select() works out which group to show. */
 function buildLectures(page) {
-  TABSETS.lectures = createTabSet({
-    page,
-    hashName: "lectures",
-    label: "Guest lectures",
-    entries: SESSIONS,
-    tabLabel: s => s.tabLabel,
-    isSoon: s => !s.data,
-    render: (panel, s) => s.data ? renderLecture(panel, s) : renderComingSoon(panel, s),
-    onSelect: panel => countUp(panel)        // replay the number animation
+  const groupBar = el("div", "group-tabs");
+  groupBar.setAttribute("role", "tablist");
+  groupBar.setAttribute("aria-label", "Type of session");
+  page.append(groupBar);
+
+  const groups = SESSION_GROUPS.map(group => {
+    const entries = SESSIONS.filter(s => s.kind === group.kind);
+
+    // The big tab
+    const tab = el("button", "group-tab");
+    tab.id = "group-tab-" + group.kind;
+    tab.setAttribute("role", "tab");
+    tab.setAttribute("aria-controls", "group-" + group.kind);
+    const done = entries.filter(s => s.data).length;
+    tab.append(
+      el("span", "group-name", group.label),
+      el("span", "group-note", group.note + " · " + done + " of " + entries.length + " written up")
+    );
+    // EVENT LISTENER: opening a group shows its first session
+    tab.addEventListener("click", () => { location.hash = "lectures/" + (SESSIONS.indexOf(entries[0]) + 1); });
+    groupBar.append(tab);
+
+    // The group's own area, with its row of session tabs inside
+    const area = el("div", "group-panel");
+    area.id = "group-" + group.kind;
+    area.setAttribute("role", "tabpanel");
+    area.setAttribute("aria-labelledby", tab.id);
+    page.append(area);
+
+    const tabSet = createTabSet({
+      page: area,
+      hashName: "lectures",
+      idPrefix: "lectures-" + group.kind,
+      label: group.label,
+      entries,
+      hashNumber: s => SESSIONS.indexOf(s) + 1,
+      tabLabel: s => s.tabLabel,
+      isSoon: s => !s.data,
+      render: (panel, s) => s.data ? renderLecture(panel, s) : renderComingSoon(panel, s),
+      onSelect: panel => countUp(panel)        // replay the number animation
+    });
+    return { tab, area, entries, tabSet };
   });
+
+  // Arrow keys move between the two big tabs
+  groupBar.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+    event.preventDefault();
+    const current = groups.findIndex(g => g.tab === document.activeElement);
+    const next = groups[(current + 1) % groups.length];
+    location.hash = "lectures/" + (SESSIONS.indexOf(next.entries[0]) + 1);
+    next.tab.focus();
+  });
+
+  TABSETS.lectures = {
+    count: SESSIONS.length,
+    // "#lectures" on its own opens the first group's first session
+    defaultIndex: SESSIONS.indexOf(groups[0].entries[0]),
+    select(index) {
+      const session = SESSIONS[index];
+      groups.forEach(g => {
+        const isActive = g.entries.includes(session);
+        g.tab.setAttribute("aria-selected", String(isActive));
+        g.tab.tabIndex = isActive ? 0 : -1;
+        g.area.hidden = !isActive;
+        if (isActive) g.tabSet.select(g.entries.indexOf(session));
+      });
+    }
+  };
 }
 
 function renderLecture(panel, session) {
@@ -2764,9 +2867,9 @@ const PAGES = {
   course:   { build: buildCourse,   title: "The course",
               subtitle: COURSE.name + " · " + COURSE.programme },
   schedule: { build: buildSchedule, title: "Schedule",
-              subtitle: "Guest lectures this semester" },
-  lectures: { build: buildLectures, title: "Guest lectures",
-              subtitle: "My notes and analysis of each session" },
+              subtitle: "All sessions this semester" },
+  lectures: { build: buildLectures, title: "Sessions",
+              subtitle: "Lectures and guest lectures · my notes and analysis" },
   games:    { build: buildGames,    title: "Games",
               subtitle: "One quiz per session to test what we learned" },
   contact:  { build: buildContact,  title: "Contact me",
@@ -2784,7 +2887,7 @@ Object.keys(PAGES).forEach(name => PAGES[name].build(document.getElementById("pa
    and showPage() displays the matching page. Bonus: the browser's
    Back button works, and you can share a link to one page.
 
-   "#lectures/2" opens the Guest lectures page on its 2nd tab,
+   "#lectures/2" opens the Sessions page on SESSIONS[1],
    "#games/3" opens the Games page on its 3rd game.
    ================================================================= */
 const menuLinks = document.querySelectorAll(".menu a");
@@ -2815,7 +2918,9 @@ function showPage() {
   // Pages with sub-tabs: "#games/2" opens tab number 2
   const tabSet = TABSETS[pageName];
   if (tabSet) {
-    const index = Math.min(Math.max((parseInt(sub, 10) || 1) - 1, 0), tabSet.count - 1);
+    const number = parseInt(sub, 10);
+    const index = number ? Math.min(Math.max(number - 1, 0), tabSet.count - 1)
+                         : (tabSet.defaultIndex || 0);
     tabSet.select(index);
   }
 
