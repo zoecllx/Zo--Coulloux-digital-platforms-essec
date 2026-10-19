@@ -363,6 +363,7 @@
       box-shadow: 0 0 0 8px var(--paper), 0 0 0 9px var(--gold-soft);
       object-fit: cover;
     }
+    img.avatar { width: 190px; height: 190px; }   /* a real photo is shown a little bigger */
     .profile > div { flex: 1 1 280px; }
 
     .timeline { list-style: none; margin: 0; padding: 0 0 0 1.5rem; border-left: 1px solid var(--gold-soft); }
@@ -783,7 +784,7 @@
 const PROFILE = {
   name: "Zoé Coulloux",
   initials: "ZC",
-  photo: "",               // e.g. "photo.jpg" (put the file next to index.html). Empty = initials circle.
+  photo: "photo.jpg",      // the file next to index.html. Empty "" = initials circle instead.
   headline: "MSc Marketing Management & Digital, ESSEC",
   focus: "Strategic Marketing · Consulting · Influence · Creation",
   location: "Singapore",
