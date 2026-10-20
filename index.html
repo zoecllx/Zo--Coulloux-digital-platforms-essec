@@ -775,65 +775,57 @@
     .toast.show { transform: translate(-50%, 0); }
 
     /* =========================================================
-       FLOATING STICKERS (behind everything)
-       position: fixed  → they stay put while the page scrolls
-       z-index: -1      → drawn on the pink background, under the cards
-       Each sticker gets its position, size, speed and tilt from
-       CSS variables set by JavaScript (--x, --y, --size, --speed…).
+       FLOATING STICKERS
+       .stickers is fixed to the screen. Each sticker:
+       - floats on its own (CSS animation "sticker-float")
+       - moves when you scroll (JavaScript changes its "top": parallax)
+       Layering: z-index 0 puts them above the pink background and the
+       banner, but below main (z-index 1), the footer and the menu.
        ========================================================= */
-    .stickers { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .stickers { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
     .sticker {
       position: absolute;
-      top: var(--y);
+      left: var(--x);
+      top: 0;                          /* set by JavaScript while scrolling */
       width: var(--size);
       height: var(--size);
       display: grid;
       place-items: center;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 30%, var(--paper), var(--blush));
-      border: 1.5px solid var(--gold);
-      box-shadow: 0 0 0 5px var(--paper), 0 0 0 6px var(--blush-2), 0 14px 30px rgba(194, 51, 106, 0.22);
-      opacity: 1;
+      border: 1px solid var(--gold);
+      box-shadow: 0 0 0 3px rgba(255, 250, 252, 0.85), 0 6px 14px rgba(194, 51, 106, 0.2);
       animation:
-        sticker-in 1.2s var(--ease) var(--delay) backwards,
+        sticker-in 1s var(--ease) var(--delay) backwards,
         sticker-float var(--speed) ease-in-out var(--delay) infinite;
     }
     .sticker svg {
-      width: 50%;
-      height: 50%;
+      width: 54%;
+      height: 54%;
       fill: none;
       stroke: var(--rose-deep);
-      stroke-width: 1.6;
+      stroke-width: 1.7;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
     .sticker.course svg { stroke: var(--gold); }     /* course stickers in gold, mine in rose */
-
-    /* Centre the stickers in the pink margins beside the content (max width 1120px).
-       "margin" = the width of one side margin; max() keeps them on screen. */
-    .sticker.left  { left:  max(6px, calc((100vw - 1120px) / 4 - var(--size) / 2 + var(--nudge))); }
-    .sticker.right { right: max(6px, calc((100vw - 1120px) / 4 - var(--size) / 2 + var(--nudge))); }
-    @keyframes sticker-in { from { opacity: 0; transform: scale(0.6); } }
+    @keyframes sticker-in { from { opacity: 0; transform: scale(0.5); } }
+    /* Floating: a slow figure-of-eight drift with a gentle sway */
     @keyframes sticker-float {
       0%, 100% { transform: translate(0, 0) rotate(var(--tilt)); }
-      50%      { transform: translate(var(--drift), -16px) rotate(calc(var(--tilt) * -1)); }
+      25%      { transform: translate(var(--drift), -10px) rotate(0deg); }
+      50%      { transform: translate(0, -18px) rotate(calc(var(--tilt) * -1)); }
+      75%      { transform: translate(calc(var(--drift) * -1), -8px) rotate(0deg); }
     }
-    /* Stickers inside the banner: visible on every screen size.
-       position: absolute → placed in % of the banner's width/height */
-    .banner { overflow: hidden; }
-    .banner h1, .banner p { position: relative; z-index: 1; }   /* text stays above the stickers */
-    .banner-stickers { position: absolute; inset: 0; pointer-events: none; }
-    .banner-stickers .sticker { left: var(--bx); top: var(--by); opacity: 0.95; }
+    /* The banner text stays above the stickers */
+    .banner h1, .banner p { position: relative; z-index: 1; }
+    footer { position: relative; z-index: 1; }
 
-    /* Phones: fewer and smaller stickers */
-    @media (max-width: 900px) {
-      .sticker { --size: 44px !important; }
-      .stickers .sticker:nth-child(even) { display: none; }      /* side stickers: half of them */
-      .banner-stickers .sticker { --size: 40px !important; }
-      .banner-stickers .sticker:nth-child(n+5) { display: none; }   /* 4 on phones */
-      .banner-stickers .sticker:nth-child(4) { left: auto; right: 6px; } /* hug the edge, clear of the text */
+    /* Phones: even smaller */
+    @media (max-width: 700px) {
+      .sticker { --size: 28px !important; }
     }
-    /* Reduced motion: still shown, but they don't float */
+    /* Reduced motion: still shown, but they don't float or move */
     @media (prefers-reduced-motion: reduce) {
       .sticker { animation: none; transform: rotate(var(--tilt)); }
     }
@@ -865,10 +857,6 @@
 </head>
 <body>
 
-  <!-- Floating stickers behind the page (filled by JavaScript, see section 2b).
-       aria-hidden: purely decorative, screen readers skip them -->
-  <div class="stickers" id="stickers" aria-hidden="true"></div>
-
   <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- ===== MAIN MENU =====
@@ -892,10 +880,15 @@
 
   <!-- Banner: its title and subtitle change for each page -->
   <header class="banner">
-    <div class="banner-stickers" id="banner-stickers" aria-hidden="true"></div>
     <h1 id="banner-title"></h1>
     <p id="banner-subtitle"></p>
   </header>
+
+  <!-- Floating stickers (filled by JavaScript, see section 2b).
+       Placed after the banner so they float OVER the banner and the pink
+       background, but UNDER the content (main has a higher z-index).
+       aria-hidden: purely decorative, screen readers skip them -->
+  <div class="stickers" id="stickers" aria-hidden="true"></div>
 
   <!-- Each page is an empty <section>; JavaScript fills them in -->
   <main id="main" tabindex="-1">
@@ -1041,7 +1034,8 @@ const COURSE = {
    group "me"     → my passions (rose drawings)
    group "course" → the course (gold drawings)
    Each "icon" is the name of a drawing in STICKER_ICONS below: tiny
-   SVG line drawings on a 24 × 24 grid.
+   SVG line drawings on a 24 × 24 grid. They float (CSS animation) and
+   move at different speeds when you scroll (parallax, in JavaScript).
    ================================================================= */
 const STICKERS = [
   { icon: "music",    group: "me",     label: "Music & musicals" },
@@ -1081,49 +1075,60 @@ const STICKER_ICONS = {
   globe:   '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/>'
 };
 
-// Places the stickers in two columns (left and right margins), going
-// down the screen, with a little variety in size, speed and tilt.
+// Creates the stickers: 24 small ones spread over the whole screen
+// (the 16 designs above, some used twice), each with its own size,
+// floating speed, tilt and parallax "depth".
+const stickerEls = [];
+
 function renderStickers() {
   const box = document.getElementById("stickers");
-  STICKERS.forEach((sticker, i) => {
-    const onLeft = i % 2 === 0;
-    const row = Math.floor(i / 2);                              // 0, 0, 1, 1, 2, 2…
-    const rows = Math.ceil(STICKERS.length / 2);
-    const span = el("span", "sticker " + sticker.group + (onLeft ? " left" : " right"));
-    span.title = sticker.label;
-    span.style.setProperty("--nudge", ((row % 2) ? 18 : -18) + "px");   // zig-zag a little
-    span.style.setProperty("--y", (4 + row * (88 / rows) + (onLeft ? 0 : 5)) + "vh");
-    span.style.setProperty("--size", (64 + (i * 7) % 29) + "px");   // 64–92px
-    span.style.setProperty("--speed", (9 + (i * 3) % 8) + "s");     // 9–16s
-    span.style.setProperty("--delay", (i * 0.15) + "s");
-    span.style.setProperty("--tilt", ((i % 3) - 1) * 7 + "deg");     // -7°, 0°, 7°
-    span.style.setProperty("--drift", (onLeft ? 8 : -8) + "px");
-    span.innerHTML = '<svg viewBox="0 0 24 24">' + STICKER_ICONS[sticker.icon] + "</svg>";
-    box.append(span);
-  });
-
-  // Banner: 6 stickers in the corners around the title (positions in %)
-  const banner = document.getElementById("banner-stickers");
-  // Corners and edges only, so they never sit on the title or subtitle
-  const spots = [
-    [3, 10], [94, 14], [9, 74], [88, 76],      // shown on phones too
-    [18, 8], [78, 6]
-  ];
-  spots.forEach(([x, y], i) => {
-    const sticker = STICKERS[(i * 3) % STICKERS.length];     // a mix of "me" and "course"
+  const count = 24;
+  for (let i = 0; i < count; i++) {
+    const sticker = STICKERS[i % STICKERS.length];
     const span = el("span", "sticker " + sticker.group);
     span.title = sticker.label;
-    span.style.setProperty("--bx", "calc(" + x + "% - " + (x > 50 ? 60 : 0) + "px)");
-    span.style.setProperty("--by", y + "%");
-    span.style.setProperty("--size", (52 + (i * 5) % 16) + "px");   // 52–67px
-    span.style.setProperty("--speed", (8 + (i * 3) % 7) + "s");
-    span.style.setProperty("--delay", (0.3 + i * 0.12) + "s");
-    span.style.setProperty("--tilt", ((i % 3) - 1) * 8 + "deg");
-    span.style.setProperty("--drift", (x < 50 ? 6 : -6) + "px");
+    // Spread evenly but not in a grid: the golden ratio gives a natural-looking scatter
+    const x = ((i * 0.618034) % 1) * 94 + 1;                          // 1%–95% of the width
+    span.style.setProperty("--x", x + "%");
+    span.style.setProperty("--size", (30 + (i * 7) % 15) + "px");   // 30–44px
+    span.style.setProperty("--speed", (6 + (i * 5) % 7) + "s");     // 6–12s
+    span.style.setProperty("--delay", ((i * 0.37) % 3) + "s");
+    span.style.setProperty("--tilt", ((i % 5) - 2) * 6 + "deg");     // -12° to 12°
+    span.style.setProperty("--drift", (i % 2 ? 10 : -10) + "px");
     span.innerHTML = '<svg viewBox="0 0 24 24">' + STICKER_ICONS[sticker.icon] + "</svg>";
-    banner.append(span);
+    box.append(span);
+    stickerEls.push({
+      span,
+      start: i / count,                    // starting height, as a share of the screen
+      depth: 0.15 + ((i * 3) % 7) * 0.08   // 0.15–0.63: how fast it moves when scrolling
+    });
+  }
+  placeStickers();
+}
+
+// PARALLAX: when the page scrolls, each sticker moves up at its own
+// speed (depth). "%" makes them loop: one that leaves the top of the
+// screen comes back in at the bottom, so there are always stickers.
+function placeStickers() {
+  const loop = window.innerHeight + 120;   // 60px of extra room above and below
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const scroll = reduce ? 0 : window.scrollY;
+  stickerEls.forEach(s => {
+    const y = (s.start * loop - scroll * s.depth) % loop;
+    s.span.style.top = ((y + loop) % loop - 60) + "px";
   });
 }
+
+// EVENT LISTENERS: re-place the stickers on scroll and resize.
+// requestAnimationFrame = at most once per screen refresh, so it stays smooth.
+let stickerFrame = null;
+function onScrollStickers() {
+  if (stickerFrame) return;
+  stickerFrame = requestAnimationFrame(() => { placeStickers(); stickerFrame = null; });
+}
+window.addEventListener("scroll", onScrollStickers, { passive: true });
+window.addEventListener("resize", onScrollStickers);
+
 renderStickers();
 
 
