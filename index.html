@@ -38,7 +38,7 @@
       --wrong-bg:   #f9e9ec;
 
       /* --- Type --- */
-      --title: "Amoresa", "Cormorant Garamond", Georgia, serif;   /* titles (falls back to Cormorant until fonts/Amoresa.* is added) */
+      --title: "Amoresa", "Cormorant Garamond", Georgia, serif;   /* titles (Amoresa Regular, in fonts/) */
       --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;   /* numbers, quotes, captions */
       --sans:  "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;   /* all body text */
 
@@ -97,10 +97,8 @@
        the next font in --title (Cormorant Garamond). */
     @font-face {
       font-family: "Amoresa";
-      src: url("fonts/Amoresa.woff2") format("woff2"),
-           url("fonts/Amoresa.woff") format("woff"),
-           url("fonts/Amoresa.otf") format("opentype"),
-           url("fonts/Amoresa.ttf") format("truetype");
+      src: url("fonts/Amoresa.woff2") format("woff2"),      /* small, modern browsers */
+           url("fonts/Amoresa.otf") format("opentype");      /* fallback for older ones */
       font-display: swap;
     }
 
