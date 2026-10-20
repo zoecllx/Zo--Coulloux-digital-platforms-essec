@@ -749,6 +749,102 @@
     .takeaway strong { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.22em; color: var(--gold); font-weight: 500; }
     .takeaway p { margin: 0.5rem 0 0; font-family: var(--serif); font-style: italic; font-size: 1.4rem; line-height: 1.4; }
 
+    /* ---------- Word Game (Wordle style) ---------- */
+    .wg-legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-size: 0.8rem; color: var(--mauve); margin: 0.5rem 0 1.25rem; }
+    .wg-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .wg-dot { width: 12px; height: 12px; display: inline-block; }
+    .wg-grid { display: grid; gap: 6px; justify-content: center; margin: 0 auto 0.5rem; }
+    .wg-row { display: grid; grid-template-columns: repeat(5, clamp(44px, 12vw, 58px)); gap: 6px; }
+    .wg-tile {
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid var(--blush-2);
+      background: var(--paper);
+      font-family: var(--sans);
+      font-size: clamp(1.3rem, 5vw, 1.7rem);
+      font-weight: 600;
+      color: var(--ink);
+      text-transform: uppercase;
+      transition: border-color 0.15s;
+    }
+    .wg-tile { border-radius: 10px; }                     /* rounded, like Pinkle */
+    .wg-tile.filled { border-color: var(--mauve); animation: pop-in 0.12s; }
+    .wg-tile.win { animation: bounce 0.5s ease; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-14px); } 60% { transform: translateY(2px); } }
+    @keyframes pop-in { 50% { transform: scale(1.08); } }
+    .wg-tile.flip { animation: flip 0.5s ease both; }
+    @keyframes flip { 0% { transform: rotateX(0); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0); } }
+    /* The three result colours, from my original Pinkle (tiles, keys, legend) */
+    .correct { background: #d81b6a !important; border-color: #d81b6a !important; color: var(--white) !important; }
+    .present { background: #f59ac0 !important; border-color: #f59ac0 !important; color: #3b1428 !important; }
+    .absent  { background: #b49aa7 !important; border-color: #b49aa7 !important; color: var(--white) !important; }
+    .wg-row.shake { animation: shake 0.35s; }
+    .wg-message { min-height: 1.6em; text-align: center; font-weight: 500; color: var(--rose-deep); margin: 0.5rem 0; }
+
+    /* On-screen keyboard (also used for the Hangman letters) */
+    .wg-keyboard { display: grid; gap: 6px; margin-top: 0.5rem; }
+    .wg-keyrow { display: flex; justify-content: center; gap: 5px; }
+    .wg-key {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-weight: 500;
+      min-width: clamp(26px, 8vw, 40px);
+      height: 48px;
+      padding: 0 0.3rem;
+      border: none;
+      border-radius: 8px;
+      background: #fbd6e4;
+      color: #3b1428;
+      cursor: pointer;
+      transition: background var(--speed), transform 0.1s;
+    }
+    .wg-key:hover:not(:disabled) { background: var(--blush-2); }
+    .wg-key:active { transform: scale(0.95); }
+    .wg-key.wide { min-width: clamp(48px, 13vw, 66px); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .wg-key:disabled { cursor: default; }
+    .wg-stats { margin: 1rem 0 0; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+    .wg-dot { border-radius: 3px; }
+
+    /* Pinkle title and stats */
+    .game h2.pinkle-title { font-weight: 700; font-size: clamp(2rem, 6vw, 2.6rem); }
+    .pinkle-title span { color: #d81b6a; }
+    .pk-stats { max-width: 380px; margin: 1.5rem auto 0; }
+    .pk-numbers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
+    .pk-numbers b { display: block; font-size: 1.6rem; font-weight: 600; line-height: 1.1; color: var(--ink); }
+    .pk-numbers span { font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mauve); }
+    .pk-dist-title { margin: 1.25rem 0 0.4rem; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mauve); }
+    .pk-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 0.8rem; }
+    .pk-bar-row > span { width: 10px; }
+    .pk-bar { background: #b49aa7; color: var(--white); text-align: right; padding: 1px 8px; border-radius: 4px; font-weight: 600; min-width: 24px; }
+    .pk-bar.hit { background: #d81b6a; }
+
+    /* ---------- Hangman ---------- */
+    .hm-layout { display: grid; grid-template-columns: minmax(120px, 200px) 1fr; gap: 1.5rem 2rem; align-items: center; margin: 1rem 0 1.5rem; }
+    .hm-art svg { width: 100%; height: auto; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .hm-base { stroke: var(--gold); stroke-width: 3; }
+    .hm-part { stroke: var(--rose-deep); stroke-width: 3; opacity: 0; transition: opacity 0.4s; }
+    .hm-part.shown { opacity: 1; }
+    .hm-hint { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+    .hm-word { display: flex; flex-wrap: wrap; gap: 6px; margin: 0.8rem 0; }
+    .hm-slot {
+      width: clamp(22px, 6vw, 34px);
+      height: clamp(32px, 8vw, 44px);
+      display: grid;
+      place-items: end center;
+      border-bottom: 2px solid var(--ink);
+      font-size: clamp(1.1rem, 4vw, 1.5rem);
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .hm-slot.found { animation: pop-in 0.2s; }
+    .hm-slot.missed { color: var(--wrong); }
+    .hm-gap { width: 16px; }
+    .hm-lives { margin: 0; color: var(--mauve); font-size: 0.9rem; }
+    .hm-letters { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 0.5rem; }
+    .hm-letters .wg-key { width: clamp(30px, 9vw, 42px); }
+    @media (max-width: 520px) { .hm-layout { grid-template-columns: 1fr; } .hm-art { max-width: 150px; margin: 0 auto; } }
+
     /* =========================================================
        PAGE: CONTACT
        ========================================================= */
@@ -931,6 +1027,8 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- Valid guesses for the Word Game (from my original Pink Wordle) -->
+<script src="games/pinkle-words.js"></script>
 <script>
 /* =================================================================
    1. ABOUT ME  (your profile + CV)
@@ -1964,6 +2062,67 @@ const GAMES = [
     intro: "The vibe coding workflow: which file does what, GitHub vocabulary, and when to push or open a pull request.",
     takeaway: "Design → Build → Deploy: GitHub stores your code, Vercel turns it into a live website.",
     rounds: [fromBank(BANK_GUEST_1, 1), fromBank(BANK_GUEST_1, 2), fromBank(BANK_GUEST_1, 3), fromBank(BANK_GUEST_1, 4)]
+  },
+
+  /* ---------- WORD GAME (Wordle style) ----------
+     kind: "wordle" → drawn by createWordGame() instead of createGame().
+     Every word must have exactly 5 letters. "clue" is shown at the end
+     (or earlier if the player asks for a hint). */
+  {
+    kind: "wordle",
+    tabLabel: "Pinkle",
+    intro: "My Pink Wordle, course edition: guess the 5-letter marketing word in 6 tries. Any real English word counts as a guess; the colours show how close you are.",
+    words: [
+      { word: "BRAND", clue: "What every campaign builds: brand consistency across channels is one benefit of suites and hubs." },
+      { word: "MEDIA", clue: "Social media: 5.33 million users in Singapore, 90.6% of the population." },
+      { word: "CLICK", clue: "With an AI summary, users click a search result only 8% of the time (vs 15% without)." },
+      { word: "LEADS", clue: "LinkedIn Lead Gen Forms capture leads without users leaving the platform." },
+      { word: "PIXEL", clue: "A tracking pixel measures conversions, like LinkedIn's integrated pixel." },
+      { word: "REELS", clue: "Short vertical videos on Instagram: feeding the algorithm many creative variations." },
+      { word: "STORY", clue: "Grab's IG Stories showcased user-generated content about 'best food delivery moments'." },
+      { word: "SHARE", clue: "Share of voice and market share are competitive benchmarking metrics." },
+      { word: "TREND", clue: "Platforms evolve quickly: stay updated on trends and new tools." },
+      { word: "EMAIL", clue: "Email, CRM & Messaging: Zalora's 'Wishlist Reminders' bring customers back." },
+      { word: "AGENT", clue: "AI agents take a goal, plan the steps and act across tools, e.g. Salesforce Agentforce." },
+      { word: "PROMO", clue: "Designing holistic approaches to promo campaigns is one of the course outcomes." },
+      { word: "VIDEO", clue: "Video & live commerce made 32% of SEA platform e-commerce GMV in 2025." },
+      { word: "VIRAL", clue: "TikTok's 'What Makes You Tic?' film reached 1M+ views in under 2 weeks." },
+      { word: "REACH", clue: "On TikTok today, what's harder to prove: reach or incremental sales?" },
+      { word: "SALES", clue: "Transactional metrics: individual KPIs like sales, revenue and conversion rates." },
+      { word: "GENAI", clue: "GenAI tools like Veo, Runway and Kling turn one idea into hundreds of ad versions." },
+      { word: "TOKEN", clue: "Logging in gives your browser a token: a temporary 'this is me' sticker." },
+      { word: "MERGE", clue: "Merge: approve a pull request and combine it into the main project." },
+      { word: "CLONE", clue: "Clone: copy a repo from GitHub to your computer to edit it locally." },
+      { word: "LOGIN", clue: "Supabase handles sign-up, login and logout for your site's users." },
+      { word: "QUERY", clue: "Lazada bid on search queries like 'best Ramadan discounts' in Indonesia." }
+    ]
+  },
+
+  /* ---------- HANGMAN ----------
+     kind: "hangman" → drawn by createHangman(). Words can be longer and
+     can contain spaces. "hint" is shown during the game, "explain" at the end. */
+  {
+    kind: "hangman",
+    tabLabel: "Hangman",
+    intro: "Find the course term letter by letter before the drawing is complete. You have 6 wrong guesses.",
+    words: [
+      { word: "INFLUENCER",   hint: "Session 1 · Platform type", explain: "Influencer & creator marketing: SG spend grew 12.9% to US$119M in 2025." },
+      { word: "ALGORITHM",    hint: "Session 1 · AI targeting", explain: "Feed the algorithm many creative variations: AI now finds the audience from the creative." },
+      { word: "RETARGETING",  hint: "Session 1 · Programmatic", explain: "Programmatic & retail media work for real-time buying, retargeting and reaching shoppers." },
+      { word: "AFFILIATE",    hint: "Session 1 · Platform type", explain: "Affiliate & social commerce: pay-for-performance sales through creators and partners." },
+      { word: "ENGAGEMENT",   hint: "Session 1 · Benchmarking", explain: "Engagement metrics: social interactions, email open rates and click-throughs." },
+      { word: "AI VISIBILITY", hint: "Session 1 · The 8th metric", explain: "The share of AI answers that mention your brand." },
+      { word: "SUPER APP",    hint: "Session 1 · Mobile", explain: "Advertise inside super-apps like Grab, Gojek and Shopee, where payment and shopping already sit." },
+      { word: "HASHTAG",      hint: "Session 2 · X Ads", explain: "X targets users by interests, keywords, hashtags and behaviours." },
+      { word: "ANALYTICS",    hint: "Session 2 · Martech", explain: "Analytics grew +11.3% on the 2026 martech landscape." },
+      { word: "POINT TOOL",   hint: "Session 2 · Types of tools", explain: "Built for one specific marketing function, like Mailchimp or Brand24." },
+      { word: "SPARK ADS",    hint: "Session 2 · TikTok", explain: "Spark Ads boost organic posts directly from TikTok creators." },
+      { word: "ADVANTAGE PLUS", hint: "Session 2 · Meta", explain: "Meta Advantage+ automates audience, creative, placement and budget." },
+      { word: "REPOSITORY",   hint: "LaunchLab · GitHub", explain: "The place on GitHub that holds all your project files and their history." },
+      { word: "PULL REQUEST", hint: "LaunchLab · GitHub", explain: "Propose your changes and ask teammates to review them before merging." },
+      { word: "VIBE CODING",  hint: "LaunchLab · The session", explain: "Building apps and websites by describing them to AI tools like Claude Code." },
+      { word: "DEPLOYMENT",   hint: "LaunchLab · Vercel", explain: "Vercel deploys your site: every push to GitHub updates it automatically." }
+    ]
   }
 ];
 
@@ -2328,7 +2487,7 @@ function buildHome(page) {
     { href: "#course",   title: "The course",     text: "What Digital Platforms Test Drive covers." },
     { href: "#schedule", title: "Schedule",       text: "All session dates at a glance." },
     { href: "#lectures", title: "Sessions",       text: "Lectures and guest lectures, with my analysis." },
-    { href: "#games",    title: "Games",          text: "Quizzes by theme: platforms, data, AI and coding." },
+    { href: "#games",    title: "Games",          text: "Quizzes by theme, a word game and hangman." },
     { href: "#contact",  title: "Contact me",     text: "Get in touch or connect on LinkedIn." }
   ].forEach(item => {
     const a = el("a");
@@ -2683,7 +2842,7 @@ function renderLecture(panel, session) {
 
   // If this session has a game, add a button to play it
   // Buttons to every game theme that uses questions from this session
-  const themes = GAMES.filter(g => g.rounds.some(r => r.session === session));
+  const themes = GAMES.filter(g => g.rounds && g.rounds.some(r => r.session === session));
   if (themes.length) {
     const row = el("div", "btn-row");
     themes.forEach(g => row.append(linkButton("Play: " + g.tabLabel, "#games/" + (GAMES.indexOf(g) + 1), true)));
@@ -2720,7 +2879,10 @@ function buildGames(page) {
     label: "Games",
     entries: GAMES,
     tabLabel: g => g.tabLabel,
-    render: (panel, game) => createGame(panel, game)
+    render: (panel, game) =>
+      game.kind === "wordle"  ? createWordGame(panel, game) :
+      game.kind === "hangman" ? createHangman(panel, game)  :
+                                createGame(panel, game)
   });
 }
 
@@ -3016,6 +3178,417 @@ function createGame(panel, game) {
   renderStart();
 }
 
+/* ---------- Helpers shared by the Word Game and Hangman ---------- */
+
+// Picks a random word, avoiding the one just played
+function pickWord(words, previous) {
+  const choices = words.filter(w => w !== previous);
+  return choices[Math.floor(Math.random() * choices.length)];
+}
+
+// True when this game's panel is the one on screen
+// (so typing on the keyboard only plays the game you're looking at)
+function isOnScreen(panel) {
+  return panel.offsetParent !== null;
+}
+
+// A small "Played · Won · Streak" line
+function statsLine(stats) {
+  return "Played " + stats.played + " · Won " + stats.won + " · Streak " + stats.streak;
+}
+
+/* ---------- THE WORD GAME (Wordle style) ----------
+   STATE:
+     answer   → the word to find ({ word, clue })
+     guesses  → the words already tried
+     current  → the letters typed in the current row
+     over     → true once won or lost
+   COLOURS (after pressing Enter), per letter:
+     "correct" → right letter, right place
+     "present" → in the word, but somewhere else
+     "absent"  → not in the word                                   */
+function createWordGame(panel, game) {
+  const ROWS = 6, COLS = 5;
+  // Words players may guess: my Pinkle dictionary + the course words.
+  // If the dictionary file didn't load, every 5-letter guess is accepted.
+  const valid = new Set((window.PINKLE_VALID || "").toUpperCase().split(" ").filter(Boolean));
+  game.words.forEach(w => valid.add(w.word));
+  const checkWords = valid.size > game.words.length;
+
+  // Stats are saved in the browser (localStorage) so they survive a refresh.
+  // try/catch: some browsers block storage; the game still works without it.
+  const STATS_KEY = "pinkle-course-stats";
+  function loadStats() {
+    try { return JSON.parse(localStorage.getItem(STATS_KEY)) || null; } catch { return null; }
+  }
+  function saveStats() {
+    try { localStorage.setItem(STATS_KEY, JSON.stringify(stats)); } catch {}
+  }
+  const stats = loadStats() || { played: 0, won: 0, streak: 0, best: 0, dist: [0, 0, 0, 0, 0, 0] };
+
+  let answer, guesses, current, over;
+  let tiles, keys, message, statsEl, actions;
+
+  const card = el("section", "card game wordgame");
+  panel.append(card);
+
+  function newGame() {
+    answer = pickWord(game.words, answer);
+    guesses = [];
+    current = "";
+    over = false;
+    draw();
+  }
+
+  /* ----- Build the screen ----- */
+  function draw() {
+    card.innerHTML = "";
+    const title = el("h2", "pinkle-title", "Pink");
+    title.append(el("span", "", "le"));                 // "Pinkle", like my original logo
+    card.append(
+      el("span", "eyebrow", "Word game · 5 letters · 6 tries"),
+      title,
+      el("p", "muted", game.intro)
+    );
+
+    // Colour legend
+    const legend = el("div", "wg-legend");
+    [["correct", "Right place"], ["present", "Wrong place"], ["absent", "Not in the word"]].forEach(([state, text]) => {
+      const item = el("span");
+      item.append(el("i", "wg-dot " + state), document.createTextNode(text));
+      legend.append(item);
+    });
+    card.append(legend);
+
+    // The 6 × 5 grid of tiles
+    const grid = el("div", "wg-grid");
+    grid.setAttribute("role", "grid");
+    grid.setAttribute("aria-label", "Your guesses");
+    tiles = [];
+    for (let r = 0; r < ROWS; r++) {
+      const row = el("div", "wg-row");
+      row.setAttribute("role", "row");
+      const rowTiles = [];
+      for (let c = 0; c < COLS; c++) {
+        const tile = el("div", "wg-tile");
+        tile.setAttribute("role", "gridcell");
+        row.append(tile);
+        rowTiles.push(tile);
+      }
+      grid.append(row);
+      tiles.push(rowTiles);
+    }
+    card.append(grid);
+
+    // Message line (screen readers announce it)
+    message = el("p", "wg-message");
+    message.setAttribute("aria-live", "polite");
+    card.append(message);
+
+    // On-screen keyboard
+    const keyboard = el("div", "wg-keyboard");
+    keys = {};
+    ["QWERTYUIOP", "ASDFGHJKL", "+ZXCVBNM-"].forEach(letters => {
+      const row = el("div", "wg-keyrow");
+      [...letters].forEach(ch => {
+        const label = ch === "+" ? "Enter" : ch === "-" ? "Delete" : ch;
+        const key = el("button", "wg-key" + (label.length > 1 ? " wide" : ""), label === "Delete" ? "⌫" : label);
+        if (label === "Delete") key.setAttribute("aria-label", "Delete");
+        // EVENT LISTENER: each on-screen key types like the real keyboard
+        key.addEventListener("click", () => press(label));
+        row.append(key);
+        if (label.length === 1) keys[label] = key;
+      });
+      keyboard.append(row);
+    });
+    card.append(keyboard);
+
+    // Bottom row: hint, new word, stats
+    actions = el("div", "btn-row");
+    const hintBtn = el("button", "btn", "Hint");
+    hintBtn.addEventListener("click", () => { if (!over) say("Hint: " + answer.clue.replace(new RegExp(answer.word, "gi"), "•••••")); });
+    const newBtn = el("button", "btn", "New word");
+    newBtn.addEventListener("click", newGame);
+    actions.append(hintBtn, newBtn);
+    card.append(actions);
+    statsEl = el("div", "pk-stats");
+    card.append(statsEl);
+    showStats(false);
+  }
+
+  function say(text) { message.textContent = text; }
+
+  // Played · Win % · Streak · Best, and (after a game) the guess distribution
+  function showStats(withDistribution, winRow) {
+    statsEl.innerHTML = "";
+    const numbers = el("div", "pk-numbers");
+    [[stats.played, "Played"], [stats.played ? Math.round(100 * stats.won / stats.played) : 0, "Win %"],
+     [stats.streak, "Streak"], [stats.best, "Best"]].forEach(([n, label]) => {
+      const box = el("div");
+      box.append(el("b", "", String(n)), el("span", "", label));
+      numbers.append(box);
+    });
+    statsEl.append(numbers);
+    if (!withDistribution) return;
+    statsEl.append(el("p", "pk-dist-title", "Guess distribution"));
+    const max = Math.max(1, ...stats.dist);
+    stats.dist.forEach((n, i) => {
+      const row = el("div", "pk-bar-row");
+      const bar = el("div", "pk-bar" + (winRow === i + 1 ? " hit" : ""), String(n));
+      bar.style.width = Math.max(8, 100 * n / max) + "%";
+      row.append(el("span", "", String(i + 1)), bar);
+      statsEl.append(row);
+    });
+  }
+
+  /* ----- Typing ----- */
+  function press(key) {
+    if (over) return;
+    const row = guesses.length;
+    if (key === "Enter") return submit();
+    if (key === "Delete") {
+      current = current.slice(0, -1);
+    } else if (/^[A-Z]$/.test(key) && current.length < COLS) {
+      current += key;
+    }
+    // Show the letters typed so far in the current row
+    tiles[row].forEach((tile, i) => {
+      tile.textContent = current[i] || "";
+      tile.classList.toggle("filled", !!current[i]);
+    });
+  }
+
+  /* ----- Checking a guess ----- */
+  function score(guess, word) {
+    const result = Array(COLS).fill("absent");
+    const left = {};                        // letters of the answer not matched yet
+    // 1st pass: right letter in the right place
+    for (let i = 0; i < COLS; i++) {
+      if (guess[i] === word[i]) result[i] = "correct";
+      else left[word[i]] = (left[word[i]] || 0) + 1;
+    }
+    // 2nd pass: right letter, wrong place (only as many times as it's left)
+    for (let i = 0; i < COLS; i++) {
+      if (result[i] !== "correct" && left[guess[i]]) {
+        result[i] = "present";
+        left[guess[i]]--;
+      }
+    }
+    return result;
+  }
+
+  function submit() {
+    const row = guesses.length;
+    const shake = () => {
+      const r = tiles[row][0].parentElement;
+      r.classList.remove("shake");
+      void r.offsetWidth;                                     // restart the animation
+      r.classList.add("shake");
+    };
+    if (current.length < COLS) { say("Not enough letters"); shake(); return; }
+    if (checkWords && !valid.has(current)) { say("Not in word list"); shake(); return; }
+    const result = score(current, answer.word);
+    tiles[row].forEach((tile, i) => {
+      tile.style.animationDelay = i * 0.12 + "s";             // flip one after another
+      tile.classList.add("flip", result[i]);
+      tile.setAttribute("aria-label", current[i] + ", " + result[i]);
+      // Keyboard colours: never downgrade (correct > present > absent)
+      const key = keys[current[i]];
+      const rank = { absent: 1, present: 2, correct: 3 };
+      const now = ["correct", "present", "absent"].find(c => key.classList.contains(c));
+      if (!now || rank[result[i]] > rank[now]) {
+        key.classList.remove("correct", "present", "absent");
+        key.classList.add(result[i]);
+      }
+    });
+    guesses.push(current);
+    const won = current === answer.word;
+    current = "";
+    say("");
+    if (won || guesses.length === ROWS) finish(won);
+  }
+
+  function finish(won) {
+    over = true;
+    stats.played++;
+    if (won) {
+      stats.won++;
+      stats.streak++;
+      stats.best = Math.max(stats.best, stats.streak);
+      stats.dist[guesses.length - 1]++;
+    } else {
+      stats.streak = 0;
+    }
+    saveStats();
+    showStats(true, won ? guesses.length : null);
+    // Same praise as my original Pinkle, by number of tries
+    const praise = ["Genius!", "Magnificent!", "Impressive!", "Splendid!", "Great!", "Phew!"][guesses.length - 1];
+    if (won) tiles[guesses.length - 1].forEach((t, i) => setTimeout(() => t.classList.add("win"), 700 + i * 100));
+    const end = el("div", "feedback " + (won ? "good" : "bad"));
+    end.append(
+      el("strong", "", won ? praise + " You found " + answer.word + " in " + guesses.length + (guesses.length === 1 ? " try" : " tries") + "."
+                           : "So close! The word was " + answer.word + "."),
+      el("p", "", answer.clue)
+    );
+    message.after(end);
+    const again = el("button", "btn btn-primary", "Play again ↻");
+    again.addEventListener("click", newGame);
+    actions.prepend(again);
+    again.focus({ preventScroll: true });
+  }
+
+  // EVENT LISTENER: the real keyboard, only while this game is on screen
+  document.addEventListener("keydown", (event) => {
+    if (!isOnScreen(panel) || event.metaKey || event.ctrlKey || event.altKey) return;
+    if (/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
+    const k = event.key;
+    if (k === "Enter") {
+      if (document.activeElement.tagName === "BUTTON") return;   // let Enter click a focused button
+      event.preventDefault(); press("Enter");
+    }
+    else if (k === "Backspace") { event.preventDefault(); press("Delete"); }
+    else if (/^[a-z]$/i.test(k)) press(k.toUpperCase());
+  });
+
+  newGame();
+}
+
+/* ---------- HANGMAN ----------
+   STATE:
+     answer  → { word, hint, explain }
+     guessed → a Set of letters already tried
+     wrong   → how many wrong letters (6 = lost)
+   The drawing has 6 parts; each wrong letter shows one more.        */
+function createHangman(panel, game) {
+  const MAX = 6;
+  const stats = { played: 0, won: 0, streak: 0 };
+  let answer, guessed, wrong, over;
+  let wordEl, parts, letterBtns, livesEl, message, statsEl, actions;
+
+  const card = el("section", "card game hangman");
+  panel.append(card);
+
+  function newGame() {
+    answer = pickWord(game.words, answer);
+    guessed = new Set();
+    wrong = 0;
+    over = false;
+    draw();
+  }
+
+  function draw() {
+    card.innerHTML = "";
+    card.append(
+      el("span", "eyebrow", "Hangman · " + MAX + " wrong guesses allowed"),
+      el("h2", "", game.tabLabel),
+      el("p", "muted", game.intro)
+    );
+
+    const layout = el("div", "hm-layout");
+
+    // The drawing: an SVG whose parts appear one by one
+    const art = el("div", "hm-art");
+    art.innerHTML = `
+      <svg viewBox="0 0 120 140" aria-hidden="true">
+        <path class="hm-base" d="M10 132h70M30 132V10h52v16"/>
+        <circle class="hm-part" cx="82" cy="38" r="12"/>
+        <path class="hm-part" d="M82 50v36"/>
+        <path class="hm-part" d="M82 60l-16 14"/>
+        <path class="hm-part" d="M82 60l16 14"/>
+        <path class="hm-part" d="M82 86l-14 22"/>
+        <path class="hm-part" d="M82 86l14 22"/>
+      </svg>`;
+    parts = [...art.querySelectorAll(".hm-part")];
+    layout.append(art);
+
+    const side = el("div", "hm-side");
+    side.append(el("span", "hm-hint", answer.hint));
+    wordEl = el("p", "hm-word");
+    wordEl.setAttribute("aria-live", "polite");
+    side.append(wordEl);
+    livesEl = el("p", "hm-lives");
+    side.append(livesEl);
+    layout.append(side);
+    card.append(layout);
+
+    message = el("div");
+    card.append(message);
+
+    // A–Z buttons
+    const letters = el("div", "hm-letters");
+    letterBtns = {};
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(ch => {
+      const b = el("button", "wg-key", ch);
+      // EVENT LISTENER: each letter button makes a guess
+      b.addEventListener("click", () => guess(ch));
+      letters.append(b);
+      letterBtns[ch] = b;
+    });
+    card.append(letters);
+
+    actions = el("div", "btn-row");
+    const newBtn = el("button", "btn", "New word");
+    newBtn.addEventListener("click", newGame);
+    actions.append(newBtn);
+    card.append(actions);
+    statsEl = el("p", "wg-stats", statsLine(stats));
+    card.append(statsEl);
+
+    update();
+  }
+
+  // Shows the word with "_" for letters not found yet (spaces stay as gaps)
+  function update() {
+    wordEl.innerHTML = "";
+    [...answer.word].forEach(ch => {
+      if (ch === " ") { wordEl.append(el("span", "hm-gap")); return; }
+      const found = guessed.has(ch) || over;
+      const slot = el("span", "hm-slot" + (found ? " found" : "") + (over && !guessed.has(ch) ? " missed" : ""), found ? ch : "");
+      wordEl.append(slot);
+    });
+    wordEl.setAttribute("aria-label", [...answer.word].map(ch => ch === " " ? " " : (guessed.has(ch) || over ? ch : "blank")).join(" "));
+    parts.forEach((p, i) => p.classList.toggle("shown", i < wrong));
+    livesEl.textContent = (MAX - wrong) + " wrong guess" + (MAX - wrong === 1 ? "" : "es") + " left";
+  }
+
+  function guess(ch) {
+    if (over || guessed.has(ch)) return;
+    guessed.add(ch);
+    const hit = answer.word.includes(ch);
+    letterBtns[ch].disabled = true;
+    letterBtns[ch].classList.add(hit ? "correct" : "absent");
+    if (!hit) wrong++;
+    const won = [...answer.word].every(c => c === " " || guessed.has(c));
+    if (won || wrong >= MAX) { over = true; finish(won); }
+    update();
+  }
+
+  function finish(won) {
+    stats.played++;
+    if (won) { stats.won++; stats.streak++; } else { stats.streak = 0; }
+    statsEl.textContent = statsLine(stats);
+    message.className = "feedback " + (won ? "good" : "bad");
+    message.append(
+      el("strong", "", won ? "Well done! " + answer.word + " it is." : "So close! The answer was " + answer.word + "."),
+      el("p", "", answer.explain)
+    );
+    Object.values(letterBtns).forEach(b => b.disabled = true);
+    const again = el("button", "btn btn-primary", "Play again ↻");
+    again.addEventListener("click", newGame);
+    actions.prepend(again);
+    again.focus({ preventScroll: true });
+  }
+
+  // EVENT LISTENER: type letters on the real keyboard (only while on screen)
+  document.addEventListener("keydown", (event) => {
+    if (!isOnScreen(panel) || event.metaKey || event.ctrlKey || event.altKey) return;
+    if (/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
+    if (/^[a-z]$/i.test(event.key)) guess(event.key.toUpperCase());
+  });
+
+  newGame();
+}
+
 /* ---------- Contact me ---------- */
 function buildContact(page) {
   const grid = el("div", "grid-2");
@@ -3106,7 +3679,7 @@ const PAGES = {
   lectures: { build: buildLectures, title: "Sessions",
               subtitle: "Lectures and guest lectures · my notes and analysis" },
   games:    { build: buildGames,    title: "Games",
-              subtitle: "Quizzes by theme, mixing questions from every session" },
+              subtitle: "Quizzes by theme, a word game and hangman, all about the course" },
   contact:  { build: buildContact,  title: "Contact me",
               subtitle: "Let's connect" }
 };
