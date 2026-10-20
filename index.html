@@ -713,6 +713,9 @@
     @keyframes pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .badge-name { font-family: var(--serif); font-size: 1.9rem; font-style: italic; color: var(--rose-deep); margin: 0.5rem 0 0; }
     .big-score { font-family: var(--serif); font-size: 3.2rem; font-weight: 400; margin: 0; line-height: 1.1; }
+    .round-list { padding-left: 1.2rem; }
+    .round-list li { padding: 0.2rem 0; }
+    .round-source { margin-left: 0.6rem; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--gold); }
     .round-breakdown { list-style: none; padding: 0; margin: 1.5rem auto; max-width: 420px; border-top: var(--hairline); }
     .round-breakdown li { padding: 0.55rem 0; border-bottom: var(--hairline); font-size: 0.9rem; }
     .takeaway { border-top: 1px solid var(--gold-soft); border-bottom: 1px solid var(--gold-soft); padding: 1.5rem 0; margin: 2rem auto; max-width: 620px; }
@@ -1453,10 +1456,17 @@ const SESSION_GROUPS = [
 
 
 /* =================================================================
-   5. GAMES (one quiz per session)
+   5. GAMES (organised by theme)
    -----------------------------------------------------------------
-   Each game has ROUNDS. A round's "type" tells the game engine
-   (section 8) how to show its questions:
+   How it fits together:
+   1. QUESTION BANKS: the questions are written per session (BANK_...),
+      so each round remembers which lecture it comes from.
+   2. THEMES (GAMES, at the end of this section): each theme picks
+      rounds from any session with fromBank(bank, roundNumber).
+   Adding a new session = write its bank, then add its rounds to a
+   theme (or create a new theme).
+
+   A round's "type" tells the game engine (section 8) how to show it:
 
      "match"       → multiple choice: the right "answer" + 3 wrong
                      options picked at random from round.choices
@@ -1466,7 +1476,7 @@ const SESSION_GROUPS = [
                      lowercase keywords that count as correct
 
    Every question has an "explain", shown after the player answers.
-   "session" links the game to its lecture (SESSIONS[0] = first tab).
+   A bank's "session" links its rounds to their lecture (SESSIONS[0] = first entry).
    ================================================================= */
 
 // Badges shared by all games: the first one whose "min" (% score) you reach
@@ -1476,11 +1486,9 @@ const BADGES = [
   { min: 0,  name: "Platform Rookie",      icon: "✦" }
 ];
 
-const GAME_GUEST_1 = {
+// Question bank: LaunchLab
+const BANK_GUEST_1 = {
   session: SESSIONS[0],
-  tabLabel: "LaunchLab",
-  intro: "Three rounds on building and deploying a website with AI, plus a bonus question.",
-  takeaway: "Design → Build → Deploy: GitHub stores your code, Vercel turns it into a live website.",
   rounds: [
     {
       type: "sort",
@@ -1548,11 +1556,9 @@ const GAME_GUEST_1 = {
   ]
 };
 
-const GAME_SESSION_1 = {
+// Question bank: Session 1
+const BANK_SESSION_1 = {
   session: SESSIONS[1],
-  tabLabel: "Session 1",
-  intro: "Three rounds on platforms, Singapore stats and the AI shift, plus a bonus question.",
-  takeaway: "Platforms evolve quickly. Stay up to date and adapt to new tools in an AI-driven industry.",
   rounds: [
     {
       type: "match",
@@ -1652,11 +1658,9 @@ const GAME_SESSION_1 = {
   ]
 };
 
-const GAME_SESSION_2 = {
+// Question bank: Session 2
+const BANK_SESSION_2 = {
   session: SESSIONS[2],
-  tabLabel: "Session 2",
-  intro: "Three rounds on types of tools, platform ad features and martech stats, plus a bonus question.",
-  takeaway: "Pick tools that share clean data with each other, as AI is only as good as what it can connect to.",
   rounds: [
     {
       type: "match",
@@ -1737,8 +1741,40 @@ const GAME_SESSION_2 = {
   ]
 };
 
-// New game? Copy one of the blocks above, then add it to this list:
-const GAMES = [GAME_GUEST_1, GAME_SESSION_1, GAME_SESSION_2];
+// Takes round number n (1 = first) from a question bank,
+// and remembers which session it came from
+function fromBank(bank, n) {
+  return { ...bank.rounds[n - 1], session: bank.session };
+}
+
+// THE THEMES: one game each, in the order of the tabs.
+// New theme? Copy a block and choose its rounds with fromBank().
+const GAMES = [
+  {
+    tabLabel: "Platforms & Tools",
+    intro: "Match campaigns to platform types, sort tools into point tools, platforms, suites and agents, and name each platform's ad features.",
+    takeaway: "Pick tools that share clean data with each other, as AI is only as good as what it can connect to.",
+    rounds: [fromBank(BANK_SESSION_1, 1), fromBank(BANK_SESSION_2, 1), fromBank(BANK_SESSION_2, 2)]
+  },
+  {
+    tabLabel: "Market Data",
+    intro: "Higher or lower? Test your feel for the numbers behind Singapore's digital audience and the 2026 martech landscape.",
+    takeaway: "Platforms evolve quickly. Stay up to date and adapt to new tools in an AI-driven industry.",
+    rounds: [fromBank(BANK_SESSION_1, 2), fromBank(BANK_SESSION_2, 3), fromBank(BANK_SESSION_2, 4)]
+  },
+  {
+    tabLabel: "AI & Marketing",
+    intro: "Spot what changed when AI arrived in targeting, search, creative and ad placements, and name the new metric it brought.",
+    takeaway: "Your creative is now the targeting, and brands compete to be cited in AI answers: track your AI Visibility.",
+    rounds: [fromBank(BANK_SESSION_1, 3), fromBank(BANK_SESSION_1, 4)]
+  },
+  {
+    tabLabel: "Build with AI",
+    intro: "The vibe coding workflow: which file does what, GitHub vocabulary, and when to push or open a pull request.",
+    takeaway: "Design → Build → Deploy: GitHub stores your code, Vercel turns it into a live website.",
+    rounds: [fromBank(BANK_GUEST_1, 1), fromBank(BANK_GUEST_1, 2), fromBank(BANK_GUEST_1, 3), fromBank(BANK_GUEST_1, 4)]
+  }
+];
 
 
 /* =================================================================
@@ -2101,7 +2137,7 @@ function buildHome(page) {
     { href: "#course",   title: "The course",     text: "What Digital Platforms Test Drive covers." },
     { href: "#schedule", title: "Schedule",       text: "All session dates at a glance." },
     { href: "#lectures", title: "Sessions",       text: "Lectures and guest lectures, with my analysis." },
-    { href: "#games",    title: "Games",          text: "Test yourself with one quiz per session." },
+    { href: "#games",    title: "Games",          text: "Quizzes by theme: platforms, data, AI and coding." },
     { href: "#contact",  title: "Contact me",     text: "Get in touch or connect on LinkedIn." }
   ].forEach(item => {
     const a = el("a");
@@ -2455,10 +2491,11 @@ function renderLecture(panel, session) {
   intro.append(meta, el("p", "", session.data.summary));
 
   // If this session has a game, add a button to play it
-  const gameIndex = GAMES.findIndex(g => g.session === session);
-  if (gameIndex !== -1) {
+  // Buttons to every game theme that uses questions from this session
+  const themes = GAMES.filter(g => g.rounds.some(r => r.session === session));
+  if (themes.length) {
     const row = el("div", "btn-row");
-    row.append(linkButton("Play the quiz for this session", "#games/" + (gameIndex + 1), true));
+    themes.forEach(g => row.append(linkButton("Play: " + g.tabLabel, "#games/" + (GAMES.indexOf(g) + 1), true)));
     intro.append(row);
   }
   panel.append(intro);
@@ -2521,7 +2558,8 @@ function shuffle(array) {
 
    SCREEN FLOW: start → round intro → questions → next round → … → results */
 function createGame(panel, game) {
-  const session = game.session;
+  // The sessions this theme draws on (each one only once)
+  const sessions = [...new Set(game.rounds.map(r => r.session))];
   const maxScore = game.rounds.reduce((sum, r) => sum + r.questions.length, 0);
   let state;
 
@@ -2555,20 +2593,26 @@ function createGame(panel, game) {
   function renderStart() {
     const card = newScreen();
     card.append(
-      el("span", "eyebrow", session.tabLabel + " · " + formatDate(session.date)),
-      el("h2", "", session.title),
+      el("span", "eyebrow", "Theme · " + game.rounds.length + " rounds · " + maxScore + " questions"),
+      el("h2", "", game.tabLabel),
       el("p", "muted", game.intro)
     );
-    const list = el("ol");
-    game.rounds.forEach(r => list.append(el("li", "", r.title)));
+    // Each round, with the session it comes from
+    const list = el("ol", "round-list");
+    game.rounds.forEach(r => {
+      const li = el("li", "", r.title);
+      li.append(el("span", "round-source", r.session.tabLabel));
+      list.append(li);
+    });
     card.append(list);
 
     const row = el("div", "btn-row");
     const startBtn = el("button", "btn btn-primary", "Start the game ▶");
     // EVENT LISTENER: Start resets the state and opens round 1
     startBtn.addEventListener("click", () => { resetState(); renderRoundIntro(); });
-    const notesIndex = SESSIONS.indexOf(session);
-    row.append(startBtn, linkButton("Revise the lecture first", "#lectures/" + (notesIndex + 1)));
+    row.append(startBtn);
+    // One "revise" link per session used in this theme
+    sessions.forEach(s => row.append(linkButton("Revise " + s.tabLabel, "#lectures/" + (SESSIONS.indexOf(s) + 1))));
     card.append(row);
   }
 
@@ -2580,7 +2624,7 @@ function createGame(panel, game) {
     const heading = el("h2", "", round.title);
     const count = round.questions.length;
     card.append(
-      el("span", "eyebrow", isBonus ? "Bonus" : "Round " + (state.round + 1)),
+      el("span", "eyebrow", (isBonus ? "Bonus" : "Round " + (state.round + 1)) + " · from " + round.session.tabLabel),
       heading,
       el("p", "muted", round.instructions),
       el("p", "", count + (count === 1 ? " question" : " questions") + " · Score so far: " + state.score)
@@ -2871,7 +2915,7 @@ const PAGES = {
   lectures: { build: buildLectures, title: "Sessions",
               subtitle: "Lectures and guest lectures · my notes and analysis" },
   games:    { build: buildGames,    title: "Games",
-              subtitle: "One quiz per session to test what we learned" },
+              subtitle: "Quizzes by theme, mixing questions from every session" },
   contact:  { build: buildContact,  title: "Contact me",
               subtitle: "Let's connect" }
 };
