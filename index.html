@@ -8,7 +8,7 @@
   <!-- Fonts: an elegant serif for headings, a refined sans-serif for text -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
 
   <!-- =========================================================
        CSS
@@ -38,7 +38,7 @@
       --wrong-bg:   #f9e9ec;
 
       /* --- Type --- */
-      --title: "Amoresa", "Cormorant Garamond", Georgia, serif;   /* titles (Amoresa Regular, in fonts/) */
+      --title: "Playfair Display", Georgia, serif;   /* titles: Playfair Display, bold italic */
       --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;   /* numbers, quotes, captions */
       --sans:  "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;   /* all body text */
 
@@ -91,18 +91,8 @@
     }
     .skip-link:focus { top: 1rem; }
 
-    /* Headings use the serif */
-    /* Amoresa: a downloaded font, so it is loaded from the project's
-       fonts/ folder. If the file is missing, the browser simply uses
-       the next font in --title (Cormorant Garamond). */
-    @font-face {
-      font-family: "Amoresa";
-      src: url("fonts/Amoresa.woff2") format("woff2"),      /* small, modern browsers */
-           url("fonts/Amoresa.otf") format("opentype");      /* fallback for older ones */
-      font-display: swap;
-    }
-
-    h1, h2, h3, h4 { font-family: var(--title); font-weight: 500; letter-spacing: 0.01em; color: var(--ink); }
+    /* Titles: Playfair Display, bold italic (loaded from Google Fonts) */
+    h1, h2, h3, h4 { font-family: var(--title); font-weight: 700; font-style: italic; letter-spacing: 0; color: var(--ink); }
     h2 { font-size: clamp(1.9rem, 4.5vw, 2.7rem); margin: 0.5rem 0 0.6rem; line-height: 1.1; }
     h3 { font-size: clamp(1.45rem, 3vw, 1.75rem); margin: 0 0 0.35rem; line-height: 1.2; }
     h4 { font-size: 1.3rem; }
@@ -147,8 +137,9 @@
     }
     .brand {
       font-family: var(--title);
-      font-size: 1.35rem;
-      font-weight: 500;
+      font-style: italic;
+      font-size: 1.3rem;
+      font-weight: 700;
       color: var(--ink);
       text-decoration: none;
       white-space: nowrap;
@@ -241,10 +232,10 @@
     .banner h1 {
       margin: 0;
       color: var(--ivory);
-      font-size: clamp(2.4rem, 7vw, 4.5rem);
-      font-weight: 400;
-      line-height: 1.05;
-      letter-spacing: 0.02em;
+      font-size: clamp(2.2rem, 6.5vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: 0;
     }
     .banner p {
       margin: 1.25rem auto 0;
@@ -535,11 +526,11 @@
       transition: background var(--speed) var(--ease), color var(--speed);
     }
     .group-tab:hover { background: var(--blush); }
-    .group-name { display: block; font-family: var(--title); font-size: clamp(1.5rem, 4vw, 2.1rem); line-height: 1.1; }
+    .group-name { display: block; font-family: var(--title); font-style: italic; font-weight: 700; font-size: clamp(1.4rem, 3.6vw, 1.9rem); line-height: 1.15; }
     .group-note { display: block; margin-top: 0.4rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--mauve); }
     .group-tab[aria-selected="true"] { background: linear-gradient(135deg, var(--ink), var(--berry)); color: var(--ivory); }
     /* Games page: category names in Poppins, like the games themselves */
-    #page-games .group-name { font-family: var(--sans); font-weight: 500; font-size: clamp(1.1rem, 2.6vw, 1.4rem); }
+    #page-games .group-name { font-family: var(--sans); font-style: normal; font-weight: 500; font-size: clamp(1.1rem, 2.6vw, 1.4rem); }
     .group-tab[aria-selected="true"] .group-note { color: var(--gold-soft); }
     @media (max-width: 760px) { .group-tabs { grid-template-columns: repeat(min(var(--groups, 2), 2), 1fr); } }
     @media (max-width: 420px) { .group-tabs { grid-template-columns: 1fr; } }
@@ -657,7 +648,7 @@
        ========================================================= */
     .game { min-height: 340px; }
     /* Games: Poppins for titles and questions, easier to read than the script font */
-    .game h2, .game h3 { font-family: var(--sans); font-weight: 500; letter-spacing: 0; line-height: 1.3; }
+    .game h2, .game h3 { font-family: var(--sans); font-style: normal; font-weight: 500; letter-spacing: 0; line-height: 1.3; }
     .game h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
     .game h3 { font-size: clamp(1.15rem, 2.5vw, 1.35rem); }
     .game .score-pill, .game .stat-guess, .game .feedback strong,
