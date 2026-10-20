@@ -39,6 +39,7 @@
 
       /* --- Type --- */
       --title: "Playfair Display", Georgia, serif;   /* titles: Playfair Display, bold italic */
+      --signature: "Amoresa", "Playfair Display", Georgia, serif;   /* my name only (fonts/Amoresa.*) */
       --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;   /* numbers, quotes, captions */
       --sans:  "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;   /* all body text */
 
@@ -90,6 +91,19 @@
       transition: top var(--speed);
     }
     .skip-link:focus { top: 1rem; }
+
+    /* My name, like a signature: Amoresa, loaded from the project's fonts/
+       folder. If the file is missing, the browser uses Playfair instead. */
+    @font-face {
+      font-family: "Amoresa";
+      src: url("fonts/Amoresa.woff2") format("woff2"),
+           url("fonts/Amoresa.otf") format("opentype");
+      font-display: swap;
+    }
+    .signature { font-family: var(--signature); font-style: normal; font-weight: 400; letter-spacing: 0; }
+    h2.signature { font-size: clamp(2.6rem, 6vw, 3.6rem); line-height: 1.1; }
+    .brand .signature { font-size: 1.35em; color: var(--ink); font-style: normal; }
+    footer .signature { font-size: 1.9em; text-transform: none; letter-spacing: 0; color: var(--ivory); vertical-align: -0.15em; }
 
     /* Titles: Playfair Display, bold italic (loaded from Google Fonts) */
     h1, h2, h3, h4 { font-family: var(--title); font-weight: 700; font-style: italic; letter-spacing: 0; color: var(--ink); }
@@ -1060,7 +1074,7 @@
        changing and shows the matching page (see section 10 of the script). -->
   <nav class="site-nav" aria-label="Main menu">
     <div class="nav-inner">
-      <a class="brand" href="#home">Zoé <span>·</span> Digital Platforms</a>
+      <a class="brand" href="#home"><span class="signature">Zoé</span> <span>·</span> Digital Platforms</a>
       <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="menu">Menu</button>
       <ul class="menu" id="menu">
         <li><a href="#home">Welcome</a></li>
@@ -1099,7 +1113,7 @@
 
   <footer>
     <div>Digital Platforms Test Drive · MSc Marketing Management &amp; Digital · ESSEC Business School</div>
-    <div>Built by <span id="author-name"></span> · <a id="footer-linkedin" href="#" target="_blank" rel="noopener">LinkedIn</a></div>
+    <div>Built by <span id="author-name" class="signature"></span> · <a id="footer-linkedin" href="#" target="_blank" rel="noopener">LinkedIn</a></div>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -2679,7 +2693,7 @@ function buildAbout(page) {
   const text = el("div");
   text.append(
     el("span", "eyebrow", PROFILE.focus),
-    el("h2", "", PROFILE.name),
+    el("h2", "signature", PROFILE.name),            // my name in Amoresa
     el("p", "muted", PROFILE.headline + " · " + PROFILE.location)
   );
   PROFILE.bio.forEach(p => text.append(el("p", "", p)));
