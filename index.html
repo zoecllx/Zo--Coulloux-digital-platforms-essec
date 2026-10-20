@@ -472,6 +472,11 @@
     .build-steps strong { display: block; margin: 0.2rem 0 0.3rem; font-weight: 600; }
     .build-steps p { margin: 0; font-size: 0.9rem; color: var(--mauve); }
     .journey-title { margin: 2rem 0 0.75rem; }
+    .design-choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem 2rem; margin-top: 1.25rem; }   /* 4 choices = 2 × 2 */
+    @media (max-width: 600px) { .design-choices { grid-template-columns: 1fr; } }
+    .design-choices > div { border-left: 1px solid var(--gold); padding: 0.2rem 0 0.2rem 1rem; }
+    .design-choices strong { display: block; font-weight: 600; }
+    .design-choices p { margin: 0.2rem 0 0; font-size: 0.9rem; color: var(--mauve); }
     .journey { list-style: none; margin: 0 0 1rem; padding: 0 0 0 1.4rem; border-left: 1px solid var(--gold-soft); }
     .journey li { position: relative; padding: 0 0 1.1rem; }
     .journey li::before { content: ""; position: absolute; left: calc(-1.4rem - 4px); top: 0.45rem; width: 7px; height: 7px; transform: rotate(45deg); background: var(--gold); }
@@ -1277,6 +1282,15 @@ const COURSE = {
     { title: "Deploy with Vercel",
       text: "Vercel is connected to the repository: every push to GitHub updates the live website automatically, within a minute." }
   ],
+  // Why I skipped Claude Design (step 1 of the LaunchLab workflow)
+  designNote: "I didn't use Claude Design because I didn't need it: I had a clear vision of the look I wanted and made the design choices myself, then asked Claude Code to build them directly, refining the result prompt by prompt.",
+  designChoices: [
+    { what: "Colour palette", detail: "Blush pink, raspberry and deep berry with champagne gold: pink, but luxury coded." },
+    { what: "Fonts", detail: "Playfair Display bold italic for titles, Poppins for text, and Amoresa for my name, like a signature." },
+    { what: "Floating stickers", detail: "Little drawings of my passions (music, travel, art, baking…) and of the course, floating and moving as you scroll." },
+    { what: "Layout & details", detail: "Fine gold lines, small-caps labels, rounded game tiles inspired by my own Pinkle game." }
+  ],
+
   features: ["One tab per session", "Lectures & guest lectures", "Quizzes by theme", "Pinkle (my Wordle)", "Hangman", "Akinator",
              "Game inside each guest tab", "Responsive on phones", "Keyboard accessible", "Floating parallax stickers"],
 
@@ -2898,7 +2912,7 @@ function buildCourse(page) {
    and my prompt journey (a timeline of the prompts that shaped the site). */
 function buildBuilt(page) {
   // 1. The workflow
-  const how = makeCard("The workflow", "From the LaunchLab guest session, applied to this site.");
+  const how = makeCard("The workflow", "From the LaunchLab guest session (Design → Build → Deploy), applied to this site. I did the Design step myself, see below.");
   const steps = el("ol", "build-steps");
   COURSE.buildSteps.forEach((s, i) => {
     const li = el("li");
@@ -2907,6 +2921,18 @@ function buildBuilt(page) {
   });
   how.append(steps);
   page.append(how);
+
+  // 1b. Why no Claude Design: my own design choices
+  const design = makeCard("A note on Claude Design");
+  design.append(el("p", "", COURSE.designNote));
+  const choices = el("div", "design-choices");
+  COURSE.designChoices.forEach(c => {
+    const box = el("div");
+    box.append(el("strong", "", c.what), el("p", "", c.detail));
+    choices.append(box);
+  });
+  design.append(choices);
+  page.append(design);
 
   // 2. The features
   const features = makeCard("Main features", "What the site does, all in plain HTML, CSS and JavaScript.");
