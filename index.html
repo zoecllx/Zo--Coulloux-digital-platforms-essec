@@ -8,7 +8,7 @@
   <!-- Fonts: an elegant serif for headings, a refined sans-serif for text -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
 
   <!-- =========================================================
        CSS
@@ -38,8 +38,9 @@
       --wrong-bg:   #f9e9ec;
 
       /* --- Type --- */
-      --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-      --sans:  "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --title: "Amoresa", "Cormorant Garamond", Georgia, serif;   /* titles (falls back to Cormorant until fonts/Amoresa.* is added) */
+      --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;   /* numbers, quotes, captions */
+      --sans:  "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;   /* all body text */
 
       /* --- Shape & motion --- */
       --radius: 4px;            /* luxury = crisp, barely rounded corners */
@@ -91,7 +92,19 @@
     .skip-link:focus { top: 1rem; }
 
     /* Headings use the serif */
-    h1, h2, h3, h4 { font-family: var(--serif); font-weight: 500; letter-spacing: 0.01em; color: var(--ink); }
+    /* Amoresa: a downloaded font, so it is loaded from the project's
+       fonts/ folder. If the file is missing, the browser simply uses
+       the next font in --title (Cormorant Garamond). */
+    @font-face {
+      font-family: "Amoresa";
+      src: url("fonts/Amoresa.woff2") format("woff2"),
+           url("fonts/Amoresa.woff") format("woff"),
+           url("fonts/Amoresa.otf") format("opentype"),
+           url("fonts/Amoresa.ttf") format("truetype");
+      font-display: swap;
+    }
+
+    h1, h2, h3, h4 { font-family: var(--title); font-weight: 500; letter-spacing: 0.01em; color: var(--ink); }
     h2 { font-size: clamp(1.9rem, 4.5vw, 2.7rem); margin: 0.5rem 0 0.6rem; line-height: 1.1; }
     h3 { font-size: clamp(1.45rem, 3vw, 1.75rem); margin: 0 0 0.35rem; line-height: 1.2; }
     h4 { font-size: 1.3rem; }
@@ -135,7 +148,7 @@
       gap: 1rem;
     }
     .brand {
-      font-family: var(--serif);
+      font-family: var(--title);
       font-size: 1.35rem;
       font-weight: 500;
       color: var(--ink);
@@ -524,7 +537,7 @@
       transition: background var(--speed) var(--ease), color var(--speed);
     }
     .group-tab:hover { background: var(--blush); }
-    .group-name { display: block; font-family: var(--serif); font-size: clamp(1.5rem, 4vw, 2.1rem); line-height: 1.1; }
+    .group-name { display: block; font-family: var(--title); font-size: clamp(1.5rem, 4vw, 2.1rem); line-height: 1.1; }
     .group-note { display: block; margin-top: 0.4rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--mauve); }
     .group-tab[aria-selected="true"] { background: linear-gradient(135deg, var(--ink), var(--berry)); color: var(--ivory); }
     .group-tab[aria-selected="true"] .group-note { color: var(--gold-soft); }
