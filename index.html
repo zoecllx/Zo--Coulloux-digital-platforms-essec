@@ -414,7 +414,7 @@
     .grade p { margin: 0.4rem 0 0; font-size: 0.92rem; }
 
     /* Guest speaker cards ("people" section) */
-    .people { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1.5rem; }
+    .people { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }   /* auto-fit: cards share the full width */
     .person { text-align: center; padding: 1.5rem 1rem; }
     .person .avatar { width: 96px; height: 96px; font-size: 2.2rem; margin: 0 auto 1.25rem; box-shadow: 0 0 0 5px var(--paper), 0 0 0 6px var(--gold-soft); }
     .person strong { display: block; font-family: var(--serif); font-size: 1.5rem; font-weight: 500; }
@@ -1380,7 +1380,7 @@ const GUEST_1 = {
       items: [
         { name: "Yibo Yang", role: "LaunchLab", photo: "images/yibo-yang.jpg",
           linkedin: "https://www.linkedin.com/in/yiboyang8/",
-          description: "Co-presenter of LaunchLab's vibe coding workshop at ESSEC Asia-Pacific." },
+          description: "Singapore American School student and founder of ForAnother, a non-profit that has led 3 international fundraising campaigns (5.9k+ SGD raised). Now building OpenSkills, an AI-education non-profit for migrant workers and students, after creating the Snapiq Chrome extension featured in the workshop and studying AI and multi-agent systems at Brown Pre-College." },
         { name: "Rishabh Modi", role: "LaunchLab", photo: "images/rishabh-modi.jpg",
           linkedin: "https://www.linkedin.com/in/rishabh-modi-2b0b06307/",
           description: "Co-presenter of LaunchLab's vibe coding workshop at ESSEC Asia-Pacific." },
