@@ -845,6 +845,89 @@
     .hm-letters .wg-key { width: clamp(30px, 9vw, 42px); }
     @media (max-width: 520px) { .hm-layout { grid-template-columns: 1fr; } .hm-art { max-width: 150px; margin: 0 auto; } }
 
+    /* ---------- Akinator (reverse) ---------- */
+    .ak-genie { display: flex; align-items: center; gap: 1rem; margin: 1rem 0 1.5rem; }
+    .ak-lamp { width: 64px; height: 64px; flex-shrink: 0; }
+    .ak-lamp svg { width: 100%; height: 100%; fill: none; stroke: var(--gold); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; animation: ak-glow 3s ease-in-out infinite; }
+    @keyframes ak-glow { 50% { filter: drop-shadow(0 0 6px rgba(184, 146, 90, 0.7)); transform: translateY(-3px); } }
+    .ak-bubble {
+      position: relative;
+      margin: 0;
+      padding: 0.8rem 1.1rem;
+      background: var(--blush);
+      border: 1px solid var(--blush-2);
+      border-radius: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .ak-bubble::before {                       /* little tail pointing at the genie */
+      content: "";
+      position: absolute;
+      left: -7px;
+      top: 50%;
+      width: 12px;
+      height: 12px;
+      background: var(--blush);
+      border-left: 1px solid var(--blush-2);
+      border-bottom: 1px solid var(--blush-2);
+      transform: translateY(-50%) rotate(45deg);
+    }
+    .ak-layout { display: grid; grid-template-columns: minmax(240px, 1fr) 1.5fr; gap: 1.75rem; }
+    @media (max-width: 760px) { .ak-layout { grid-template-columns: 1fr; } }
+    .ak-label { margin: 0 0 0.5rem; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+    .ak-questions { display: grid; gap: 6px; margin-bottom: 1.25rem; }
+    .ak-q {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      text-align: left;
+      font-family: var(--sans);
+      font-size: 0.86rem;
+      padding: 0.55rem 0.8rem;
+      border: 1px solid var(--blush-2);
+      border-radius: 8px;
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+      transition: border-color var(--speed), background var(--speed);
+    }
+    .ak-q:hover:not(:disabled) { border-color: #d81b6a; background: var(--blush); }
+    .ak-q:disabled { cursor: default; }
+    .ak-q.yes { border-color: #d81b6a; }
+    .ak-q.no  { opacity: 0.6; }
+    .ak-answer { font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .ak-q.yes .ak-answer { color: #d81b6a; }
+    .ak-q.no  .ak-answer { color: var(--mauve); }
+    .ak-log { margin: 0; padding-left: 1.2rem; font-size: 0.85rem; }
+    .ak-log li { padding: 0.2rem 0; }
+    .ak-log li span { margin-right: 0.4rem; }
+    .ak-log li.yes b { color: #d81b6a; }
+    .ak-log li.no b { color: var(--mauve); }
+    .ak-board-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+    .ak-info { margin: 0 0 0.5rem; font-size: 0.78rem; color: var(--mauve); }
+    .ak-board { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 8px; }
+    .ak-card {
+      min-height: 64px;
+      padding: 0.6rem;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 500;
+      line-height: 1.3;
+      border: 1px solid var(--blush-2);
+      border-radius: 10px;
+      background: linear-gradient(180deg, var(--paper), var(--blush));
+      color: var(--ink);
+      cursor: pointer;
+      transition: opacity var(--speed), transform var(--speed), border-color var(--speed);
+    }
+    .ak-card:hover { transform: translateY(-2px); border-color: var(--rose); }
+    .ak-card.crossed { opacity: 0.32; text-decoration: line-through; }
+    .ak-card.wrong-guess { border-color: var(--wrong); }
+    .ak-card.secret { opacity: 1; text-decoration: none; background: #d81b6a; border-color: #d81b6a; color: var(--white); }
+    /* Guess mode: cards glow gold to show that a click now means "this one!" */
+    .guess-mode .ak-card:not(.crossed) { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(184, 146, 90, 0.25); }
+    .guess-mode .ak-board-head .ak-label { color: #d81b6a; }
+
     /* =========================================================
        PAGE: CONTACT
        ========================================================= */
@@ -2123,6 +2206,83 @@ const GAMES = [
       { word: "VIBE CODING",  hint: "LaunchLab · The session", explain: "Building apps and websites by describing them to AI tools like Claude Code." },
       { word: "DEPLOYMENT",   hint: "LaunchLab · Vercel", explain: "Vercel deploys your site: every push to GitHub updates it automatically." }
     ]
+  },
+
+  /* ---------- AKINATOR (reverse: I guess, the site answers) ----------
+     kind: "akinator" → drawn by createAkinator().
+     Each concept has "tags". A question is answered YES when the secret
+     concept has the question's tag, otherwise NO. To add a concept, give
+     it the tags that are true for it; to add a question, pick a tag. */
+  {
+    kind: "akinator",
+    tabLabel: "Akinator",
+    intro: "Reverse Akinator: the genie is thinking of a concept from the course. Ask yes/no questions, cross out the cards that no longer fit, then make your guess. You have 3 guesses.",
+    questions: [
+      { tag: "session1",  text: "Was it covered in Session 1?" },
+      { tag: "session2",  text: "Was it covered in Session 2?" },
+      { tag: "launchlab", text: "Was it in the LaunchLab session?" },
+      { tag: "type",      text: "Is it one of the 10 types of digital marketing platforms?" },
+      { tag: "metric",    text: "Is it something you measure (a metric)?" },
+      { tag: "feature",   text: "Is it a specific tool or ad feature?" },
+      { tag: "company",   text: "Is it the name of a company or product?" },
+      { tag: "ai",        text: "Does it use AI?" },
+      { tag: "video",     text: "Is it about video?" },
+      { tag: "social",    text: "Is it linked to social media?" },
+      { tag: "coding",    text: "Is it about coding or building websites?" },
+      { tag: "commerce",  text: "Is it about selling or e-commerce?" },
+      { tag: "data",      text: "Is it mainly about data?" },
+      { tag: "search",    text: "Is it about search engines or being found?" },
+      { tag: "rivals",    text: "Does it compare you with competitors?" },
+      { tag: "meta",      text: "Does it belong to Meta?" },
+      { tag: "google",    text: "Does it belong to Google?" },
+      { tag: "tiktok",    text: "Is it a TikTok thing?" }
+    ],
+    concepts: [
+      { name: "Influencer & Creator Marketing", tags: ["session1", "type", "social"],
+        explain: "One of the 10 platform types: trusted creators drive discovery and sales. SG spend: US$119M in 2025." },
+      { name: "Search: SEO, SEM & GEO", tags: ["session1", "type", "ai", "search"],
+        explain: "Capturing high-intent demand, and now being the brand AI answers cite (GEO)." },
+      { name: "Affiliate & Social Commerce", tags: ["session1", "type", "social", "commerce"],
+        explain: "Pay-for-performance sales through creators and partners, like TikTok Shop affiliates." },
+      { name: "Marketing Automation & AI Agents", tags: ["session1", "type", "ai"],
+        explain: "From triggered journeys to AI agents: DBS's digibot resolves 9 in 10 queries." },
+      { name: "Programmatic & Retail Media", tags: ["session1", "type", "data", "commerce"],
+        explain: "Real-time ad buying and ads next to real purchase data (Shopee Ads, GrabAds…)." },
+      { name: "AI Visibility", tags: ["session1", "metric", "ai", "search"],
+        explain: "The 8th benchmarking metric: the share of AI answers that mention your brand." },
+      { name: "Net Promoter Score", tags: ["session1", "metric"],
+        explain: "A perceptual metric, alongside customer satisfaction and customer effort scores." },
+      { name: "Share of Voice", tags: ["session1", "metric", "rivals"],
+        explain: "A competitive metric, alongside market share and share of wallet." },
+      { name: "Meta Advantage+", tags: ["session1", "session2", "feature", "company", "ai", "social", "meta"],
+        explain: "Meta's AI that finds the audience and automates creative, placement and budget." },
+      { name: "Meta Business Agent", tags: ["session2", "feature", "company", "ai", "social", "commerce", "meta"],
+        explain: "An AI agent that answers questions and closes sales on WhatsApp, Instagram and Messenger." },
+      { name: "TikTok Symphony", tags: ["session2", "feature", "company", "ai", "video", "social", "tiktok"],
+        explain: "TikTok's AI creative suite: it makes and translates videos." },
+      { name: "Spark Ads", tags: ["session2", "feature", "video", "social", "tiktok"],
+        explain: "Boost organic posts directly from TikTok creators as ads." },
+      { name: "TikTok Shop", tags: ["session1", "session2", "company", "video", "social", "commerce", "tiktok"],
+        explain: "Shopping inside TikTok: its SEA GMV doubled to US$45.6B in 2025." },
+      { name: "LinkedIn Lead Gen Forms", tags: ["session2", "feature", "social", "data"],
+        explain: "Capture leads without users leaving LinkedIn." },
+      { name: "YouTube Peak Points", tags: ["session2", "feature", "ai", "video", "google"],
+        explain: "Gemini places ads right after a video's most engaging moments." },
+      { name: "Google Performance Max", tags: ["session1", "session2", "feature", "company", "ai", "google", "search"],
+        explain: "Google's AI campaigns that pick audience, placement and budget: 'your creative is the targeting'." },
+      { name: "Mailchimp", tags: ["session1", "session2", "company"],
+        explain: "A point tool for email marketing, with built-in AI features." },
+      { name: "HubSpot", tags: ["session2", "company", "ai"],
+        explain: "A marketing suite, now adding AI agents (HubSpot Breeze)." },
+      { name: "Claude Code", tags: ["launchlab", "feature", "company", "ai", "coding"],
+        explain: "An agentic coding system that reads projects, runs commands and debugs, used to build this site." },
+      { name: "Pull Request", tags: ["launchlab", "coding"],
+        explain: "Propose changes on GitHub and ask teammates to review them before merging." },
+      { name: "Vercel", tags: ["launchlab", "company", "coding"],
+        explain: "Turns a GitHub repo into a live website that updates on every push." },
+      { name: "Supabase", tags: ["launchlab", "company", "coding", "data"],
+        explain: "A backend-as-a-service: logins, verification and a user database." }
+    ]
   }
 ];
 
@@ -2487,7 +2647,7 @@ function buildHome(page) {
     { href: "#course",   title: "The course",     text: "What Digital Platforms Test Drive covers." },
     { href: "#schedule", title: "Schedule",       text: "All session dates at a glance." },
     { href: "#lectures", title: "Sessions",       text: "Lectures and guest lectures, with my analysis." },
-    { href: "#games",    title: "Games",          text: "Quizzes by theme, a word game and hangman." },
+    { href: "#games",    title: "Games",          text: "Quizzes, Pinkle, Hangman and a reverse Akinator." },
     { href: "#contact",  title: "Contact me",     text: "Get in touch or connect on LinkedIn." }
   ].forEach(item => {
     const a = el("a");
@@ -2882,6 +3042,7 @@ function buildGames(page) {
     render: (panel, game) =>
       game.kind === "wordle"  ? createWordGame(panel, game) :
       game.kind === "hangman" ? createHangman(panel, game)  :
+      game.kind === "akinator" ? createAkinator(panel, game) :
                                 createGame(panel, game)
   });
 }
@@ -3589,6 +3750,194 @@ function createHangman(panel, game) {
   newGame();
 }
 
+/* ---------- AKINATOR (reverse) ----------
+   The site picks a secret concept; the player asks yes/no questions.
+   STATE:
+     secret      → the concept to find
+     asked       → questions already asked (in order), with their answer
+     crossed     → cards the player crossed out (a Set of indexes)
+     guessesLeft → 3 at the start
+     guessing    → true while "Make a guess" mode is on (a card click = a guess)
+   Answer rule: YES if the secret concept's tags include the question's tag. */
+function createAkinator(panel, game) {
+  const GUESSES = 3;
+  const STATS_KEY = "akinator-stats";
+  const loadStats = () => { try { return JSON.parse(localStorage.getItem(STATS_KEY)); } catch { return null; } };
+  const saveStats = () => { try { localStorage.setItem(STATS_KEY, JSON.stringify(stats)); } catch {} };
+  const stats = loadStats() || { played: 0, won: 0, best: null };   // best = fewest questions in a win
+
+  let secret, asked, crossed, guessesLeft, guessing, over;
+  let bubble, logEl, qButtons, cards, guessBtn, infoEl, statsEl, endEl, boardLabel;
+
+  const card = el("section", "card game akinator");
+  panel.append(card);
+
+  function newGame() {
+    secret = pickWord(game.concepts, secret);
+    asked = [];
+    crossed = new Set();
+    guessesLeft = GUESSES;
+    guessing = false;
+    over = false;
+    draw();
+  }
+
+  function draw() {
+    card.innerHTML = "";
+    card.append(
+      el("span", "eyebrow", "Reverse Akinator · yes/no questions · " + GUESSES + " guesses"),
+      el("h2", "", game.tabLabel),
+      el("p", "muted", game.intro)
+    );
+
+    // The genie and its speech bubble
+    const genie = el("div", "ak-genie");
+    const lamp = el("div", "ak-lamp");
+    lamp.setAttribute("aria-hidden", "true");
+    lamp.innerHTML = '<svg viewBox="0 0 64 64"><circle cx="32" cy="28" r="18"/><path d="M20 50h24M24 56h16M26 46l-2 4M38 46l2 4"/><path d="M32 18l2.5 6.5L41 27l-6.5 2.5L32 36l-2.5-6.5L23 27l6.5-2.5z"/></svg>';
+    bubble = el("p", "ak-bubble", "I'm thinking of a concept from the course… Ask me a question!");
+    bubble.setAttribute("aria-live", "polite");
+    genie.append(lamp, bubble);
+    card.append(genie);
+
+    const layout = el("div", "ak-layout");
+
+    // Left: questions + log
+    const left = el("div", "ak-left");
+    left.append(el("p", "ak-label", "Ask a question"));
+    const qList = el("div", "ak-questions");
+    qButtons = game.questions.map((q, i) => {
+      const b = el("button", "ak-q", q.text);
+      // EVENT LISTENER: asking a question
+      b.addEventListener("click", () => ask(i));
+      qList.append(b);
+      return b;
+    });
+    left.append(qList);
+    left.append(el("p", "ak-label", "Your notes"));
+    logEl = el("ol", "ak-log");
+    left.append(logEl);
+    layout.append(left);
+
+    // Right: the board of concepts
+    const right = el("div", "ak-right");
+    const head = el("div", "ak-board-head");
+    boardLabel = el("p", "ak-label", "Click a card to cross it out");
+    head.append(boardLabel);
+    infoEl = el("p", "ak-info");
+    head.append(infoEl);
+    right.append(head);
+    const board = el("div", "ak-board");
+    cards = game.concepts.map((c, i) => {
+      const b = el("button", "ak-card", c.name);
+      b.setAttribute("aria-pressed", "false");
+      // EVENT LISTENER: cross out / un-cross a card, or guess it in guess mode
+      b.addEventListener("click", () => guessing ? guess(i) : toggle(i));
+      board.append(b);
+      return b;
+    });
+    right.append(board);
+    layout.append(right);
+    card.append(layout);
+
+    endEl = el("div");
+    card.append(endEl);
+
+    const row = el("div", "btn-row");
+    guessBtn = el("button", "btn btn-primary", "I know! Make a guess");
+    guessBtn.addEventListener("click", () => setGuessing(!guessing));
+    const newBtn = el("button", "btn", "New game");
+    newBtn.addEventListener("click", newGame);
+    row.append(guessBtn, newBtn);
+    card.append(row);
+
+    statsEl = el("p", "wg-stats");
+    card.append(statsEl);
+    update();
+  }
+
+  function update() {
+    infoEl.textContent = asked.length + (asked.length === 1 ? " question" : " questions") + " · " +
+                         guessesLeft + (guessesLeft === 1 ? " guess" : " guesses") + " left · " +
+                         (game.concepts.length - crossed.size) + (game.concepts.length - crossed.size === 1 ? " card" : " cards") + " left";
+    statsEl.textContent = "Played " + stats.played + " · Won " + stats.won +
+                          " · Best: " + (stats.best === null ? "–" : stats.best + " questions");
+  }
+
+  function ask(i) {
+    if (over) return;
+    const q = game.questions[i];
+    const yes = secret.tags.includes(q.tag);
+    asked.push({ q, yes });
+    qButtons[i].disabled = true;
+    qButtons[i].classList.add(yes ? "yes" : "no");
+    qButtons[i].append(el("span", "ak-answer", yes ? "Yes" : "No"));
+    const li = el("li", yes ? "yes" : "no");
+    li.append(el("span", "", q.text), el("b", "", yes ? "Yes" : "No"));
+    logEl.append(li);
+    bubble.textContent = yes ? "Yes! ✦" : "No.";
+    update();
+  }
+
+  function toggle(i) {
+    if (over) return;
+    if (crossed.has(i)) crossed.delete(i); else crossed.add(i);
+    cards[i].classList.toggle("crossed", crossed.has(i));
+    cards[i].setAttribute("aria-pressed", String(crossed.has(i)));
+    update();
+  }
+
+  function setGuessing(on) {
+    guessing = on;
+    card.classList.toggle("guess-mode", on);
+    guessBtn.textContent = on ? "Cancel guess" : "I know! Make a guess";
+    boardLabel.textContent = on ? "Guess mode: click your answer" : "Click a card to cross it out";
+    bubble.textContent = on ? "Go on, click the card you think I'm thinking of…" : "Ask me another question!";
+  }
+
+  function guess(i) {
+    if (over) return;
+    const right = game.concepts[i] === secret;
+    if (right) return finish(true);
+    guessesLeft--;
+    cards[i].classList.add("crossed", "wrong-guess");
+    crossed.add(i);
+    if (guessesLeft === 0) return finish(false);
+    setGuessing(false);                                   // first leave guess mode…
+    bubble.textContent = "Not that one! " + guessesLeft + (guessesLeft === 1 ? " guess" : " guesses") + " left.";   // …then say why
+    update();
+  }
+
+  function finish(won) {
+    over = true;
+    setGuessing(false);
+    stats.played++;
+    if (won) {
+      stats.won++;
+      if (stats.best === null || asked.length < stats.best) stats.best = asked.length;
+    }
+    saveStats();
+    cards[game.concepts.indexOf(secret)].classList.add("secret");
+    qButtons.forEach(b => b.disabled = true);
+    bubble.textContent = won ? "You read my mind! ✦" : "I win this time!";
+    endEl.className = "feedback " + (won ? "good" : "bad");
+    endEl.append(
+      el("strong", "", won ? "Found in " + asked.length + (asked.length === 1 ? " question" : " questions") + ": " + secret.name + "!"
+                           : "I was thinking of: " + secret.name),
+      el("p", "", secret.explain)
+    );
+    guessBtn.textContent = "Play again ↻";
+    guessBtn.onclick = null;
+    guessBtn.replaceWith(guessBtn.cloneNode(true));     // drop the old click listener
+    const again = card.querySelector(".btn-row .btn-primary");
+    again.addEventListener("click", newGame);
+    again.focus({ preventScroll: true });
+    update();
+  }
+
+  newGame();
+}
+
 /* ---------- Contact me ---------- */
 function buildContact(page) {
   const grid = el("div", "grid-2");
@@ -3679,7 +4028,7 @@ const PAGES = {
   lectures: { build: buildLectures, title: "Sessions",
               subtitle: "Lectures and guest lectures · my notes and analysis" },
   games:    { build: buildGames,    title: "Games",
-              subtitle: "Quizzes by theme, a word game and hangman, all about the course" },
+              subtitle: "Quizzes, Pinkle, Hangman and Akinator, all about the course" },
   contact:  { build: buildContact,  title: "Contact me",
               subtitle: "Let's connect" }
 };
