@@ -849,63 +849,36 @@
     @media (max-width: 520px) { .hm-layout { grid-template-columns: 1fr; } .hm-art { max-width: 150px; margin: 0 auto; } }
 
     /* ---------- Akinator (reverse) ---------- */
-    .ak-genie { display: flex; align-items: center; gap: 1rem; margin: 1rem 0 1.5rem; }
-    .ak-lamp { width: 64px; height: 64px; flex-shrink: 0; }
-    .ak-lamp svg { width: 100%; height: 100%; fill: none; stroke: var(--gold); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; animation: ak-glow 3s ease-in-out infinite; }
-    @keyframes ak-glow { 50% { filter: drop-shadow(0 0 6px rgba(184, 146, 90, 0.7)); transform: translateY(-3px); } }
-    .ak-bubble {
-      position: relative;
-      margin: 0;
-      padding: 0.8rem 1.1rem;
-      background: var(--blush);
+    /* Chat */
+    .ak-layout { display: grid; grid-template-columns: minmax(280px, 1.1fr) 1.3fr; gap: 1.75rem; margin-top: 1.25rem; }
+    @media (max-width: 800px) { .ak-layout { grid-template-columns: 1fr; } }
+    .ak-chatbox { display: flex; flex-direction: column; border: 1px solid var(--blush-2); border-radius: 14px; background: var(--ivory); overflow: hidden; }
+    .ak-chat { flex: 1; min-height: 380px; max-height: 620px; overflow-y: auto;   /* fills the box, scrolls when full */ padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; scroll-behavior: smooth; }
+    .ak-msg { display: flex; align-items: flex-end; gap: 0.5rem; max-width: 90%; animation: fadeUp 0.25s ease; }
+    .ak-msg.me { align-self: flex-end; }
+    .ak-avatar { width: 30px; height: 30px; flex-shrink: 0; }
+    .ak-avatar svg { width: 100%; height: 100%; fill: none; stroke: var(--gold); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .ak-text { padding: 0.6rem 0.9rem; border-radius: 16px; font-size: 0.92rem; line-height: 1.45; }
+    .ak-text p { margin: 0; }
+    .ak-text small { display: block; margin-top: 0.3rem; font-size: 0.75rem; opacity: 0.75; }
+    .ak-msg.genie .ak-text { background: var(--paper); border: 1px solid var(--blush-2); border-bottom-left-radius: 4px; color: var(--ink); }
+    .ak-msg.me .ak-text { background: #d81b6a; color: var(--white); border-bottom-right-radius: 4px; }
+    .ak-msg.typing .ak-text p { letter-spacing: 0.2em; animation: shimmer 1s infinite; }
+    .ak-form { display: flex; gap: 0.5rem; padding: 0.75rem; border-top: 1px solid var(--blush-2); background: var(--paper); }
+    .ak-form input {
+      flex: 1;
+      min-width: 0;
+      font: inherit;
+      font-size: 0.95rem;
+      padding: 0.6rem 0.9rem;
       border: 1px solid var(--blush-2);
-      border-radius: 14px;
-      font-weight: 500;
+      border-radius: 999px;
+      background: var(--ivory);
       color: var(--ink);
     }
-    .ak-bubble::before {                       /* little tail pointing at the genie */
-      content: "";
-      position: absolute;
-      left: -7px;
-      top: 50%;
-      width: 12px;
-      height: 12px;
-      background: var(--blush);
-      border-left: 1px solid var(--blush-2);
-      border-bottom: 1px solid var(--blush-2);
-      transform: translateY(-50%) rotate(45deg);
-    }
-    .ak-layout { display: grid; grid-template-columns: minmax(240px, 1fr) 1.5fr; gap: 1.75rem; }
-    @media (max-width: 760px) { .ak-layout { grid-template-columns: 1fr; } }
+    .ak-form input:focus-visible { border-color: #d81b6a; box-shadow: 0 0 0 3px rgba(216, 27, 106, 0.15); border-radius: 999px; }
+    .ak-form .btn { padding: 0.6rem 1.2rem; }
     .ak-label { margin: 0 0 0.5rem; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
-    .ak-questions { display: grid; gap: 6px; margin-bottom: 1.25rem; }
-    .ak-q {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      text-align: left;
-      font-family: var(--sans);
-      font-size: 0.86rem;
-      padding: 0.55rem 0.8rem;
-      border: 1px solid var(--blush-2);
-      border-radius: 8px;
-      background: var(--paper);
-      color: var(--ink);
-      cursor: pointer;
-      transition: border-color var(--speed), background var(--speed);
-    }
-    .ak-q:hover:not(:disabled) { border-color: #d81b6a; background: var(--blush); }
-    .ak-q:disabled { cursor: default; }
-    .ak-q.yes { border-color: #d81b6a; }
-    .ak-q.no  { opacity: 0.6; }
-    .ak-answer { font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
-    .ak-q.yes .ak-answer { color: #d81b6a; }
-    .ak-q.no  .ak-answer { color: var(--mauve); }
-    .ak-log { margin: 0; padding-left: 1.2rem; font-size: 0.85rem; }
-    .ak-log li { padding: 0.2rem 0; }
-    .ak-log li span { margin-right: 0.4rem; }
-    .ak-log li.yes b { color: #d81b6a; }
-    .ak-log li.no b { color: var(--mauve); }
     .ak-board-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
     .ak-info { margin: 0 0 0.5rem; font-size: 0.78rem; color: var(--mauve); }
     .ak-board { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 8px; }
@@ -927,9 +900,6 @@
     .ak-card.crossed { opacity: 0.32; text-decoration: line-through; }
     .ak-card.wrong-guess { border-color: var(--wrong); }
     .ak-card.secret { opacity: 1; text-decoration: none; background: #d81b6a; border-color: #d81b6a; color: var(--white); }
-    /* Guess mode: cards glow gold to show that a click now means "this one!" */
-    .guess-mode .ak-card:not(.crossed) { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(184, 146, 90, 0.25); }
-    .guess-mode .ak-board-head .ak-label { color: #d81b6a; }
 
     /* =========================================================
        PAGE: CONTACT
@@ -2122,7 +2092,7 @@ const GAME_CATEGORIES = [
   { kind: "quiz",     label: "Quizzes",  note: "4 themes · multiple choice" },
   { kind: "wordle",   label: "Pinkle",   note: "Word game · 6 tries" },
   { kind: "hangman",  label: "Hangman",  note: "Find the course term" },
-  { kind: "akinator", label: "Akinator", note: "Guess the genie's concept" }
+  { kind: "akinator", label: "Akinator", note: "Chat with the genie" }
 ];
 
 // Takes round number n (1 = first) from a question bank,
@@ -2220,79 +2190,83 @@ const GAMES = [
     ]
   },
 
-  /* ---------- AKINATOR (reverse: I guess, the site answers) ----------
+  /* ---------- AKINATOR (reverse, as a chatbot) ----------
      kind: "akinator" → drawn by createAkinator().
-     Each concept has "tags". A question is answered YES when the secret
-     concept has the question's tag, otherwise NO. To add a concept, give
-     it the tags that are true for it; to add a question, pick a tag. */
+     The player TYPES questions. The genie understands them with keywords:
+     - topics: if the question contains one of a topic's "words", that
+       topic is asked. Answer YES when the secret concept has that tag.
+       Several topics in one question → YES only if all are true.
+     - concepts: if the question contains one of a concept's "names",
+       it counts as a guess ("Is it Spark Ads?").
+     Words are matched as whole words, ignoring capitals and punctuation. */
   {
     kind: "akinator",
     tabLabel: "Akinator",
-    intro: "Reverse Akinator: the genie is thinking of a concept from the course. Ask yes/no questions, cross out the cards that no longer fit, then make your guess. You have 3 guesses.",
-    questions: [
-      { tag: "session1",  text: "Was it covered in Session 1?" },
-      { tag: "session2",  text: "Was it covered in Session 2?" },
-      { tag: "launchlab", text: "Was it in the LaunchLab session?" },
-      { tag: "type",      text: "Is it one of the 10 types of digital marketing platforms?" },
-      { tag: "metric",    text: "Is it something you measure (a metric)?" },
-      { tag: "feature",   text: "Is it a specific tool or ad feature?" },
-      { tag: "company",   text: "Is it the name of a company or product?" },
-      { tag: "ai",        text: "Does it use AI?" },
-      { tag: "video",     text: "Is it about video?" },
-      { tag: "social",    text: "Is it linked to social media?" },
-      { tag: "coding",    text: "Is it about coding or building websites?" },
-      { tag: "commerce",  text: "Is it about selling or e-commerce?" },
-      { tag: "data",      text: "Is it mainly about data?" },
-      { tag: "search",    text: "Is it about search engines or being found?" },
-      { tag: "rivals",    text: "Does it compare you with competitors?" },
-      { tag: "meta",      text: "Does it belong to Meta?" },
-      { tag: "google",    text: "Does it belong to Google?" },
-      { tag: "tiktok",    text: "Is it a TikTok thing?" }
+    intro: "Reverse Akinator, as a chat: the genie is thinking of a concept from the course. Type yes/no questions, cross out the cards that no longer fit, and when you know, ask \"Is it …?\". You have 3 guesses.",
+    topics: [
+      { tag: "session1",  says: "covered in Session 1",            words: ["session 1", "session one", "first session", "first lecture", "lecture 1", "s1"] },
+      { tag: "session2",  says: "covered in Session 2",            words: ["session 2", "session two", "second session", "second lecture", "lecture 2", "s2"] },
+      { tag: "launchlab", says: "from the LaunchLab session",      words: ["launchlab", "launch lab", "guest", "guest speaker", "guest speakers", "vibe coding", "yibo", "nirvan", "rishabh"] },
+      { tag: "type",      says: "one of the 10 platform types",    words: ["platform type", "type of platform", "types of platforms", "10 types", "ten types", "type of digital marketing", "marketing platform", "kind of platform"] },
+      { tag: "metric",    says: "a metric",                        words: ["metric", "metrics", "measure", "measured", "measurement", "kpi", "kpis", "benchmark", "benchmarking", "score"] },
+      { tag: "feature",   says: "a specific tool or ad feature",   words: ["tool", "feature", "ad feature", "ad format", "functionality", "option"] },
+      { tag: "company",   says: "the name of a company or product", words: ["company", "brand", "brand name", "product", "business", "firm", "startup", "name of a company"] },
+      { tag: "ai",        says: "using AI",                        words: ["ai", "a.i", "artificial intelligence", "genai", "gen ai", "machine learning", "automated", "automatic", "algorithm", "smart"] },
+      { tag: "video",     says: "about video",                     words: ["video", "videos", "film", "films", "reels", "watch", "watching"] },
+      { tag: "social",    says: "linked to social media",          words: ["social", "social media", "social network", "influencer", "influencers", "creator", "creators", "linkedin"] },
+      { tag: "coding",    says: "about coding or websites",        words: ["code", "coding", "programming", "developer", "developers", "website", "websites", "github", "build", "building", "deploy", "web"] },
+      { tag: "commerce",  says: "about selling or e-commerce",     words: ["sell", "selling", "sale", "sales", "shop", "shopping", "ecommerce", "e-commerce", "commerce", "buy", "buying", "purchase", "retail"] },
+      { tag: "data",      says: "mainly about data",               words: ["data", "database", "databases", "information", "leads", "first-party", "users data"] },
+      { tag: "search",    says: "about search or being found",     words: ["search", "search engine", "search engines", "seo", "found", "findable", "discoverability", "visibility", "visible"] },
+      { tag: "rivals",    says: "comparing you with competitors",  words: ["competitor", "competitors", "competition", "rival", "rivals", "compare", "comparing", "comparison"] },
+      { tag: "meta",      says: "from Meta",                       words: ["meta", "facebook", "instagram", "whatsapp", "messenger", "zuckerberg"] },
+      { tag: "google",    says: "from Google",                     words: ["google", "youtube", "gemini", "alphabet"] },
+      { tag: "tiktok",    says: "a TikTok thing",                  words: ["tiktok", "tik tok", "bytedance"] }
     ],
     concepts: [
-      { name: "Influencer & Creator Marketing", tags: ["session1", "type", "social"],
+      { name: "Influencer & Creator Marketing", names: ["influencer marketing", "creator marketing", "influencer & creator", "influencer and creator"], tags: ["session1", "type", "social"],
         explain: "One of the 10 platform types: trusted creators drive discovery and sales. SG spend: US$119M in 2025." },
-      { name: "Search: SEO, SEM & GEO", tags: ["session1", "type", "ai", "search"],
+      { name: "Search: SEO, SEM & GEO", names: ["seo sem", "sem", "geo", "seo sem geo", "search marketing", "search engine marketing", "search engine optimisation", "search engine optimization"], tags: ["session1", "type", "ai", "search"],
         explain: "Capturing high-intent demand, and now being the brand AI answers cite (GEO)." },
-      { name: "Affiliate & Social Commerce", tags: ["session1", "type", "social", "commerce"],
+      { name: "Affiliate & Social Commerce", names: ["affiliate", "affiliate marketing", "social commerce", "affiliate & social commerce"], tags: ["session1", "type", "social", "commerce"],
         explain: "Pay-for-performance sales through creators and partners, like TikTok Shop affiliates." },
-      { name: "Marketing Automation & AI Agents", tags: ["session1", "type", "ai"],
+      { name: "Marketing Automation & AI Agents", names: ["marketing automation", "ai agents", "automation & ai agents", "automation and ai agents"], tags: ["session1", "type", "ai"],
         explain: "From triggered journeys to AI agents: DBS's digibot resolves 9 in 10 queries." },
-      { name: "Programmatic & Retail Media", tags: ["session1", "type", "data", "commerce"],
+      { name: "Programmatic & Retail Media", names: ["programmatic", "retail media", "programmatic advertising"], tags: ["session1", "type", "data", "commerce"],
         explain: "Real-time ad buying and ads next to real purchase data (Shopee Ads, GrabAds…)." },
-      { name: "AI Visibility", tags: ["session1", "metric", "ai", "search"],
+      { name: "AI Visibility", names: ["ai visibility"], tags: ["session1", "metric", "ai", "search"],
         explain: "The 8th benchmarking metric: the share of AI answers that mention your brand." },
-      { name: "Net Promoter Score", tags: ["session1", "metric"],
+      { name: "Net Promoter Score", names: ["net promoter score", "nps", "net promoter"], tags: ["session1", "metric"],
         explain: "A perceptual metric, alongside customer satisfaction and customer effort scores." },
-      { name: "Share of Voice", tags: ["session1", "metric", "rivals"],
+      { name: "Share of Voice", names: ["share of voice", "sov", "voice share"], tags: ["session1", "metric", "rivals"],
         explain: "A competitive metric, alongside market share and share of wallet." },
-      { name: "Meta Advantage+", tags: ["session1", "session2", "feature", "company", "ai", "social", "meta"],
+      { name: "Meta Advantage+", names: ["advantage+", "advantage plus", "advantage", "meta advantage"], tags: ["session1", "session2", "feature", "company", "ai", "social", "meta"],
         explain: "Meta's AI that finds the audience and automates creative, placement and budget." },
-      { name: "Meta Business Agent", tags: ["session2", "feature", "company", "ai", "social", "commerce", "meta"],
+      { name: "Meta Business Agent", names: ["business agent", "meta business agent"], tags: ["session2", "feature", "company", "ai", "social", "commerce", "meta"],
         explain: "An AI agent that answers questions and closes sales on WhatsApp, Instagram and Messenger." },
-      { name: "TikTok Symphony", tags: ["session2", "feature", "company", "ai", "video", "social", "tiktok"],
+      { name: "TikTok Symphony", names: ["symphony", "tiktok symphony"], tags: ["session2", "feature", "company", "ai", "video", "social", "tiktok"],
         explain: "TikTok's AI creative suite: it makes and translates videos." },
-      { name: "Spark Ads", tags: ["session2", "feature", "video", "social", "tiktok"],
+      { name: "Spark Ads", names: ["spark ads", "spark ad", "spark"], tags: ["session2", "feature", "video", "social", "tiktok"],
         explain: "Boost organic posts directly from TikTok creators as ads." },
-      { name: "TikTok Shop", tags: ["session1", "session2", "company", "video", "social", "commerce", "tiktok"],
+      { name: "TikTok Shop", names: ["tiktok shop", "tik tok shop"], tags: ["session1", "session2", "company", "video", "social", "commerce", "tiktok"],
         explain: "Shopping inside TikTok: its SEA GMV doubled to US$45.6B in 2025." },
-      { name: "LinkedIn Lead Gen Forms", tags: ["session2", "feature", "social", "data"],
+      { name: "LinkedIn Lead Gen Forms", names: ["lead gen forms", "lead gen form", "lead gen", "lead generation forms"], tags: ["session2", "feature", "social", "data"],
         explain: "Capture leads without users leaving LinkedIn." },
-      { name: "YouTube Peak Points", tags: ["session2", "feature", "ai", "video", "google"],
+      { name: "YouTube Peak Points", names: ["peak points", "peak point", "youtube peak points"], tags: ["session2", "feature", "ai", "video", "google"],
         explain: "Gemini places ads right after a video's most engaging moments." },
-      { name: "Google Performance Max", tags: ["session1", "session2", "feature", "company", "ai", "google", "search"],
+      { name: "Google Performance Max", names: ["performance max", "pmax", "p max", "google performance max"], tags: ["session1", "session2", "feature", "company", "ai", "google", "search"],
         explain: "Google's AI campaigns that pick audience, placement and budget: 'your creative is the targeting'." },
-      { name: "Mailchimp", tags: ["session1", "session2", "company"],
+      { name: "Mailchimp", names: ["mailchimp", "mail chimp"], tags: ["session1", "session2", "company"],
         explain: "A point tool for email marketing, with built-in AI features." },
-      { name: "HubSpot", tags: ["session2", "company", "ai"],
+      { name: "HubSpot", names: ["hubspot", "hub spot"], tags: ["session2", "company", "ai"],
         explain: "A marketing suite, now adding AI agents (HubSpot Breeze)." },
-      { name: "Claude Code", tags: ["launchlab", "feature", "company", "ai", "coding"],
+      { name: "Claude Code", names: ["claude code", "claude"], tags: ["launchlab", "feature", "company", "ai", "coding"],
         explain: "An agentic coding system that reads projects, runs commands and debugs, used to build this site." },
-      { name: "Pull Request", tags: ["launchlab", "coding"],
+      { name: "Pull Request", names: ["pull request", "pull requests", "pr"], tags: ["launchlab", "coding"],
         explain: "Propose changes on GitHub and ask teammates to review them before merging." },
-      { name: "Vercel", tags: ["launchlab", "company", "coding"],
+      { name: "Vercel", names: ["vercel"], tags: ["launchlab", "company", "coding"],
         explain: "Turns a GitHub repo into a live website that updates on every push." },
-      { name: "Supabase", tags: ["launchlab", "company", "coding", "data"],
+      { name: "Supabase", names: ["supabase", "supa base"], tags: ["launchlab", "company", "coding", "data"],
         explain: "A backend-as-a-service: logins, verification and a user database." }
     ]
   }
@@ -3804,15 +3778,18 @@ function createHangman(panel, game) {
   newGame();
 }
 
-/* ---------- AKINATOR (reverse) ----------
-   The site picks a secret concept; the player asks yes/no questions.
+/* ---------- AKINATOR (reverse, as a chatbot) ----------
    STATE:
      secret      → the concept to find
-     asked       → questions already asked (in order), with their answer
+     questions   → how many yes/no questions were answered
      crossed     → cards the player crossed out (a Set of indexes)
      guessesLeft → 3 at the start
-     guessing    → true while "Make a guess" mode is on (a card click = a guess)
-   Answer rule: YES if the secret concept's tags include the question's tag. */
+   HOW THE GENIE READS A MESSAGE (understand()):
+     1. clean it: lower case, punctuation removed
+     2. "hint" / "give up" / "help" → special commands
+     3. a concept name ("spark ads", "nps"…) → it's a guess
+     4. topic words ("ai", "meta", "session 2"…) → a yes/no question
+     5. nothing recognised → the genie asks you to rephrase      */
 function createAkinator(panel, game) {
   const GUESSES = 3;
   const STATS_KEY = "akinator-stats";
@@ -3820,64 +3797,128 @@ function createAkinator(panel, game) {
   const saveStats = () => { try { localStorage.setItem(STATS_KEY, JSON.stringify(stats)); } catch {} };
   const stats = loadStats() || { played: 0, won: 0, best: null };   // best = fewest questions in a win
 
-  let secret, asked, crossed, guessesLeft, guessing, over;
-  let bubble, logEl, qButtons, cards, guessBtn, infoEl, statsEl, endEl, boardLabel;
+  let secret, questions, crossed, guessesLeft, over, hintsGiven;
+  let chatEl, input, sendBtn, cards, infoEl, statsEl, endEl;
 
   const card = el("section", "card game akinator");
   panel.append(card);
 
+  /* ----- Understanding text ----- */
+  // " Is it A.I.-based?!" → " is it a i based " (spaces around so we can match whole words)
+  const clean = text => " " + text.toLowerCase()
+    .replace(/&/g, " and ").replace(/\+/g, " plus ")
+    .replace(/[^a-z0-9]+/g, " ").trim() + " ";
+  const has = (text, phrase) => text.includes(" " + clean(phrase).trim() + " ");
+
+  function understand(raw) {
+    const text = clean(raw);
+    if (/ (hint|clue|help me) /.test(text)) return { kind: "hint" };
+    if (/ (give up|i give up|surrender|tell me|reveal) /.test(text)) return { kind: "giveup" };
+    if (/ (help|how|what can i ask|examples?) /.test(text) && !/ is it /.test(text)) return { kind: "help" };
+
+    // A guess? Find the concept whose name matches with the longest phrase
+    let guessed = null, longest = 0;
+    game.concepts.forEach(c => {
+      [c.name, ...c.names].forEach(n => {
+        if (has(text, n) && clean(n).length > longest) { guessed = c; longest = clean(n).length; }
+      });
+    });
+
+    // Topics asked about (each topic once)
+    let topics = game.topics.filter(t => t.words.some(w => has(text, w)));
+    // A word that is part of the guessed concept's name doesn't count as a topic
+    // ("is it tiktok shop?" is a guess, not "is it a TikTok thing?")
+    if (guessed) {
+      const nameWords = [guessed.name, ...guessed.names].map(clean).join(" ");
+      topics = topics.filter(t => !t.words.some(w => has(text, w) && nameWords.includes(clean(w).trim())));
+      if (topics.length === 0) return { kind: "guess", concept: guessed };
+    }
+    if (topics.length) return { kind: "question", topics };
+    return { kind: "unknown" };
+  }
+
+  /* ----- Chat bubbles ----- */
+  function addMessage(who, text, extra) {
+    const msg = el("div", "ak-msg " + who);
+    if (who === "genie") {
+      const lamp = el("span", "ak-avatar");
+      lamp.setAttribute("aria-hidden", "true");
+      lamp.innerHTML = '<svg viewBox="0 0 64 64"><circle cx="32" cy="28" r="18"/><path d="M20 50h24M24 56h16"/><path d="M32 18l2.5 6.5L41 27l-6.5 2.5L32 36l-2.5-6.5L23 27l6.5-2.5z"/></svg>';
+      msg.append(lamp);
+    }
+    const bubble = el("div", "ak-text");
+    bubble.append(el("p", "", text));
+    if (extra) bubble.append(el("small", "", extra));
+    msg.append(bubble);
+    chatEl.append(msg);
+    chatEl.scrollTop = chatEl.scrollHeight;          // keep the newest message in view
+    return msg;
+  }
+
+  // The genie "types" for a moment before answering (feels like a chatbot)
+  function genieSays(text, extra) {
+    const typing = addMessage("genie typing", "…");
+    input.disabled = sendBtn.disabled = true;
+    setTimeout(() => {
+      typing.remove();
+      addMessage("genie", text, extra);
+      if (!over) { input.disabled = sendBtn.disabled = false; input.focus({ preventScroll: true }); }
+    }, 450);
+  }
+
+  /* ----- Game ----- */
   function newGame() {
     secret = pickWord(game.concepts, secret);
-    asked = [];
+    questions = 0;
     crossed = new Set();
     guessesLeft = GUESSES;
-    guessing = false;
+    hintsGiven = new Set();
     over = false;
     draw();
+    addMessage("genie", "I'm thinking of a concept from the course… ✦ Ask me yes/no questions!",
+      "Try: \"Does it use AI?\", \"Was it in Session 2?\", \"Is it a TikTok thing?\". When you know: \"Is it Spark Ads?\". Type \"hint\" or \"give up\" any time.");
   }
 
   function draw() {
     card.innerHTML = "";
     card.append(
-      el("span", "eyebrow", "Reverse Akinator · yes/no questions · " + GUESSES + " guesses"),
+      el("span", "eyebrow", "Reverse Akinator · chat · " + GUESSES + " guesses"),
       el("h2", "", game.tabLabel),
       el("p", "muted", game.intro)
     );
-
-    // The genie and its speech bubble
-    const genie = el("div", "ak-genie");
-    const lamp = el("div", "ak-lamp");
-    lamp.setAttribute("aria-hidden", "true");
-    lamp.innerHTML = '<svg viewBox="0 0 64 64"><circle cx="32" cy="28" r="18"/><path d="M20 50h24M24 56h16M26 46l-2 4M38 46l2 4"/><path d="M32 18l2.5 6.5L41 27l-6.5 2.5L32 36l-2.5-6.5L23 27l6.5-2.5z"/></svg>';
-    bubble = el("p", "ak-bubble", "I'm thinking of a concept from the course… Ask me a question!");
-    bubble.setAttribute("aria-live", "polite");
-    genie.append(lamp, bubble);
-    card.append(genie);
-
     const layout = el("div", "ak-layout");
 
-    // Left: questions + log
-    const left = el("div", "ak-left");
-    left.append(el("p", "ak-label", "Ask a question"));
-    const qList = el("div", "ak-questions");
-    qButtons = game.questions.map((q, i) => {
-      const b = el("button", "ak-q", q.text);
-      // EVENT LISTENER: asking a question
-      b.addEventListener("click", () => ask(i));
-      qList.append(b);
-      return b;
+    // Left: the chat
+    const chatBox = el("div", "ak-chatbox");
+    chatEl = el("div", "ak-chat");
+    chatEl.setAttribute("role", "log");                // screen readers read new messages
+    chatEl.setAttribute("aria-live", "polite");
+    chatBox.append(chatEl);
+    const form = el("form", "ak-form");
+    input = el("input");
+    input.type = "text";
+    input.placeholder = "Ask a yes/no question…";
+    input.setAttribute("aria-label", "Your question for the genie");
+    input.autocomplete = "off";
+    sendBtn = el("button", "btn btn-primary", "Send");
+    sendBtn.type = "submit";
+    form.append(input, sendBtn);
+    // EVENT LISTENER: pressing Enter or Send sends the message
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const text = input.value.trim();
+      if (!text || over) return;
+      input.value = "";
+      addMessage("me", text);
+      reply(text);
     });
-    left.append(qList);
-    left.append(el("p", "ak-label", "Your notes"));
-    logEl = el("ol", "ak-log");
-    left.append(logEl);
-    layout.append(left);
+    chatBox.append(form);
+    layout.append(chatBox);
 
     // Right: the board of concepts
     const right = el("div", "ak-right");
     const head = el("div", "ak-board-head");
-    boardLabel = el("p", "ak-label", "Click a card to cross it out");
-    head.append(boardLabel);
+    head.append(el("p", "ak-label", "Click a card to cross it out"));
     infoEl = el("p", "ak-info");
     head.append(infoEl);
     right.append(head);
@@ -3885,8 +3926,8 @@ function createAkinator(panel, game) {
     cards = game.concepts.map((c, i) => {
       const b = el("button", "ak-card", c.name);
       b.setAttribute("aria-pressed", "false");
-      // EVENT LISTENER: cross out / un-cross a card, or guess it in guess mode
-      b.addEventListener("click", () => guessing ? guess(i) : toggle(i));
+      // EVENT LISTENER: cross out / un-cross a card
+      b.addEventListener("click", () => toggle(i));
       board.append(b);
       return b;
     });
@@ -3896,41 +3937,23 @@ function createAkinator(panel, game) {
 
     endEl = el("div");
     card.append(endEl);
-
     const row = el("div", "btn-row");
-    guessBtn = el("button", "btn btn-primary", "I know! Make a guess");
-    guessBtn.addEventListener("click", () => setGuessing(!guessing));
     const newBtn = el("button", "btn", "New game");
     newBtn.addEventListener("click", newGame);
-    row.append(guessBtn, newBtn);
+    row.append(newBtn);
     card.append(row);
-
     statsEl = el("p", "wg-stats");
     card.append(statsEl);
     update();
   }
 
   function update() {
-    infoEl.textContent = asked.length + (asked.length === 1 ? " question" : " questions") + " · " +
+    const left = game.concepts.length - crossed.size;
+    infoEl.textContent = questions + (questions === 1 ? " question" : " questions") + " · " +
                          guessesLeft + (guessesLeft === 1 ? " guess" : " guesses") + " left · " +
-                         (game.concepts.length - crossed.size) + (game.concepts.length - crossed.size === 1 ? " card" : " cards") + " left";
+                         left + (left === 1 ? " card" : " cards") + " left";
     statsEl.textContent = "Played " + stats.played + " · Won " + stats.won +
                           " · Best: " + (stats.best === null ? "–" : stats.best + " questions");
-  }
-
-  function ask(i) {
-    if (over) return;
-    const q = game.questions[i];
-    const yes = secret.tags.includes(q.tag);
-    asked.push({ q, yes });
-    qButtons[i].disabled = true;
-    qButtons[i].classList.add(yes ? "yes" : "no");
-    qButtons[i].append(el("span", "ak-answer", yes ? "Yes" : "No"));
-    const li = el("li", yes ? "yes" : "no");
-    li.append(el("span", "", q.text), el("b", "", yes ? "Yes" : "No"));
-    logEl.append(li);
-    bubble.textContent = yes ? "Yes! ✦" : "No.";
-    update();
   }
 
   function toggle(i) {
@@ -3941,51 +3964,77 @@ function createAkinator(panel, game) {
     update();
   }
 
-  function setGuessing(on) {
-    guessing = on;
-    card.classList.toggle("guess-mode", on);
-    guessBtn.textContent = on ? "Cancel guess" : "I know! Make a guess";
-    boardLabel.textContent = on ? "Guess mode: click your answer" : "Click a card to cross it out";
-    bubble.textContent = on ? "Go on, click the card you think I'm thinking of…" : "Ask me another question!";
-  }
+  // Joins ["using AI", "from Meta"] → "using AI and from Meta"
+  const joinAnd = list => list.length < 2 ? list.join("") : list.slice(0, -1).join(", ") + " and " + list[list.length - 1];
 
-  function guess(i) {
-    if (over) return;
-    const right = game.concepts[i] === secret;
-    if (right) return finish(true);
-    guessesLeft--;
-    cards[i].classList.add("crossed", "wrong-guess");
-    crossed.add(i);
-    if (guessesLeft === 0) return finish(false);
-    setGuessing(false);                                   // first leave guess mode…
-    bubble.textContent = "Not that one! " + guessesLeft + (guessesLeft === 1 ? " guess" : " guesses") + " left.";   // …then say why
+  function reply(text) {
+    const meaning = understand(text);
+
+    if (meaning.kind === "question") {
+      questions++;
+      const yes = meaning.topics.every(t => secret.tags.includes(t.tag));
+      const understood = "I understood: is it " + joinAnd(meaning.topics.map(t => t.says)) + "?";
+      genieSays(yes ? "Yes! ✦" : "No.", understood);
+    }
+    else if (meaning.kind === "guess") {
+      guess(meaning.concept);
+    }
+    else if (meaning.kind === "hint") {
+      // A clue: something TRUE about the secret that hasn't been given as a hint yet
+      const options = game.topics.filter(t => secret.tags.includes(t.tag) && !hintsGiven.has(t.tag));
+      if (!options.length) return genieSays("I've no more hints… you can do it!");
+      const t = options[Math.floor(Math.random() * options.length)];
+      hintsGiven.add(t.tag);
+      genieSays("Hint: it's " + t.says + ". ✦");
+    }
+    else if (meaning.kind === "giveup") {
+      finish(false, true);
+    }
+    else if (meaning.kind === "help") {
+      genieSays("Ask me yes/no questions about what it is or where it's from.",
+        "I know about: Session 1, Session 2, LaunchLab, platform types, metrics, tools, companies, AI, video, social media, coding, selling, data, search, competitors, Meta, Google and TikTok.");
+    }
+    else {
+      genieSays("Hmm, I didn't understand that one. Could you ask it another way?",
+        "Try a topic like AI, video, Meta, Google, TikTok, Session 1, a metric, coding, selling… or guess: \"Is it Vercel?\"");
+    }
     update();
   }
 
-  function finish(won) {
+  function guess(concept) {
+    if (concept === secret) return finish(true);
+    guessesLeft--;
+    const i = game.concepts.indexOf(concept);
+    crossed.add(i);
+    cards[i].classList.add("crossed", "wrong-guess");
+    if (guessesLeft === 0) return finish(false);
+    genieSays("No, it's not " + concept.name + "! " + guessesLeft + (guessesLeft === 1 ? " guess" : " guesses") + " left.");
+    update();
+  }
+
+  function finish(won, gaveUp) {
     over = true;
-    setGuessing(false);
     stats.played++;
     if (won) {
       stats.won++;
-      if (stats.best === null || asked.length < stats.best) stats.best = asked.length;
+      if (stats.best === null || questions < stats.best) stats.best = questions;
     }
     saveStats();
     cards[game.concepts.indexOf(secret)].classList.add("secret");
-    qButtons.forEach(b => b.disabled = true);
-    bubble.textContent = won ? "You read my mind! ✦" : "I win this time!";
+    input.disabled = sendBtn.disabled = true;
+    const line = won ? "You read my mind! It was " + secret.name + ". ✦"
+               : gaveUp ? "I was thinking of " + secret.name + "."
+               : "Out of guesses! I was thinking of " + secret.name + ".";
+    setTimeout(() => addMessage("genie", line, secret.explain), 450);
     endEl.className = "feedback " + (won ? "good" : "bad");
     endEl.append(
-      el("strong", "", won ? "Found in " + asked.length + (asked.length === 1 ? " question" : " questions") + ": " + secret.name + "!"
-                           : "I was thinking of: " + secret.name),
+      el("strong", "", won ? "Found in " + questions + (questions === 1 ? " question" : " questions") + ": " + secret.name + "!"
+                           : "The answer was: " + secret.name),
       el("p", "", secret.explain)
     );
-    guessBtn.textContent = "Play again ↻";
-    guessBtn.onclick = null;
-    guessBtn.replaceWith(guessBtn.cloneNode(true));     // drop the old click listener
-    const again = card.querySelector(".btn-row .btn-primary");
+    const again = el("button", "btn btn-primary", "Play again ↻");
     again.addEventListener("click", newGame);
-    again.focus({ preventScroll: true });
+    card.querySelector(".btn-row").prepend(again);
     update();
   }
 
