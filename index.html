@@ -423,6 +423,11 @@
     .person img.avatar { width: 120px; height: 120px; }
     .person .btn { padding: 0.6rem 1.1rem; }
 
+    /* "Photos: …" credit line */
+    .source-line { margin: 1.25rem 0 0; font-size: 0.78rem; color: var(--mauve); }
+    .source-line a { color: var(--rose-deep); }
+    .lightbox-caption a { font-family: var(--sans); font-style: normal; font-size: 0.8rem; color: var(--rose-deep); }
+
     /* Photo gallery + lightbox */
     .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
     .gallery figure { margin: 0; }
@@ -1376,6 +1381,7 @@ const GUEST_1 = {
     {
       type: "people",
       title: "Meet the guest speakers",
+      source: { label: "LinkedIn post", url: "https://lnkd.in/p/gAKraa2j" },   // portraits cropped from this post's photos
       intro: "The LaunchLab team (ISS) presented the whole workshop together, showing us how to design, build, store and launch a website with Claude Design, Claude Code, GitHub and Vercel.",
       items: [
         { name: "Yibo Yang", role: "LaunchLab", photo: "images/yibo-yang.jpg",
@@ -1393,6 +1399,7 @@ const GUEST_1 = {
     {
       type: "gallery",
       title: "The session in pictures",
+      source: { label: "LinkedIn post", url: "https://lnkd.in/p/gAKraa2j" },   // where the photos come from
       intro: "LaunchLab at ESSEC Asia-Pacific, 9 October 2026. Click a photo to enlarge it.",
       items: [
         { src: "images/launchlab-team.jpg",
@@ -2529,6 +2536,17 @@ function renderQuote(section) {
   return card;
 }
 
+// "Photos: LinkedIn post ↗" credit line, for sections with a "source"
+function sourceLine(source) {
+  const p = el("p", "source-line", "Photos: ");
+  const a = el("a", "", source.label + " ↗");
+  a.href = source.url;
+  a.target = "_blank";
+  a.rel = "noopener";
+  p.append(a);
+  return p;
+}
+
 /* ---- "people": guest speaker cards ---- */
 function renderPeople(section) {
   const card = makeCard(section.title, section.intro);
@@ -2556,6 +2574,7 @@ function renderPeople(section) {
     grid.append(box);
   });
   card.append(grid);
+  if (section.source) card.append(sourceLine(section.source));
   return card;
 }
 
@@ -2576,15 +2595,16 @@ function renderGallery(section) {
     img.loading = "lazy";
     button.append(img);
     // EVENT LISTENER: clicking a photo opens it in the lightbox
-    button.addEventListener("click", () => openLightbox(item));
+    button.addEventListener("click", () => openLightbox(item, section.source));
     figure.append(button, el("figcaption", "", item.caption));
     grid.append(figure);
   });
   card.append(grid);
+  if (section.source) card.append(sourceLine(section.source));
   return card;
 }
 
-function openLightbox(item) {
+function openLightbox(item, source) {
   let dialog = document.getElementById("lightbox");
   if (!dialog) {                     // build it the first time it's needed
     dialog = el("dialog", "lightbox");
@@ -2599,7 +2619,9 @@ function openLightbox(item) {
   const img = dialog.querySelector("img");
   img.src = item.src;
   img.alt = item.alt;
-  dialog.querySelector(".lightbox-caption").textContent = item.caption;
+  const caption = dialog.querySelector(".lightbox-caption");
+  caption.textContent = item.caption;
+  if (source) caption.append(document.createTextNode(" · "), sourceLine(source).lastChild);
   dialog.showModal();
 }
 
