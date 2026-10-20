@@ -462,6 +462,26 @@
     .lightbox-close { float: right; margin-bottom: 0.75rem; }
     .lightbox-caption { clear: both; margin: 0.75rem 0 0; text-align: center; font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: var(--mauve); }
 
+    /* "How I built this website" (course page) */
+    .build-steps { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .build-steps li { padding: 1.1rem 1.2rem; border: 1px solid var(--blush-2); border-radius: 10px; background: linear-gradient(180deg, var(--paper), var(--blush)); }
+    .build-num { display: block; font-family: var(--serif); font-style: italic; color: var(--gold); font-size: 1.1rem; }
+    .build-steps strong { display: block; margin: 0.2rem 0 0.3rem; font-weight: 600; }
+    .build-steps p { margin: 0; font-size: 0.9rem; color: var(--mauve); }
+    .journey-title { margin: 2rem 0 0.75rem; }
+    .journey { list-style: none; margin: 0 0 1rem; padding: 0 0 0 1.4rem; border-left: 1px solid var(--gold-soft); }
+    .journey li { position: relative; padding: 0 0 1.1rem; }
+    .journey li::before { content: ""; position: absolute; left: calc(-1.4rem - 4px); top: 0.45rem; width: 7px; height: 7px; transform: rotate(45deg); background: var(--gold); }
+    .journey-step { display: block; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+    .journey q { display: block; margin: 0.15rem 0; font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: var(--ink); }
+    .journey p { margin: 0; font-size: 0.88rem; color: var(--mauve); }
+
+    /* Game embedded at the bottom of a guest lecture tab */
+    .embedded-game { margin-top: 2rem; }
+    .embedded-head { text-align: center; margin-bottom: 1rem; }
+    .embedded-head .eyebrow::after { content: ""; width: 28px; height: 1px; background: currentColor; }
+    .embedded-head h3 { font-size: clamp(1.6rem, 3.5vw, 2.1rem); margin-top: 0.3rem; }
+
     /* =========================================================
        PAGE: SCHEDULE
        ========================================================= */
@@ -1241,7 +1261,47 @@ const COURSE = {
     "Singapore Business Review Top 10 Hottest Ad Executives & Marketers",
     "2026 Visionary Leader Award, Top 100 Business Leaders Awards Asia"
   ],
-  skills: ["HTML structure", "CSS & variables", "Responsive design", "JavaScript events", "DOM manipulation", "Accessibility", "Claude Design", "Claude Code", "GitHub", "Vercel"]
+  skills: ["HTML structure", "CSS & variables", "Responsive design", "JavaScript events", "DOM manipulation", "Accessibility", "Claude Design", "Claude Code", "GitHub", "Vercel"],
+
+  // "How I built this website": the LaunchLab workflow, as I applied it
+  buildSteps: [
+    { title: "Build with Claude Code",
+      text: "I described each page and feature in plain language; Claude Code wrote the HTML, CSS and JavaScript, tested it in the browser and fixed bugs." },
+    { title: "Store the code on GitHub",
+      text: "Every change is saved as a commit and pushed to my public repository, so the full history of the site is kept." },
+    { title: "Deploy with Vercel",
+      text: "Vercel is connected to the repository: every push to GitHub updates the live website automatically, within a minute." }
+  ],
+  features: ["One tab per session", "Lectures & guest lectures", "Quizzes by theme", "Pinkle (my Wordle)", "Hangman", "Akinator",
+             "Game inside each guest tab", "Responsive on phones", "Keyboard accessible", "Floating parallax stickers"],
+
+  // My prompt journey: how the site evolved, prompt by prompt (summarised)
+  journey: [
+    { step: "The idea", prompt: "Create a website with a tab for each guest speaker session, each one an interactive game. Make it pink.",
+      result: "A first page with a 3-round quiz on Session 1." },
+    { step: "A notebook, not a test", prompt: "Not a test, just a website for my analysis of the guest lectures.",
+      result: "Lecture pages with expandable cards, animated stats and space for my analysis." },
+    { step: "A real website", prompt: "Add a welcome page and a menu: about me, the course, the schedule, the guest lectures, contact me.",
+      result: "Six pages with a menu, built from data in the code." },
+    { step: "Real content", prompt: "Add a first tab with our first guest speakers (+ the slides of Sessions 1 and 2).",
+      result: "LaunchLab, Session 1 and Session 2 filled in from the slides." },
+    { step: "Games", prompt: "Add a game tab, then organise the games into themes instead of sessions.",
+      result: "Four quiz themes mixing questions from every session." },
+    { step: "The look", prompt: "Make it more aesthetic and luxury oriented… still pink but luxury coded.",
+      result: "Blush, berry and champagne gold, elegant fonts, fine gold lines." },
+    { step: "Going live", prompt: "Push this project to GitHub… then deploy it with Vercel.",
+      result: "A public website that updates on every push." },
+    { step: "About me", prompt: "Here is my CV, add a professional profile picture, improve my summary.",
+      result: "My CV as a timeline, a cleaned-up portrait, a sharper bio." },
+    { step: "The guest speakers", prompt: "Add their LinkedIn, photos and a different description for each.",
+      result: "Speaker cards and a photo gallery, with credits." },
+    { step: "Details that matter", prompt: "Floating stickers that move when I scroll; Playfair Display titles; my name in Amoresa.",
+      result: "Parallax stickers, new typography and a signature." },
+    { step: "More games", prompt: "Add the word game we created, a hangman and a reverse Akinator, and sort games into categories.",
+      result: "Pinkle, Hangman and Akinator, each in its own category." },
+    { step: "Meeting the brief", prompt: "Put each guest session's game inside its tab and explain how I built this.",
+      result: "This section, and a playable game in every guest lecture tab." }
+  ]
 };
 
 
@@ -1362,8 +1422,9 @@ renderStickers();
                   (optional "label" = bold word before each detail)
      "stats"    → key numbers that count up when you open the tab
      "compare"  → a Before / After toggle switch
-     "analysis" → YOUR writing. Leave "text" empty ([]) and a dashed
-                  box with the guiding question shows instead.
+     "analysis" → YOUR writing. Blocks with an empty "text" ([]) are
+                  hidden (the "prompt" is just a reminder for me);
+                  write paragraphs in "text" and they appear.
      "quote"    → one highlighted key takeaway
 
    To write your analysis, type paragraphs inside the "text" arrays:
@@ -2514,16 +2575,16 @@ function renderCompare(section) {
 
 /* ---- "analysis": your own writing ---- */
 function renderAnalysis(section) {
+  // Only the blocks I've actually written are shown. Empty ones stay hidden,
+  // so the public site never shows unfinished placeholders. If nothing is
+  // written yet, the whole card is skipped (return null).
+  const written = section.blocks.filter(block => block.text.length);
+  if (!written.length) return null;
   const card = makeCard(section.title);
-  section.blocks.forEach(block => {
+  written.forEach(block => {
     const wrap = el("div", "analysis-block");
     wrap.append(el("h4", "", block.heading));
-    if (block.text.length) {
-      block.text.forEach(paragraph => wrap.append(el("p", "", paragraph)));
-    } else {
-      // Nothing written yet: show the guiding question in a dashed box
-      wrap.append(el("div", "placeholder", "" + block.prompt));
-    }
+    block.text.forEach(paragraph => wrap.append(el("p", "", paragraph)));
     card.append(wrap);
   });
   return card;
@@ -2823,6 +2884,43 @@ function buildCourse(page) {
   code.append(chips(COURSE.skills));
   grid2.append(prof, code);
   page.append(grid2);
+
+  /* ----- How I built this website ----- */
+  const built = makeCard("How I built this website",
+    "The workflow from the LaunchLab session, applied to this site.");
+  built.style.marginTop = "1.5rem";
+  built.classList.add("built");
+  const steps = el("ol", "build-steps");
+  COURSE.buildSteps.forEach((s, i) => {
+    const li = el("li");
+    li.append(el("span", "build-num", String(i + 1).padStart(2, "0")), el("strong", "", s.title), el("p", "", s.text));
+    steps.append(li);
+  });
+  built.append(steps);
+  built.append(el("p", "ak-label", "Main features"));
+  built.append(chips(COURSE.features));
+
+  // My prompt journey: the first 4 steps, then a button to see them all
+  built.append(el("h4", "journey-title", "My prompt journey"));
+  const journey = el("ol", "journey");
+  COURSE.journey.forEach((j, i) => {
+    const li = el("li");
+    if (i >= 4) li.hidden = true;
+    li.append(el("span", "journey-step", j.step), el("q", "", j.prompt), el("p", "", "→ " + j.result));
+    journey.append(li);
+  });
+  built.append(journey);
+  const more = el("button", "btn", "Show the full journey (" + COURSE.journey.length + " steps)");
+  more.setAttribute("aria-expanded", "false");
+  // EVENT LISTENER: show / hide the rest of the journey
+  more.addEventListener("click", () => {
+    const open = more.getAttribute("aria-expanded") === "false";
+    [...journey.children].forEach((li, i) => { if (i >= 4) li.hidden = !open; });
+    more.setAttribute("aria-expanded", String(open));
+    more.textContent = open ? "Show less" : "Show the full journey (" + COURSE.journey.length + " steps)";
+  });
+  built.append(more);
+  page.append(built);
 }
 
 /* ---------- Schedule ---------- */
@@ -3086,9 +3184,28 @@ function renderLecture(panel, session) {
 
   session.data.sections.forEach(section => {
     const render = RENDERERS[section.type];
-    if (render) panel.append(render(section));
-    else console.warn("Unknown section type:", section.type);
+    if (!render) return console.warn("Unknown section type:", section.type);
+    const node = render(section);
+    if (node) panel.append(node);              // a renderer may return nothing (e.g. empty analysis)
   });
+
+  // GUEST SESSIONS: the game made only of this session's questions is
+  // played right here, at the bottom of the tab (the assignment brief:
+  // "each tab containing an interactive game"). It's automatic: any quiz
+  // theme whose rounds ALL come from this session is embedded.
+  // createGame() keeps its state inside, so this copy has its own score,
+  // separate from the same game on the Games page.
+  if (session.kind === "guest") {
+    GAMES.filter(g => g.rounds && g.rounds.every(r => r.session === session)).forEach(game => {
+      const wrap = el("section", "embedded-game");
+      const head = el("div", "embedded-head");
+      head.append(el("span", "eyebrow", "Interactive game"), el("h3", "", "Play: test what you learned"));
+      const gameBox = el("div");
+      wrap.append(head, gameBox);
+      panel.append(wrap);
+      createGame(gameBox, game);
+    });
+  }
 }
 
 function renderComingSoon(panel, session) {
