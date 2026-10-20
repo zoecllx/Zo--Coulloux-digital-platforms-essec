@@ -546,8 +546,10 @@
     .panel[hidden] { display: none; }
 
     /* Lecture section: expandable cards */
-    .concepts { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1px; background: var(--blush-2); border: var(--hairline); }
-    .concept { background: var(--paper); transition: background var(--speed); }
+    /* Fine grid lines: each cell draws half a line on every side (box-shadow),
+       so empty spaces at the end of the grid stay white instead of pink */
+    .concepts { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); background: var(--paper); border: var(--hairline); }
+    .concept { background: var(--paper); box-shadow: 0 0 0 0.5px var(--blush-2); transition: background var(--speed); }
     .concept:hover { background: var(--ivory); }
     .concept-toggle {
       width: 100%;
@@ -573,8 +575,8 @@
     .concept-body strong { color: var(--ink); }
 
     /* Lecture section: stats */
-    .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--blush-2); border: var(--hairline); }
-    .stat { background: linear-gradient(180deg, var(--paper), var(--blush)); padding: 1.6rem 1.4rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); background: var(--paper); border: var(--hairline); }
+    .stat { background: linear-gradient(180deg, var(--paper), var(--blush)); box-shadow: 0 0 0 0.5px var(--blush-2); padding: 1.6rem 1.4rem; }
     .stat-number { font-family: var(--serif); font-size: 2.6rem; font-weight: 400; color: var(--rose-deep); line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
     .stat-label { font-size: 0.9rem; margin-top: 0.6rem; color: var(--ink); }
     .stat-note  { color: var(--gold); font-size: 0.78rem; margin-top: 0.3rem; letter-spacing: 0.04em; }
@@ -772,6 +774,56 @@
     }
     .toast.show { transform: translate(-50%, 0); }
 
+    /* =========================================================
+       FLOATING STICKERS (behind everything)
+       position: fixed  → they stay put while the page scrolls
+       z-index: -1      → drawn on the pink background, under the cards
+       Each sticker gets its position, size, speed and tilt from
+       CSS variables set by JavaScript (--x, --y, --size, --speed…).
+       ========================================================= */
+    .stickers { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .sticker {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--size);
+      height: var(--size);
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 1px solid var(--gold-soft);
+      box-shadow: 0 0 0 4px rgba(255, 250, 252, 0.7), 0 10px 24px rgba(194, 51, 106, 0.12);
+      opacity: 0.85;
+      animation:
+        sticker-in 1.2s var(--ease) var(--delay) backwards,
+        sticker-float var(--speed) ease-in-out var(--delay) infinite;
+    }
+    .sticker svg {
+      width: 52%;
+      height: 52%;
+      fill: none;
+      stroke: var(--rose-deep);
+      stroke-width: 1.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .sticker.course svg { stroke: var(--gold); }     /* course stickers in gold, mine in rose */
+    @keyframes sticker-in { from { opacity: 0; } }
+    @keyframes sticker-float {
+      0%, 100% { transform: translate(0, 0) rotate(var(--tilt)); }
+      50%      { transform: translate(var(--drift), -16px) rotate(calc(var(--tilt) * -1)); }
+    }
+    /* Phones: fewer and smaller stickers */
+    @media (max-width: 900px) {
+      .sticker { --size: 40px !important; }
+      .sticker:nth-child(even) { display: none; }
+    }
+    /* Reduced motion: still shown, but they don't float */
+    @media (prefers-reduced-motion: reduce) {
+      .sticker { opacity: 0.85; animation: none; transform: rotate(var(--tilt)); }
+    }
+
     /* ---------- Footer ---------- */
     footer {
       text-align: center;
@@ -798,6 +850,10 @@
   </style>
 </head>
 <body>
+
+  <!-- Floating stickers behind the page (filled by JavaScript, see section 2b).
+       aria-hidden: purely decorative, screen readers skip them -->
+  <div class="stickers" id="stickers" aria-hidden="true"></div>
 
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -962,6 +1018,77 @@ const COURSE = {
   ],
   skills: ["HTML structure", "CSS & variables", "Responsive design", "JavaScript events", "DOM manipulation", "Accessibility", "Claude Design", "Claude Code", "GitHub", "Vercel"]
 };
+
+
+/* =================================================================
+   2b. FLOATING STICKERS
+   -----------------------------------------------------------------
+   group "me"     → my passions (rose drawings)
+   group "course" → the course (gold drawings)
+   Each "icon" is the name of a drawing in STICKER_ICONS below: tiny
+   SVG line drawings on a 24 × 24 grid.
+   ================================================================= */
+const STICKERS = [
+  { icon: "music",    group: "me",     label: "Music & musicals" },
+  { icon: "code",     group: "course", label: "Coding" },
+  { icon: "plane",    group: "me",     label: "Travel" },
+  { icon: "sparkle",  group: "course", label: "AI" },
+  { icon: "palette",  group: "me",     label: "Art" },
+  { icon: "phone",    group: "course", label: "Social media" },
+  { icon: "leaf",     group: "me",     label: "Sustainability" },
+  { icon: "chart",    group: "course", label: "Analytics" },
+  { icon: "cake",     group: "me",     label: "Baking & cooking" },
+  { icon: "hashtag",  group: "course", label: "Hashtags" },
+  { icon: "camera",   group: "me",     label: "Content creation" },
+  { icon: "cap",      group: "course", label: "ESSEC MSc" },
+  { icon: "eiffel",   group: "me",     label: "Paris" },
+  { icon: "heart",    group: "me",     label: "Influence" },
+  { icon: "bag",      group: "me",     label: "Luxury" },
+  { icon: "globe",    group: "course", label: "Digital platforms" }
+];
+
+const STICKER_ICONS = {
+  music:   '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+  code:    '<path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/>',
+  plane:   '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>',
+  sparkle: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15v4"/><path d="M17 17h4"/>',
+  palette: '<path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.7 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.7 1.7-1.7h2c3 0 5.5-2.5 5.5-5.5C22 6 17.5 2 12 2z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="10.5" cy="6.5" r="1"/><circle cx="15.5" cy="7.5" r="1"/>',
+  phone:   '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/>',
+  leaf:    '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6C9.5 14.5 12 13 13 12"/>',
+  chart:   '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
+  cake:    '<path d="M5 11h14l-1.8 10H6.8z"/><path d="M4 11a4 4 0 0 1 4-4 4 4 0 0 1 8 0 4 4 0 0 1 4 4"/><path d="M12 3V1"/>',
+  hashtag: '<path d="M4 9h16"/><path d="M4 15h16"/><path d="M10 3 8 21"/><path d="M16 3l-2 18"/>',
+  camera:  '<rect x="2" y="6" width="20" height="14" rx="3"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1.5-3h5L16 6"/>',
+  cap:     '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/><path d="M22 10v6"/>',
+  eiffel:  '<path d="M12 2v3"/><path d="M10 5h4"/><path d="M10.5 5 8 13h8l-2.5-8"/><path d="M7 13h10"/><path d="M8 13 5 22"/><path d="M16 13l3 9"/><path d="M9.5 22a2.5 2.5 0 0 1 5 0"/>',
+  heart:   '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>',
+  bag:     '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  globe:   '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/>'
+};
+
+// Places the stickers in two columns (left and right margins), going
+// down the screen, with a little variety in size, speed and tilt.
+function renderStickers() {
+  const box = document.getElementById("stickers");
+  STICKERS.forEach((sticker, i) => {
+    const onLeft = i % 2 === 0;
+    const row = Math.floor(i / 2);                              // 0, 0, 1, 1, 2, 2…
+    const rows = Math.ceil(STICKERS.length / 2);
+    const span = el("span", "sticker " + sticker.group);
+    span.title = sticker.label;
+    span.style.setProperty("--x", onLeft ? (1.5 + (row % 2) * 3.5) + "vw"
+                                         : "calc(" + (94.5 - (row % 2) * 3.5) + "vw - 40px)");
+    span.style.setProperty("--y", (4 + row * (88 / rows) + (onLeft ? 0 : 5)) + "vh");
+    span.style.setProperty("--size", (50 + (i * 7) % 22) + "px");   // 50–71px
+    span.style.setProperty("--speed", (9 + (i * 3) % 8) + "s");     // 9–16s
+    span.style.setProperty("--delay", (i * 0.15) + "s");
+    span.style.setProperty("--tilt", ((i % 3) - 1) * 7 + "deg");     // -7°, 0°, 7°
+    span.style.setProperty("--drift", (onLeft ? 8 : -8) + "px");
+    span.innerHTML = '<svg viewBox="0 0 24 24">' + STICKER_ICONS[sticker.icon] + "</svg>";
+    box.append(span);
+  });
+}
+renderStickers();
 
 
 /* =================================================================
