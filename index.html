@@ -518,7 +518,7 @@
     /* The two big tabs on the Sessions page */
     .group-tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(var(--groups, 2), 1fr);   /* one column per big tab */
       gap: 1px;                          /* 1px gap = a fine dividing line */
       background: var(--blush-2);
       border: var(--hairline);
@@ -538,8 +538,11 @@
     .group-name { display: block; font-family: var(--title); font-size: clamp(1.5rem, 4vw, 2.1rem); line-height: 1.1; }
     .group-note { display: block; margin-top: 0.4rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--mauve); }
     .group-tab[aria-selected="true"] { background: linear-gradient(135deg, var(--ink), var(--berry)); color: var(--ivory); }
+    /* Games page: category names in Poppins, like the games themselves */
+    #page-games .group-name { font-family: var(--sans); font-weight: 500; font-size: clamp(1.1rem, 2.6vw, 1.4rem); }
     .group-tab[aria-selected="true"] .group-note { color: var(--gold-soft); }
-    @media (max-width: 520px) { .group-tabs { grid-template-columns: 1fr; } }
+    @media (max-width: 760px) { .group-tabs { grid-template-columns: repeat(min(var(--groups, 2), 2), 1fr); } }
+    @media (max-width: 420px) { .group-tabs { grid-template-columns: 1fr; } }
     .tab:hover { color: var(--ink); background: var(--ivory); }
     .tab::after {
       content: "";
@@ -2113,6 +2116,15 @@ const BANK_SESSION_2 = {
   ]
 };
 
+// The big tabs on the Games page, in order. A game goes in the category
+// matching its "kind"; quizzes have no kind and go under "quiz".
+const GAME_CATEGORIES = [
+  { kind: "quiz",     label: "Quizzes",  note: "4 themes · multiple choice" },
+  { kind: "wordle",   label: "Pinkle",   note: "Word game · 6 tries" },
+  { kind: "hangman",  label: "Hangman",  note: "Find the course term" },
+  { kind: "akinator", label: "Akinator", note: "Guess the genie's concept" }
+];
+
 // Takes round number n (1 = first) from a question bank,
 // and remembers which session it came from
 function fromBank(bank, n) {
@@ -2912,82 +2924,117 @@ function createTabSet(options) {
 // Pages that have sub-tabs register them here, e.g. TABSETS.lectures
 const TABSETS = {};
 
-/* ---------- Sessions page: two big tabs (Lectures / Guest lectures) ----------
-   Level 1: one big tab per SESSION_GROUPS entry.
-   Level 2: inside each group, a normal row of session tabs (createTabSet).
-   The URL always uses the session's position in SESSIONS, so
-   "#lectures/3" opens Session 2 wherever it is: Schedule and Games
-   links keep working. select() works out which group to show. */
-function buildLectures(page) {
+/* ---------- Reusable "big tabs + small tabs" ----------
+   Used by the Sessions page (Lectures / Guest lectures) and the Games
+   page (Quizzes / Pinkle / Hangman / Akinator).
+   Level 1: one big tab per group.
+   Level 2: inside a group with several entries, a row of small tabs
+            (createTabSet). A group with ONE entry shows it directly.
+   The URL always uses the entry's position in the full list (allEntries),
+   so "#games/5" opens the 5th game wherever it is, and links from other
+   pages keep working. select() works out which group to show.
+   options = { page, hashName, label, allEntries, groups: [{ key, label, note, entries }],
+               tabLabel(entry), isSoon(entry), render(panel, entry), onSelect(panel) } */
+function createGroupedTabs(options) {
+  const { page, hashName, allEntries } = options;
+  const number = entry => allEntries.indexOf(entry) + 1;      // the number in the URL
+
   const groupBar = el("div", "group-tabs");
+  groupBar.style.setProperty("--groups", options.groups.length);
   groupBar.setAttribute("role", "tablist");
-  groupBar.setAttribute("aria-label", "Type of session");
+  groupBar.setAttribute("aria-label", options.label);
   page.append(groupBar);
 
-  const groups = SESSION_GROUPS.map(group => {
-    const entries = SESSIONS.filter(s => s.kind === group.kind);
-
+  const groups = options.groups.map(group => {
     // The big tab
     const tab = el("button", "group-tab");
-    tab.id = "group-tab-" + group.kind;
+    tab.id = hashName + "-group-tab-" + group.key;
     tab.setAttribute("role", "tab");
-    tab.setAttribute("aria-controls", "group-" + group.kind);
-    const done = entries.filter(s => s.data).length;
-    tab.append(
-      el("span", "group-name", group.label),
-      el("span", "group-note", group.note + " · " + done + " of " + entries.length + " written up")
-    );
-    // EVENT LISTENER: opening a group shows its first session
-    tab.addEventListener("click", () => { location.hash = "lectures/" + (SESSIONS.indexOf(entries[0]) + 1); });
+    tab.setAttribute("aria-controls", hashName + "-group-" + group.key);
+    tab.append(el("span", "group-name", group.label), el("span", "group-note", group.note));
+    // EVENT LISTENER: opening a group shows its first entry
+    tab.addEventListener("click", () => { location.hash = hashName + "/" + number(group.entries[0]); });
     groupBar.append(tab);
 
-    // The group's own area, with its row of session tabs inside
+    // The group's own area
     const area = el("div", "group-panel");
-    area.id = "group-" + group.kind;
+    area.id = hashName + "-group-" + group.key;
     area.setAttribute("role", "tabpanel");
     area.setAttribute("aria-labelledby", tab.id);
     page.append(area);
 
-    const tabSet = createTabSet({
-      page: area,
-      hashName: "lectures",
-      idPrefix: "lectures-" + group.kind,
-      label: group.label,
-      entries,
-      hashNumber: s => SESSIONS.indexOf(s) + 1,
-      tabLabel: s => s.tabLabel,
-      isSoon: s => !s.data,
-      render: (panel, s) => s.data ? renderLecture(panel, s) : renderComingSoon(panel, s),
-      onSelect: panel => countUp(panel)        // replay the number animation
-    });
-    return { tab, area, entries, tabSet };
+    let tabSet = null;
+    if (group.entries.length > 1) {
+      // Several entries → a row of small tabs
+      tabSet = createTabSet({
+        page: area,
+        hashName,
+        idPrefix: hashName + "-" + group.key,
+        label: group.label,
+        entries: group.entries,
+        hashNumber: entry => number(entry),
+        tabLabel: options.tabLabel,
+        isSoon: options.isSoon,
+        render: options.render,
+        onSelect: options.onSelect
+      });
+    } else {
+      // One entry → show it straight away, no small tabs
+      const panel = el("div", "panel");
+      area.append(panel);
+      options.render(panel, group.entries[0]);
+    }
+    return { tab, area, entries: group.entries, tabSet };
   });
 
-  // Arrow keys move between the two big tabs
+  // Arrow keys move between the big tabs
   groupBar.addEventListener("keydown", (event) => {
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
     event.preventDefault();
     const current = groups.findIndex(g => g.tab === document.activeElement);
-    const next = groups[(current + 1) % groups.length];
-    location.hash = "lectures/" + (SESSIONS.indexOf(next.entries[0]) + 1);
+    const step = event.key === "ArrowRight" ? 1 : groups.length - 1;
+    const next = groups[(current + step) % groups.length];
+    location.hash = hashName + "/" + number(next.entries[0]);
     next.tab.focus();
   });
 
-  TABSETS.lectures = {
-    count: SESSIONS.length,
-    // "#lectures" on its own opens the first group's first session
-    defaultIndex: SESSIONS.indexOf(groups[0].entries[0]),
+  return {
+    count: allEntries.length,
+    // "#games" on its own opens the first group's first entry
+    defaultIndex: allEntries.indexOf(groups[0].entries[0]),
     select(index) {
-      const session = SESSIONS[index];
+      const entry = allEntries[index];
       groups.forEach(g => {
-        const isActive = g.entries.includes(session);
+        const isActive = g.entries.includes(entry);
         g.tab.setAttribute("aria-selected", String(isActive));
         g.tab.tabIndex = isActive ? 0 : -1;
         g.area.hidden = !isActive;
-        if (isActive) g.tabSet.select(g.entries.indexOf(session));
+        if (!isActive) return;
+        if (g.tabSet) g.tabSet.select(g.entries.indexOf(entry));
+        else if (options.onSelect) options.onSelect(g.area);
       });
     }
   };
+}
+
+/* ---------- Sessions page: Lectures / Guest lectures ---------- */
+function buildLectures(page) {
+  TABSETS.lectures = createGroupedTabs({
+    page,
+    hashName: "lectures",
+    label: "Type of session",
+    allEntries: SESSIONS,
+    groups: SESSION_GROUPS.map(group => {
+      const entries = SESSIONS.filter(s => s.kind === group.kind);
+      const done = entries.filter(s => s.data).length;
+      return { key: group.kind, label: group.label, entries,
+               note: group.note + " · " + done + " of " + entries.length + " written up" };
+    }),
+    tabLabel: s => s.tabLabel,
+    isSoon: s => !s.data,
+    render: (panel, s) => s.data ? renderLecture(panel, s) : renderComingSoon(panel, s),
+    onSelect: panel => countUp(panel)        // replay the number animation
+  });
 }
 
 function renderLecture(panel, session) {
@@ -3033,17 +3080,24 @@ function renderComingSoon(panel, session) {
 
 /* ---------- Games ---------- */
 function buildGames(page) {
-  TABSETS.games = createTabSet({
+  TABSETS.games = createGroupedTabs({
     page,
     hashName: "games",
-    label: "Games",
-    entries: GAMES,
+    label: "Type of game",
+    allEntries: GAMES,
+    // One big tab per category; quizzes (no "kind") all go under "Quizzes"
+    groups: GAME_CATEGORIES.map(cat => ({
+      key: cat.kind,
+      label: cat.label,
+      note: cat.note,
+      entries: GAMES.filter(g => (g.kind || "quiz") === cat.kind)
+    })),
     tabLabel: g => g.tabLabel,
     render: (panel, game) =>
-      game.kind === "wordle"  ? createWordGame(panel, game) :
-      game.kind === "hangman" ? createHangman(panel, game)  :
+      game.kind === "wordle"   ? createWordGame(panel, game) :
+      game.kind === "hangman"  ? createHangman(panel, game)  :
       game.kind === "akinator" ? createAkinator(panel, game) :
-                                createGame(panel, game)
+                                 createGame(panel, game)
   });
 }
 
