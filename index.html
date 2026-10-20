@@ -141,7 +141,7 @@
       border-bottom: var(--hairline);
     }
     .nav-inner {
-      max-width: 1120px;
+      max-width: 1240px;
       margin: 0 auto;
       padding: 1rem 1.25rem;
       display: flex;
@@ -165,12 +165,12 @@
     .menu a {
       display: block;
       position: relative;
-      padding: 0.4rem 0.75rem;
+      padding: 0.4rem 0.6rem;
       color: var(--mauve);
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 400;
       text-transform: uppercase;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.14em;
       text-decoration: none;
       white-space: nowrap;
       transition: color var(--speed);
@@ -179,8 +179,8 @@
     .menu a::after {
       content: "";
       position: absolute;
-      left: 0.75rem;
-      right: 0.75rem;
+      left: 0.6rem;
+      right: 0.6rem;
       bottom: 0.1rem;
       height: 1px;
       background: var(--gold);
@@ -207,7 +207,8 @@
       cursor: pointer;
     }
 
-    @media (max-width: 1000px) {
+    /* Below 1100px the 8 links don't fit on one line: show the Menu button instead */
+    @media (max-width: 1100px) {
       .menu-toggle { display: block; }
       .nav-inner { flex-wrap: wrap; }
       .menu {
@@ -340,12 +341,13 @@
        ========================================================= */
     .explore {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);   /* 6 cards = a neat 3 × 2 grid */
-      gap: 1px;                         /* 1px gaps show the border colour = fine grid lines */
-      background: var(--blush-2);
+      grid-template-columns: repeat(12, 1fr);   /* 12 small columns: 3 wide cards on top, 4 below */
+      background: var(--paper);
       border: var(--hairline);
     }
     .explore a {
+      grid-column: span 3;                       /* 4 per row */
+      box-shadow: 0 0 0 0.5px var(--blush-2);   /* fine grid lines */
       display: block;
       background: var(--paper);
       padding: 2rem 1.75rem;
@@ -357,8 +359,9 @@
     .explore .num { font-family: var(--serif); font-style: italic; color: var(--gold); font-size: 1.1rem; }
     .explore strong { display: block; font-family: var(--serif); font-weight: 500; font-size: 1.6rem; margin: 0.4rem 0 0.3rem; }
     .explore span.muted { display: block; font-size: 0.9rem; }
-    @media (max-width: 860px) { .explore { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 520px) { .explore { grid-template-columns: 1fr; } }
+    .explore a:nth-child(-n+3) { grid-column: span 4; }   /* the first 3 cards: 3 per row */
+    @media (max-width: 860px) { .explore a, .explore a:nth-child(-n+3) { grid-column: span 6; } .explore a:last-child { grid-column: span 12; } }
+    @media (max-width: 520px) { .explore a, .explore a:nth-child(-n+3), .explore a:last-child { grid-column: span 12; } }
     .explore .arrow { display: inline-block; margin-top: 0.75rem; color: var(--rose-deep); transition: transform var(--speed) var(--ease); }
     .explore a:hover .arrow { transform: translateX(6px); }
 
@@ -1108,6 +1111,7 @@
         <li><a href="#schedule">Schedule</a></li>
         <li><a href="#lectures">Sessions</a></li>
         <li><a href="#games">Games</a></li>
+        <li><a href="#built">How I built it</a></li>
         <li><a href="#contact">Contact me</a></li>
       </ul>
     </div>
@@ -1133,6 +1137,7 @@
     <section class="page" id="page-schedule" aria-labelledby="banner-title" hidden></section>
     <section class="page" id="page-lectures" aria-labelledby="banner-title" hidden></section>
     <section class="page" id="page-games"    aria-labelledby="banner-title" hidden></section>
+    <section class="page" id="page-built"    aria-labelledby="banner-title" hidden></section>
     <section class="page" id="page-contact"  aria-labelledby="banner-title" hidden></section>
   </main>
 
@@ -2748,6 +2753,7 @@ function buildHome(page) {
     { href: "#schedule", title: "Schedule",       text: "All session dates at a glance." },
     { href: "#lectures", title: "Sessions",       text: "Lectures and guest lectures, with my analysis." },
     { href: "#games",    title: "Games",          text: "Quizzes, Pinkle, Hangman and a reverse Akinator." },
+    { href: "#built",    title: "How I built it", text: "The tools, the workflow and my prompt journey." },
     { href: "#contact",  title: "Contact me",     text: "Get in touch or connect on LinkedIn." }
   ].forEach(item => {
     const a = el("a");
@@ -2885,42 +2891,39 @@ function buildCourse(page) {
   grid2.append(prof, code);
   page.append(grid2);
 
-  /* ----- How I built this website ----- */
-  const built = makeCard("How I built this website",
-    "The workflow from the LaunchLab session, applied to this site.");
-  built.style.marginTop = "1.5rem";
-  built.classList.add("built");
+}
+
+/* ---------- How I built it ----------
+   Three cards: the LaunchLab workflow (3 steps), the main features,
+   and my prompt journey (a timeline of the prompts that shaped the site). */
+function buildBuilt(page) {
+  // 1. The workflow
+  const how = makeCard("The workflow", "From the LaunchLab guest session, applied to this site.");
   const steps = el("ol", "build-steps");
   COURSE.buildSteps.forEach((s, i) => {
     const li = el("li");
     li.append(el("span", "build-num", String(i + 1).padStart(2, "0")), el("strong", "", s.title), el("p", "", s.text));
     steps.append(li);
   });
-  built.append(steps);
-  built.append(el("p", "ak-label", "Main features"));
-  built.append(chips(COURSE.features));
+  how.append(steps);
+  page.append(how);
 
-  // My prompt journey: the first 4 steps, then a button to see them all
-  built.append(el("h4", "journey-title", "My prompt journey"));
+  // 2. The features
+  const features = makeCard("Main features", "What the site does, all in plain HTML, CSS and JavaScript.");
+  features.append(chips(COURSE.features));
+  page.append(features);
+
+  // 3. The prompt journey, in full
+  const journeyCard = makeCard("My prompt journey",
+    "How the website evolved, prompt by prompt: what I asked (summarised) and what it produced.");
   const journey = el("ol", "journey");
-  COURSE.journey.forEach((j, i) => {
+  COURSE.journey.forEach(j => {
     const li = el("li");
-    if (i >= 4) li.hidden = true;
     li.append(el("span", "journey-step", j.step), el("q", "", j.prompt), el("p", "", "→ " + j.result));
     journey.append(li);
   });
-  built.append(journey);
-  const more = el("button", "btn", "Show the full journey (" + COURSE.journey.length + " steps)");
-  more.setAttribute("aria-expanded", "false");
-  // EVENT LISTENER: show / hide the rest of the journey
-  more.addEventListener("click", () => {
-    const open = more.getAttribute("aria-expanded") === "false";
-    [...journey.children].forEach((li, i) => { if (i >= 4) li.hidden = !open; });
-    more.setAttribute("aria-expanded", String(open));
-    more.textContent = open ? "Show less" : "Show the full journey (" + COURSE.journey.length + " steps)";
-  });
-  built.append(more);
-  page.append(built);
+  journeyCard.append(journey);
+  page.append(journeyCard);
 }
 
 /* ---------- Schedule ---------- */
@@ -4227,6 +4230,8 @@ const PAGES = {
               subtitle: "Lectures and guest lectures · my notes and analysis" },
   games:    { build: buildGames,    title: "Games",
               subtitle: "Quizzes, Pinkle, Hangman and Akinator, all about the course" },
+  built:    { build: buildBuilt,    title: "How I built it",
+              subtitle: "Claude Code, GitHub and Vercel · my prompt journey" },
   contact:  { build: buildContact,  title: "Contact me",
               subtitle: "Let's connect" }
 };

@@ -9,6 +9,7 @@ My website for the **Digital Platforms Test Drive** course (MSc Marketing Manage
 - **Schedule**: all sessions in date order
 - **Sessions**: lectures and guest lectures, with my notes; each guest lecture tab includes a playable game
 - **Games**: quizzes by theme, Pinkle (my Wordle), Hangman and a reverse Akinator
+- **How I built it**: the workflow (Claude Code, GitHub, Vercel), the features and my prompt journey
 - **Contact me**
 
 ## How I built it
@@ -19,7 +20,7 @@ Following the workflow from the LaunchLab guest session:
 
 **Main features:** one tab per session, a game inside each guest lecture tab, quizzes by theme, Pinkle, Hangman, Akinator, responsive design for phones, keyboard accessibility.
 
-**My prompt journey (short version):** a pink quiz page → a site for my lecture analyses → welcome page and menu → real content from the slides → games by theme → luxury pink redesign → live on GitHub + Vercel → CV, portrait and bio → guest speaker cards → stickers and new fonts → Pinkle, Hangman, Akinator → games inside the guest tabs. The full journey is on the website's "The course" page.
+**My prompt journey (short version):** a pink quiz page → a site for my lecture analyses → welcome page and menu → real content from the slides → games by theme → luxury pink redesign → live on GitHub + Vercel → CV, portrait and bio → guest speaker cards → stickers and new fonts → Pinkle, Hangman, Akinator → games inside the guest tabs. The full journey is on the website's "How I built it" page.
 
 ## Built with
 Plain HTML, CSS and vanilla JavaScript, no frameworks: `index.html`, plus `games/pinkle-words.js` (word list), `images/` and `fonts/`.
