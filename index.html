@@ -8,7 +8,7 @@
   <!-- Fonts: an elegant serif for headings, a refined sans-serif for text -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- =========================================================
        CSS
@@ -1087,6 +1087,226 @@
     footer::before { content: "✦"; display: block; margin-bottom: 0.75rem; color: var(--gold); }
     footer a { color: var(--ivory); text-decoration: none; border-bottom: 1px solid var(--gold); }
 
+
+    /* =========================================================
+       WELCOME REDESIGN (designed in Claude Design, handed off to Claude Code)
+       Softer, cuter pink: Instrument Serif + Figtree, rounded cards.
+       Applies to: the menu and footer (every page), the Welcome page,
+       the loading screen, the music button and the click sprinkles.
+       ========================================================= */
+    :root {
+      --accent:     oklch(0.55 0.19 358);   /* raspberry (alternatives: strawberry oklch(0.6 0.19 15), bubblegum oklch(0.66 0.17 340)) */
+      --bubblegum:  oklch(0.66 0.17 340);
+      --wd-bg:      oklch(0.975 0.012 350);
+      --wd-load-bg: oklch(0.965 0.02 355);
+      --wd-ink:     oklch(0.28 0.09 355);
+      --wd-text2:   oklch(0.42 0.07 355);
+      --wd-soft:    oklch(0.93 0.045 355);
+      --wd-hover:   oklch(0.94 0.035 355);
+      --wd-border:  oklch(0.9 0.04 355);
+      --wd-butter:  oklch(0.94 0.06 85);
+      --wd-butter2: oklch(0.85 0.09 85);
+      --wd-display: "Instrument Serif", Georgia, serif;
+      --wd-body:    "Figtree", system-ui, sans-serif;
+    }
+    body { background: var(--wd-bg); overflow-x: clip; }   /* clip: the full-width word lines never cause sideways scroll */
+
+    /* ----- Menu: a floating pill ----- */
+    .site-nav { background: transparent; border-bottom: none; backdrop-filter: none; padding: 16px 20px; z-index: 20; }
+    .nav-inner {
+      max-width: 1180px;
+      padding: 8px 8px 8px 24px;
+      background: rgba(255, 250, 252, 0.85);
+      backdrop-filter: blur(14px);
+      border: 1.5px solid var(--wd-border);
+      border-radius: 999px;
+      box-shadow: 0 6px 20px oklch(0.6 0.15 355 / 0.08);
+      font-family: var(--wd-body);
+    }
+    .brand { display: flex; align-items: baseline; gap: 10px; font-style: normal; color: var(--wd-ink); }
+    .brand .signature { font-size: 30px; line-height: 1; }
+    .brand .brand-sub { font-family: var(--wd-body); font-style: normal; font-size: 13px; font-weight: 600; color: oklch(0.5 0.07 355); }
+    .menu { gap: 0; flex-wrap: nowrap; }
+    .menu a {
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-family: var(--wd-body);
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+      color: oklch(0.4 0.08 355);
+      transition: background var(--speed), color var(--speed);
+    }
+    .menu a::after { display: none; }
+    .menu a:hover { background: var(--wd-hover); color: var(--wd-ink); }
+    .menu a[aria-current="page"] { background: var(--wd-ink); color: #fff; padding: 8px 14px; }
+    .menu a.say-hi { background: var(--accent); color: #fff; padding: 8px 14px; }
+    .menu a.say-hi[aria-current="page"] { background: var(--wd-ink); }
+    .menu-toggle { border: none; border-radius: 999px; background: var(--wd-ink); color: #fff; font-family: var(--wd-body); font-weight: 600; letter-spacing: 0.04em; text-transform: none; font-size: 13px; padding: 10px 18px; }
+    @media (max-width: 1100px) {
+      .nav-inner:has(.menu.is-open) { border-radius: 28px; padding-bottom: 14px; }   /* the pill opens into a rounded panel */
+      .menu.is-open a { padding: 10px 14px; }
+    }
+
+    /* ----- Footer ----- */
+    footer.site-footer {
+      text-align: left;
+      background: var(--wd-ink);
+      color: oklch(0.9 0.03 355);
+      border-radius: 40px 40px 0 0;
+      padding: 48px 24px 96px;          /* extra room at the bottom for the music button */
+      font-family: var(--wd-body);
+      font-size: 14px;
+      text-transform: none;
+      letter-spacing: 0;
+      line-height: 1.6;
+    }
+    footer.site-footer::before { display: none; }
+    .footer-inner { max-width: 1180px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; }
+    footer .footer-name { font-size: 52px; line-height: 1; color: #fff; vertical-align: 0; }
+    .footer-info { display: flex; flex-direction: column; gap: 6px; }
+    .footer-links { display: flex; gap: 16px; }
+    footer.site-footer a { color: #fff; font-weight: 600; border-bottom: none; }
+
+    /* ----- Welcome page: no banner, wider content ----- */
+    body.is-home .banner { display: none; }
+    body.is-home .stickers { display: none; }   /* the Welcome page has its own bobbing stickers */
+    body.is-home main { margin-top: 0; max-width: 1180px; padding: 24px 20px 80px; }
+    .wd-home { display: flex; flex-direction: column; gap: 28px; font-family: var(--wd-body); color: var(--wd-ink); }
+    .wd-home h1, .wd-home h2 { font-family: var(--wd-display); font-weight: 400; font-style: normal; letter-spacing: 0; color: var(--wd-ink); margin: 0; }
+    .wd-home em { font-style: italic; color: var(--accent); }
+    .wd-home a { text-decoration: none; }
+
+    /* Hero */
+    .wd-hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 40px; align-items: center; padding: 40px 0 20px; }
+    .wd-hero-text { display: flex; flex-direction: column; gap: 24px; }
+    .wd-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .wd-tag { font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 999px; }
+    .wd-tag.soft { background: var(--wd-soft); color: oklch(0.4 0.12 355); }
+    .wd-tag.outline { background: #fff; border: 1.5px solid var(--wd-border); color: oklch(0.45 0.08 355); }
+    .wd-title { font-size: clamp(52px, 7.4vw, 96px); line-height: 0.95; letter-spacing: -0.02em !important; text-wrap: balance; }
+    .wd-lead { margin: 0; font-size: 19px; line-height: 1.6; max-width: 520px; color: oklch(0.4 0.07 355); text-wrap: pretty; }
+    .wd-btns { display: flex; flex-wrap: wrap; gap: 12px; }
+    .wd-btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 26px; border-radius: 999px; font-weight: 600; font-size: 16px; transition: transform var(--speed), background var(--speed); }
+    .wd-btn.ink { background: var(--wd-ink); color: #fff; box-shadow: 0 4px 0 oklch(0.55 0.19 358 / 0.35); }
+    .wd-btn.ink:hover { transform: translateY(-2px); color: #fff; }
+    .wd-btn.white { background: #fff; border: 1.5px solid oklch(0.88 0.05 355); color: var(--wd-ink); }
+    .wd-btn.white:hover { background: oklch(0.95 0.03 355); transform: translateY(-2px) rotate(-1deg); }
+    .wd-btn.small { padding: 14px 22px; font-size: 15px; align-self: flex-start; }
+
+    /* Letter tiles, like Pinkle */
+    .wd-tiles { display: flex; gap: 3px; }
+    .wd-tiles span { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #fff; }
+    .wd-tiles.big { gap: 6px; }
+    .wd-tiles.big span { width: 38px; height: 38px; border-radius: 10px; font-size: 16px; }
+    .wd-tiles .t-accent { background: var(--accent); }
+    .wd-tiles .t-butter { background: var(--wd-butter2); color: oklch(0.3 0.07 60); }
+    .wd-tiles .t-ink { background: var(--wd-ink); }
+    .wd-tiles .t-plum { background: oklch(0.42 0.08 355); }
+
+    /* Portrait in an arch, with bobbing stickers */
+    .wd-portrait { position: relative; justify-self: center; width: min(86%, 400px); aspect-ratio: 4 / 5; }
+    .wd-arch-bg { position: absolute; inset: 0; border-radius: 200px 200px 32px 32px; background: oklch(0.9 0.06 355); transform: rotate(4deg); }
+    .wd-portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 200px 200px 32px 32px; border: 6px solid #fff; box-sizing: border-box; box-shadow: 0 20px 50px oklch(0.5 0.15 355 / 0.18); }
+    .wd-sticker { position: absolute; padding: 8px 14px; border-radius: 999px; white-space: nowrap; font-weight: 600; font-size: 14px; box-shadow: 0 6px 16px oklch(0.5 0.15 355 / 0.15); animation: bob 4s ease-in-out infinite; z-index: 1; }
+    .wd-sticker.s0 { --r: -8deg; top: 8%; left: -6%; background: #fff; }
+    .wd-sticker.s1 { --r: 6deg; top: 40%; right: -2%; background: var(--accent); color: #fff; animation-duration: 5s; animation-delay: 0.6s; box-shadow: 0 6px 16px oklch(0.5 0.15 355 / 0.2); }
+    .wd-sticker.s2 { --r: -4deg; bottom: 12%; left: -4%; background: var(--wd-butter); color: oklch(0.35 0.07 60); animation-duration: 4.5s; animation-delay: 1.2s; }
+    @keyframes bob { 0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); } 50% { transform: translateY(-6px) rotate(var(--r, 0deg)); } }
+    .wd-signature { position: absolute; bottom: -18px; right: 8%; font-size: 46px; color: #fff; text-shadow: 0 2px 12px oklch(0.4 0.15 355 / 0.45); transform: rotate(-6deg); z-index: 1; }
+
+    /* Info bar */
+    .wd-info { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px 28px; padding: 18px 24px; border-radius: 24px; background: var(--wd-ink); color: oklch(0.95 0.02 355); font-size: 15px; font-weight: 500; text-align: center; }
+    .wd-info .sep { color: oklch(0.75 0.12 355); }
+    .wd-info .motto { font-family: var(--wd-display); font-style: italic; font-size: 19px; }
+
+    /* Latest guest session */
+    .wd-latest { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); border-radius: 32px; overflow: hidden; background: #fffafc; border: 1.5px solid oklch(0.92 0.035 355); }
+    .wd-latest > img { width: 100%; height: 100%; min-height: 300px; object-fit: cover; display: block; }
+    .wd-latest-text { padding: clamp(28px, 4vw, 48px); display: flex; flex-direction: column; gap: 18px; }
+    .wd-latest-text .wd-tag { align-self: flex-start; padding: 6px 12px; }
+    .wd-h2 { font-size: clamp(34px, 4vw, 48px); line-height: 1.05; text-wrap: balance; }
+    .wd-latest-text p { margin: 0; font-size: 17px; line-height: 1.65; color: oklch(0.4 0.07 355); text-wrap: pretty; }
+    .wd-avatars-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 14px; color: oklch(0.45 0.07 355); }
+    .wd-avatars { display: flex; }
+    .wd-avatars img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; }
+    .wd-avatars img + img { margin-left: -12px; }
+
+    /* "Have a little look around" */
+    .wd-explore { display: flex; flex-direction: column; gap: 20px; padding-top: 24px; }
+    .wd-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 16px; }
+    .wd-card { display: flex; flex-direction: column; gap: 10px; padding: 26px; border-radius: 28px; color: var(--wd-ink); min-height: 170px; transition: transform 0.25s; }
+    .wd-card:hover { transform: translateY(-4px) rotate(-0.6deg); color: var(--wd-ink); }
+    .wd-card .icon { width: 42px; height: 42px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 18px; color: var(--accent); }
+    .wd-card strong { font-family: var(--wd-display); font-weight: 400; font-size: 28px; line-height: 1.1; margin-top: auto; }
+    .wd-card span.text { font-size: 15px; line-height: 1.5; color: oklch(0.42 0.07 355); }
+    .wd-card.tint-0 { background: oklch(0.94 0.04 355); }
+    .wd-card.tint-1 { background: oklch(0.94 0.04 40); }
+    .wd-card.tint-2 { background: oklch(0.94 0.04 320); }
+    .wd-card.games { background: var(--wd-ink); color: #fff; gap: 14px; }
+    .wd-card.games:hover { transform: translateY(-4px) rotate(0.6deg); color: #fff; }
+    .wd-card.games span.text { color: oklch(0.88 0.03 355); }
+
+    /* Two moving lines of words (full width) */
+    .wd-marquee { display: flex; flex-direction: column; gap: 4px; margin: 32px calc(50% - 50vw) 0; padding: 18px 0; }
+    .wd-line { overflow: hidden; padding: 6px 0; }
+    .wd-line.course { color: var(--wd-ink); }
+    .wd-line.me { color: var(--accent); }
+    .wd-track { display: flex; width: max-content; animation: marquee-rtl 38s linear infinite; }
+    .wd-line.course .wd-track { animation-name: marquee-ltr; }
+    .wd-half { display: flex; align-items: center; gap: 28px; padding-right: 28px; flex-shrink: 0; }
+    .wd-half .word { font-family: var(--wd-display); font-size: 34px; letter-spacing: 0.01em; white-space: nowrap; }
+    .wd-half .word.it { font-style: italic; }
+    .wd-half .glyph { font-size: 12px; opacity: 0.55; }
+    @keyframes marquee-ltr { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+    @keyframes marquee-rtl { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ----- Music button (bottom right, every page) ----- */
+    .wd-music {
+      position: fixed; right: 20px; bottom: 20px; z-index: 30;
+      display: flex; align-items: center; gap: 8px; padding: 12px 18px;
+      border-radius: 999px; border: 1.5px solid var(--wd-border);
+      background: rgba(255, 250, 252, 0.92); backdrop-filter: blur(10px);
+      color: var(--wd-ink); font-family: var(--wd-body); font-weight: 600; font-size: 14px;
+      cursor: pointer; box-shadow: 0 8px 24px oklch(0.5 0.15 355 / 0.15);
+      transition: transform var(--speed);
+    }
+    .wd-music:hover { transform: translateY(-2px); }
+    .wd-music .note { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 14px; }
+    .wd-music.is-playing { animation: music-shake 260ms infinite; }
+    .wd-music.is-playing .note { animation: music-pulse 520ms ease-out infinite; }
+    @keyframes music-shake { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-1px, 1px); } 40% { transform: translate(1px, -1px); } 60% { transform: translate(-1px, -1px); } 80% { transform: translate(1px, 1px); } }
+    @keyframes music-pulse {
+      0%   { transform: scale(1);    box-shadow: 0 0 0 0 oklch(0.55 0.19 358 / 0.55), 0 0 0 0 oklch(0.55 0.19 358 / 0.35); }
+      50%  { transform: scale(1.15); box-shadow: 0 0 0 6px oklch(0.55 0.19 358 / 0.25), 0 0 0 12px oklch(0.55 0.19 358 / 0.12); }
+      100% { transform: scale(1);    box-shadow: 0 0 0 10px oklch(0.55 0.19 358 / 0), 0 0 0 18px oklch(0.55 0.19 358 / 0); }
+    }
+    body.intro-open .wd-music { display: none; }
+
+    /* ----- Loading screen: polaroids ----- */
+    body.intro-open { overflow: hidden; }
+    .wd-intro { position: fixed; inset: 0; z-index: 100; background: var(--wd-load-bg); overflow: hidden; display: grid; place-items: center; font-family: var(--wd-body); }
+    .wd-polaroid {
+      position: absolute; top: 0; left: 0;
+      width: clamp(78px, min(var(--vw, 11vw), var(--vh, 18vh)), var(--max, 160px));
+      padding: 8px 8px 38px; background: #fff; border-radius: 6px;
+      box-shadow: 0 12px 30px oklch(0.5 0.15 355 / 0.18); opacity: 0;
+    }
+    .wd-polaroid .pic { aspect-ratio: 1; overflow: hidden; background: linear-gradient(135deg, oklch(0.94 0.04 355), oklch(0.94 0.04 320)); display: grid; place-items: center; color: oklch(0.75 0.1 355); font-size: 22px; }
+    .wd-polaroid .pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .wd-polaroid .cap { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font-family: "Amoresa", serif; font-size: 17px; line-height: 1; color: var(--wd-ink); }
+    .wd-intro-center { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 36px 44px; border-radius: 32px; background: rgba(255, 250, 252, 0.9); backdrop-filter: blur(8px); text-align: center; margin: 16px; }
+    .wd-intro-center .signature { font-size: clamp(64px, 9vw, 110px); line-height: 0.9; color: var(--wd-ink); }
+    .wd-intro-center .course { font-family: var(--wd-display); font-style: italic; font-size: 22px; color: var(--accent); }
+    .wd-progress { width: 220px; height: 6px; border-radius: 999px; background: oklch(0.92 0.04 355); overflow: hidden; }
+    .wd-progress span { display: block; width: 0%; height: 100%; border-radius: 999px; background: var(--accent); }
+    .wd-intro-msg { font-size: 14px; color: oklch(0.45 0.07 355); }
+    .wd-enter { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .wd-enter button { padding: 14px 22px; border-radius: 999px; font-family: var(--wd-body); font-weight: 600; font-size: 15px; cursor: pointer; }
+    .wd-enter .music { border: none; background: var(--wd-ink); color: #fff; }
+    .wd-enter .quiet { border: 1.5px solid oklch(0.88 0.05 355); background: #fff; color: var(--wd-ink); }
+
     /* Respect users who prefer less motion */
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -1107,7 +1327,7 @@
        changing and shows the matching page (see section 10 of the script). -->
   <nav class="site-nav" aria-label="Main menu">
     <div class="nav-inner">
-      <a class="brand" href="#home"><span class="signature">Zoé</span> <span>·</span> Digital Platforms</a>
+      <a class="brand" href="#home"><span class="signature">Zoé</span><span class="brand-sub">Digital Platforms</span></a>
       <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="menu">Menu</button>
       <ul class="menu" id="menu">
         <li><a href="#home">Welcome</a></li>
@@ -1117,7 +1337,7 @@
         <li><a href="#lectures">Sessions</a></li>
         <li><a href="#games">Games</a></li>
         <li><a href="#built">How I built it</a></li>
-        <li><a href="#contact">Contact me</a></li>
+        <li><a href="#contact" class="say-hi">Say hi ♡</a></li>
       </ul>
     </div>
   </nav>
@@ -1146,9 +1366,17 @@
     <section class="page" id="page-contact"  aria-labelledby="banner-title" hidden></section>
   </main>
 
-  <footer>
-    <div>Digital Platforms Test Drive · MSc Marketing Management &amp; Digital · ESSEC Business School</div>
-    <div>Built by <span id="author-name" class="signature"></span> · <a id="footer-linkedin" href="#" target="_blank" rel="noopener">LinkedIn</a></div>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span id="author-name" class="signature footer-name"></span>
+      <div class="footer-info">
+        <span>Digital Platforms Test Drive · ESSEC Business School</span>
+        <div class="footer-links">
+          <a id="footer-linkedin" href="#" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a href="#contact">Contact me ↗</a>
+        </div>
+      </div>
+    </div>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1283,15 +1511,15 @@ const COURSE = {
       text: "Vercel is connected to the repository: every push to GitHub updates the live website automatically, within a minute." }
   ],
   // Why I skipped Claude Design (step 1 of the LaunchLab workflow)
-  designNote: "I didn't use Claude Design because I didn't need it: I had a clear vision of the look I wanted and made the design choices myself, then asked Claude Code to build them directly, refining the result prompt by prompt.",
+  designNote: "For most of the site I didn't need Claude Design: I had a clear vision of the look I wanted, made the design choices myself, and asked Claude Code to build them directly, refining the result prompt by prompt. For the Welcome page, I did use it: I designed the new page, the polaroid loading screen and the music player in Claude Design, then used \"Handoff to Claude Code\" to add them to the site.",
   designChoices: [
     { what: "Colour palette", detail: "Blush pink, raspberry and deep berry with champagne gold: pink, but luxury coded." },
-    { what: "Fonts", detail: "Playfair Display bold italic for titles, Poppins for text, and Amoresa for my name, like a signature." },
+    { what: "Fonts", detail: "Playfair Display bold italic for titles, Poppins for text, and Amoresa for my name, like a signature. The Welcome page uses Instrument Serif and Figtree." },
     { what: "Floating stickers", detail: "Little drawings of my passions (music, travel, art, baking…) and of the course, floating and moving as you scroll." },
     { what: "Layout & details", detail: "Fine gold lines, small-caps labels, rounded game tiles inspired by my own Pinkle game." }
   ],
 
-  features: ["One tab per session", "Lectures & guest lectures", "Quizzes by theme", "Pinkle (my Wordle)", "Hangman", "Akinator",
+  features: ["Polaroid loading screen", "Music player", "Click sprinkles", "One tab per session", "Lectures & guest lectures", "Quizzes by theme", "Pinkle (my Wordle)", "Hangman", "Akinator",
              "Game inside each guest tab", "Responsive on phones", "Keyboard accessible", "Floating parallax stickers"],
 
   // My prompt journey: how the site evolved, prompt by prompt (summarised)
@@ -1319,7 +1547,9 @@ const COURSE = {
     { step: "More games", prompt: "Add the word game we created, a hangman and a reverse Akinator, and sort games into categories.",
       result: "Pinkle, Hangman and Akinator, each in its own category." },
     { step: "Meeting the brief", prompt: "Put each guest session's game inside its tab and explain how I built this.",
-      result: "This section, and a playable game in every guest lecture tab." }
+      result: "This section, and a playable game in every guest lecture tab." },
+    { step: "Claude Design", prompt: "Redesign my Welcome page in Claude Design, then hand it off to Claude Code.",
+      result: "A softer pink Welcome page, a polaroid loading screen, music, click sprinkles and moving lines of words." }
   ]
 };
 
@@ -1426,6 +1656,74 @@ window.addEventListener("scroll", onScrollStickers, { passive: true });
 window.addEventListener("resize", onScrollStickers);
 
 renderStickers();
+
+
+/* =================================================================
+   2c. WELCOME PAGE, LOADING SCREEN AND MUSIC
+   (designed in Claude Design, see "How I built it")
+   ================================================================= */
+const HOME = {
+  lead: "My little corner of the course: lecture notes, guest speakers, and pink games to test what we've learned, all built with AI along the way.",
+  // The three bobbing stickers next to my photo: each one cycles through its words
+  heroStickers: [
+    ["♫ musicals", "✈ travel", "✎ storytelling", "☕ Paris cafés", "♪ opera"],
+    ["♡ influence", "✦ luxury", "◎ strategy", "▶ content creation", "☆ culture"],
+    ["✿ baking", "✿ art", "❀ sustainability", "♡ cooking", "✦ creation"]
+  ],
+  latest: {
+    tag: "● Latest guest session · 9 Oct 2026",
+    image: "images/launchlab-team.jpg",
+    imageAlt: "The LaunchLab team presenting at ESSEC",
+    titleStart: "Vibe coding, from idea to ",
+    titleAccent: "live website",
+    text: "The LaunchLab team showed us how to go from an idea to a live site with AI: design in Claude Design, build with Claude Code, store on GitHub, deploy with Vercel. They also set the task of building this website.",
+    speakers: "Yibo, Rishabh & Nirvan · LaunchLab",
+    link: "#lectures/1"
+  },
+  // "Have a little look around": tints rotate pink → peach → lilac
+  pages: [
+    { href: "#about",    icon: "♡", title: "About me",       text: "My background, CV and LinkedIn." },
+    { href: "#course",   icon: "✎", title: "The course",     text: "What Digital Platforms Test Drive covers." },
+    { href: "#schedule", icon: "◷", title: "Schedule",       text: "All session dates at a glance." },
+    { href: "#lectures", icon: "✦", title: "Sessions",       text: "Lectures and guest lectures, with my analysis." },
+    { href: "#built",    icon: "⌘", title: "How I built it", text: "The tools, the workflow and my prompt journey." },
+    { href: "#contact",  icon: "✉", title: "Contact me",     text: "Get in touch or connect on LinkedIn." }
+  ],
+  // The two moving lines of words
+  courseWords: ["Digital Platforms", "Audience segmentation", "Test · tweak · improve", "AI tools", "Guest speakers",
+                "Campaign strategy", "Measure & report", "Vibe coding", "ESSEC Singapore"],
+  meWords: ["Luxury & culture", "Influence", "Musicals", "Paris", "Madrid", "London", "Singapore",
+            "Baking & cooking", "Art", "Travel", "Storytelling"]
+};
+
+// Loading screen polaroids. To add a photo: put it in images/intro/
+// and write its path in "src" (e.g. "images/intro/paris.jpg").
+// Empty "src" = a pink placeholder with the caption.
+const INTRO_POLAROIDS = [
+  { caption: "me",         src: "photo.jpg" },
+  { caption: "Paris",      src: "" },
+  { caption: "musicals",   src: "" },
+  { caption: "baking",     src: "" },
+  { caption: "travel",     src: "" },
+  { caption: "art",        src: "" },
+  { caption: "Singapore",  src: "images/launchlab-presenting.jpg" },
+  { caption: "friends",    src: "" },
+  { caption: "my cat",     src: "" },
+  { caption: "family",     src: "" },
+  { caption: "humour",     src: "" },
+  { caption: "baby me",    src: "" },
+  { caption: "London",     src: "" },
+  { caption: "Madrid",     src: "" },
+  { caption: "the opera",  src: "" },
+  { caption: "cooking",    src: "" },
+  { caption: "concerts",   src: "" },
+  { caption: "sunny days", src: "" }
+];
+
+// Music: YouTube video IDs, played in a shuffled order
+const MUSIC_IDS = ["3DcoC8p9az8", "suAR1PYFNYA", "u2pySXCmwpc", "oygrmJFKYZY", "vjx5kv05x3A", "LIIDh-qI9oI",
+  "5vheNbQlsyU", "znlKuELSGXM", "xMaE6toi4mk", "bixuI_GV5I0", "xTlNMmZKwpA", "MFKqiFG6HVs", "vWaRiD5ym74",
+  "_2qsU8FGU_E", "-62YbRZqxjs", "LRST9zCdUN4", "bhKPe0EWF0E", "dbxyKR1P8vA", "tDWeLlvYyYU"];
 
 
 /* =================================================================
@@ -2725,58 +3023,135 @@ const RENDERERS = {
    each menu link.
    ================================================================= */
 
-/* ---------- Welcome ---------- */
+/* ---------- Welcome (redesigned in Claude Design) ---------- */
+
+// Coloured letter tiles, like my Pinkle game: "PLAY" or "PINK"
+function letterTiles(word, colours, big) {
+  const box = el("span", "wd-tiles" + (big ? " big" : ""));
+  box.setAttribute("aria-hidden", "true");
+  [...word].forEach((ch, i) => box.append(el("span", "t-" + colours[i % colours.length], ch)));
+  return box;
+}
+
+// A link that looks like a pill button
+function pillLink(text, href, kind) {
+  const a = el("a", "wd-btn " + kind, text);
+  a.href = href;
+  return a;
+}
+
 function buildHome(page) {
-  const intro = makeCard();
-  intro.append(
-    el("span", "eyebrow", COURSE.semester + " · " + COURSE.programme),
-    el("h2", "", "Welcome to my course website"),
-  );
-  COURSE.description.forEach(p => intro.append(el("p", "", p)));
-  const meta = el("div", "meta");
-  meta.append(
-    el("span", "", "" + COURSE.school),
-    el("span", "", "Taught by " + COURSE.professor),
-    el("span", "", "" + COURSE.tagline)
-  );
-  intro.append(meta);
-  const row = el("div", "btn-row");
-  row.append(linkButton("Read my lecture analyses →", "#lectures", true), linkButton("About the course", "#course"));
-  intro.append(row);
-  page.append(intro);
+  page.classList.add("wd-home");
 
-  // Spotlight on the first guest speakers
-  const guest = SESSIONS[0];
-  const spot = makeCard();
-  spot.append(
-    el("span", "eyebrow", "Latest guest session · " + formatDate(guest.date)),
-    el("h3", "", guest.title),
-    el("p", "muted", guest.speaker),
-    el("p", "", guest.data.summary)
-  );
-  const spotRow = el("div", "btn-row");
-  spotRow.append(linkButton("Meet the guest speakers →", "#lectures/1", true));
-  spot.append(spotRow);
-  page.append(spot);
+  /* ----- Hero: title, intro, buttons + my photo in an arch ----- */
+  const hero = el("section", "wd-hero");
+  const text = el("div", "wd-hero-text");
+  const tags = el("div", "wd-tags");
+  tags.append(el("span", "wd-tag soft", "✿ " + COURSE.semester), el("span", "wd-tag outline", "ESSEC · " + COURSE.programme));
+  const title = el("h1", "wd-title", "Digital Platforms ");
+  title.append(el("em", "", "Test Drive"));                 //   = non-breaking space
+  const buttons = el("div", "wd-btns");
+  const play = el("a", "wd-btn white");
+  play.href = "#games";
+  play.append(letterTiles("PLAY", ["accent", "butter", "ink", "accent"]), el("span", "", "Think you can beat my games?"));
+  buttons.append(pillLink("Read my lecture notes →", "#lectures", "ink"), play);
+  text.append(tags, title, el("p", "wd-lead", HOME.lead), buttons);
 
-  // Shortcut cards to every other page
-  const explore = el("div", "explore");
-  [
-    { href: "#about",    title: "About me",       text: "My background, CV and LinkedIn." },
-    { href: "#course",   title: "The course",     text: "What Digital Platforms Test Drive covers." },
-    { href: "#schedule", title: "Schedule",       text: "All session dates at a glance." },
-    { href: "#lectures", title: "Sessions",       text: "Lectures and guest lectures, with my analysis." },
-    { href: "#games",    title: "Games",          text: "Quizzes, Pinkle, Hangman and a reverse Akinator." },
-    { href: "#built",    title: "How I built it", text: "The tools, the workflow and my prompt journey." },
-    { href: "#contact",  title: "Contact me",     text: "Get in touch or connect on LinkedIn." }
-  ].forEach(item => {
-    const a = el("a");
-    a.href = item.href;
-    const number = el("span", "num", String(explore.children.length + 1).padStart(2, "0"));   // "01", "02"…
-    a.append(number, el("strong", "", item.title), el("span", "muted", item.text), el("span", "arrow", "→"));
-    explore.append(a);
+  const portrait = el("div", "wd-portrait");
+  const photo = el("img");
+  photo.src = PROFILE.photo;
+  photo.alt = "Portrait of " + PROFILE.name;
+  portrait.append(el("div", "wd-arch-bg"), photo);
+  const stickers = HOME.heroStickers.map((words, i) => {
+    const s = el("span", "wd-sticker s" + i, words[0]);
+    portrait.append(s);
+    return s;
   });
+  const sig = el("span", "signature wd-signature", "Zoé");
+  sig.setAttribute("aria-hidden", "true");
+  portrait.append(sig);
+  hero.append(text, portrait);
+  page.append(hero);
+
+  // Every 2.6s one sticker (taking turns) fades out, swaps its word, fades back in.
+  // Only the text changes, so the bobbing animation never restarts.
+  let tick = 0;
+  setInterval(() => {
+    tick++;
+    const i = tick % 3;
+    const words = HOME.heroStickers[i];
+    const next = words[Math.floor(tick / 3 + 1) % words.length];
+    stickers[i].animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: "forwards" }).onfinish = () => {
+      stickers[i].textContent = next;
+      stickers[i].animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, fill: "forwards" });
+    };
+  }, 2600);
+
+  /* ----- Info bar ----- */
+  const info = el("section", "wd-info");
+  info.append(el("span", "", "ESSEC Business School, Singapore"), el("span", "sep", "✦"),
+              el("span", "", "Taught by " + COURSE.professor), el("span", "sep", "✦"),
+              el("span", "motto", "Master the tools, drive the results."));
+  page.append(info);
+
+  /* ----- Latest guest session ----- */
+  const L = HOME.latest;
+  const latest = el("section", "wd-latest");
+  const img = el("img");
+  img.src = L.image;
+  img.alt = L.imageAlt;
+  const box = el("div", "wd-latest-text");
+  const h2 = el("h2", "wd-h2", L.titleStart);
+  h2.append(el("em", "", L.titleAccent));
+  // Speaker avatars come from the LaunchLab "people" section
+  const people = (SESSIONS[0].data.sections.find(s => s.type === "people") || { items: [] }).items;
+  const avatars = el("div", "wd-avatars");
+  people.forEach(p => { const a = el("img"); a.src = p.photo; a.alt = p.name; avatars.append(a); });
+  const row = el("div", "wd-avatars-row");
+  row.append(avatars, el("span", "", L.speakers));
+  box.append(el("span", "wd-tag soft", L.tag), h2, el("p", "", L.text), row, pillLink("Meet the speakers →", L.link, "ink small"));
+  latest.append(img, box);
+  page.append(latest);
+
+  /* ----- "Have a little look around" ----- */
+  const explore = el("section", "wd-explore");
+  const eh = el("h2", "wd-h2", "Have a little ");
+  eh.append(el("em", "", "look around"));
+  const cards = el("div", "wd-cards");
+  HOME.pages.forEach((p, i) => {
+    const a = el("a", "wd-card tint-" + (i % 3));
+    a.href = p.href;
+    const icon = el("span", "icon", p.icon);
+    icon.setAttribute("aria-hidden", "true");
+    a.append(icon, el("strong", "", p.title), el("span", "text", p.text));
+    cards.append(a);
+  });
+  const games = el("a", "wd-card games");
+  games.href = "#games";
+  games.append(letterTiles("PINK", ["accent", "butter", "plum", "accent"], true), el("strong", "", "Games"),
+               el("span", "text", "Quizzes, Pinkle (my Wordle), Hangman and a reverse Akinator."));
+  cards.append(games);
+  explore.append(eh, cards);
   page.append(explore);
+
+  /* ----- Two moving lines of words ----- */
+  const marquee = el("section", "wd-marquee");
+  marquee.setAttribute("aria-label", "The course and me");
+  // Each line holds the words twice, then slides by half its width and loops
+  const line = (words, kind, glyph) => {
+    const wrap = el("div", "wd-line " + kind);
+    const track = el("div", "wd-track");
+    for (let copy = 0; copy < 2; copy++) {
+      const half = el("div", "wd-half");
+      if (copy) half.setAttribute("aria-hidden", "true");     // read the words once, not twice
+      words.forEach((w, i) => half.append(el("span", "word" + (i % 2 ? " it" : ""), w), el("span", "glyph", glyph)));
+      track.append(half);
+    }
+    wrap.append(track);
+    return wrap;
+  };
+  marquee.append(line(HOME.courseWords, "course", "✦"), line(HOME.meWords, "me", "♡"));
+  page.append(marquee);
 }
 
 /* ---------- About me ---------- */
@@ -2912,7 +3287,7 @@ function buildCourse(page) {
    and my prompt journey (a timeline of the prompts that shaped the site). */
 function buildBuilt(page) {
   // 1. The workflow
-  const how = makeCard("The workflow", "From the LaunchLab guest session (Design → Build → Deploy), applied to this site. I did the Design step myself, see below.");
+  const how = makeCard("The workflow", "From the LaunchLab guest session (Design → Build → Deploy), applied to this site. For the Design step, see below.");
   const steps = el("ol", "build-steps");
   COURSE.buildSteps.forEach((s, i) => {
     const li = el("li");
@@ -2923,7 +3298,7 @@ function buildBuilt(page) {
   page.append(how);
 
   // 1b. Why no Claude Design: my own design choices
-  const design = makeCard("A note on Claude Design");
+  const design = makeCard("Design: my choices + Claude Design");
   design.append(el("p", "", COURSE.designNote));
   const choices = el("div", "design-choices");
   COURSE.designChoices.forEach(c => {
@@ -4219,7 +4594,7 @@ function buildContact(page) {
       return;
     }
     // mailto: link with the subject and message filled in
-    const body = message + "\n\n— " + name;
+    const body = message + "\n\nFrom " + name;
     window.location.href = "mailto:" + PROFILE.email +
       "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
     msg.textContent = "Your email app should open now. Thank you! ";
@@ -4285,6 +4660,9 @@ function showPage() {
   const [name, sub] = location.hash.slice(1).split("/");
   const pageName = PAGES[name] ? name : "home";
 
+  // The Welcome page has its own hero instead of the banner
+  document.body.classList.toggle("is-home", pageName === "home");
+
   // Show one page, hide the others
   Object.keys(PAGES).forEach(key => {
     document.getElementById("page-" + key).hidden = key !== pageName;
@@ -4326,12 +4704,230 @@ menuToggle.addEventListener("click", () => {
 });
 
 
+
+/* =================================================================
+   10b. LOADING SCREEN, MUSIC AND CLICK SPRINKLES
+   (from my Claude Design handoff)
+   ================================================================= */
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- Music: a hidden YouTube player ----------
+   The YouTube IFrame API is loaded only when music is first asked for.
+   Songs play in a shuffled order; when one ends (or fails) the next starts. */
+const music = {
+  playing: false,
+  queue: [],
+  current: null,
+  player: null,
+  ready: null,
+  button: null,
+
+  nextId() {
+    if (!this.queue.length) {
+      this.queue = shuffle(MUSIC_IDS);
+      if (this.queue[0] === this.current && this.queue.length > 1) this.queue.push(this.queue.shift());
+    }
+    this.current = this.queue.shift();
+    return this.current;
+  },
+
+  load() {
+    if (this.ready) return this.ready;
+    this.ready = new Promise(resolve => {
+      const make = () => {
+        const host = el("div");
+        host.style.cssText = "position:fixed;width:1px;height:1px;left:-10px;bottom:0;opacity:0;pointer-events:none;";
+        const inner = el("div");
+        host.append(inner);
+        document.body.append(host);
+        this.player = new YT.Player(inner, {
+          videoId: this.nextId(), width: 1, height: 1,
+          playerVars: { autoplay: 0, controls: 0, playsinline: 1 },
+          events: {
+            onReady: () => resolve(this.player),
+            onStateChange: ev => { if (ev.data === 0) this.player.loadVideoById(this.nextId()); },   // 0 = ended
+            onError: () => { if (this.playing) this.player.loadVideoById(this.nextId()); }
+          }
+        });
+      };
+      if (window.YT && window.YT.Player) return make();
+      const previous = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => { if (previous) previous(); make(); };
+      const script = el("script");
+      script.src = "https://www.youtube.com/iframe_api";
+      document.head.append(script);
+    });
+    return this.ready;
+  },
+
+  play() {
+    this.playing = true;
+    this.update();
+    this.load().then(p => { p.setVolume(45); if (this.playing) p.playVideo(); });
+  },
+
+  pause() {
+    this.playing = false;
+    this.update();
+    if (this.player && this.player.pauseVideo) this.player.pauseVideo();
+  },
+
+  update() {
+    this.button.classList.toggle("is-playing", this.playing);
+    this.button.querySelector(".label").textContent = this.playing ? "Pause music" : "Play some music";
+    this.button.setAttribute("aria-pressed", String(this.playing));
+  }
+};
+
+// The music button, bottom right on every page
+music.button = el("button", "wd-music");
+music.button.setAttribute("aria-label", "Toggle music");
+const musicNote = el("span", "note", "♫");
+musicNote.setAttribute("aria-hidden", "true");
+music.button.append(musicNote, el("span", "label", "Play some music"));
+// EVENT LISTENER: play / pause
+music.button.addEventListener("click", () => music.playing ? music.pause() : music.play());
+document.body.append(music.button);
+
+/* ---------- Click sprinkles ----------
+   Clicking any link or button makes it jiggle and sends 12 little
+   sprinkles flying from the cursor. They are removed when they finish. */
+const SPRINKLES = ["♡", "♥", "♫", "♪", "🧁", "🎂", "✿", "✦"];
+const SPRINKLE_COLOURS = ["var(--accent)", "var(--bubblegum)", "oklch(0.8 0.1 85)", "var(--wd-ink)"];
+
+// EVENT LISTENER: one listener for the whole page
+document.addEventListener("click", (event) => {
+  if (reduceMotion) return;
+  const target = event.target.closest("a, button");
+  if (!target) return;
+  target.animate([
+    { transform: "rotate(0) scale(1)" }, { transform: "rotate(-6deg) scale(1.08)" },
+    { transform: "rotate(5deg) scale(1.05)" }, { transform: "rotate(-3deg) scale(1.02)" },
+    { transform: "rotate(0) scale(1)" }
+  ], { duration: 450, easing: "ease-out" });
+
+  for (let i = 0; i < 12; i++) {
+    const s = el("span", "", SPRINKLES[Math.floor(Math.random() * SPRINKLES.length)]);
+    s.setAttribute("aria-hidden", "true");
+    Object.assign(s.style, {
+      position: "fixed", left: event.clientX + "px", top: event.clientY + "px", pointerEvents: "none",
+      zIndex: 9999, fontSize: (14 + Math.random() * 12) + "px", color: SPRINKLE_COLOURS[i % 4], lineHeight: 1
+    });
+    document.body.append(s);
+    const angle = Math.random() * Math.PI * 2, dist = 50 + Math.random() * 70;
+    const dx = Math.cos(angle) * dist, dy = Math.sin(angle) * dist - 30, r = (Math.random() - 0.5) * 120;
+    s.animate([
+      { transform: "translate(-50%,-50%) scale(0.4)", opacity: 1 },
+      { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${r}deg) scale(1)`, opacity: 1, offset: 0.6 },
+      { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy + 40}px)) rotate(${r * 1.5}deg) scale(0.8)`, opacity: 0 }
+    ], { duration: 900 + Math.random() * 400, easing: "cubic-bezier(.2,.7,.3,1)" }).onfinish = () => s.remove();
+  }
+});
+
+/* ---------- Loading screen ----------
+   18 polaroids pop in around a centre card, each at a random place
+   chosen so they overlap the centre card and each other as little as
+   possible. When the progress bar is full, two buttons let you in. */
+function showIntro() {
+  document.body.classList.add("intro-open");
+  const intro = el("div", "wd-intro");
+  intro.setAttribute("role", "dialog");
+  intro.setAttribute("aria-modal", "true");
+  intro.setAttribute("aria-label", "Welcome");
+
+  // The polaroids (two sizes, alternating)
+  const cards = INTRO_POLAROIDS.map((p, i) => {
+    const card = el("div", "wd-polaroid");
+    card.setAttribute("aria-hidden", "true");
+    if (i % 2) card.style.cssText = "--vw:10.5vw;--vh:17vh;--max:150px";
+    else card.style.cssText = "--vw:12vw;--vh:19vh;--max:170px";
+    const pic = el("div", "pic");
+    if (p.src) { const img = el("img"); img.src = p.src; img.alt = ""; pic.append(img); }
+    else pic.textContent = "✿";                          // placeholder until a photo is added
+    card.append(pic, el("span", "cap", p.caption));
+    intro.append(card);
+    return card;
+  });
+
+  // The centre card
+  const center = el("div", "wd-intro-center");
+  const progress = el("div", "wd-progress");
+  const bar = el("span");
+  progress.append(bar);
+  const msg = el("span", "wd-intro-msg", "getting everything pretty…");
+  center.append(el("span", "signature", "Zoé"), el("span", "course", "Digital Platforms Test Drive"), progress, msg);
+  intro.append(center);
+  document.body.append(intro);
+
+  // Place the cards once the browser knows the sizes
+  requestAnimationFrame(() => {
+    const W = innerWidth, H = innerHeight, placed = [];
+    const c = center.getBoundingClientRect();
+    const middle = { x: c.left + c.width * 0.2, y: c.top + c.height * 0.2, w: c.width * 0.6, h: c.height * 0.6 };
+    const overlap = (a, b) =>
+      Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) *
+      Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+
+    shuffle(cards).forEach((card, i) => {
+      const w = card.offsetWidth || 160, hgt = card.offsetHeight || 200;
+      // Try 150 random spots, keep the one with the lowest score
+      let best = null, bestScore = Infinity;
+      for (let t = 0; t < 150; t++) {
+        const r = { x: Math.random() * Math.max(1, W - w), y: Math.random() * Math.max(1, H - hgt), w, h: hgt };
+        const score = overlap(r, middle) * 4 + placed.reduce((sum, p) => sum + overlap(r, p), 0);
+        if (score < bestScore) { best = r; bestScore = score; if (score === 0) break; }
+      }
+      placed.push(best);
+      Object.assign(card.style, { left: best.x + "px", top: best.y + "px", zIndex: 1 + Math.floor(Math.random() * 3) });
+      const tilt = "rotate(" + (Math.random() * 24 - 12).toFixed(1) + "deg)";
+      card.style.transform = tilt;
+      if (reduceMotion) { card.style.opacity = 1; return; }
+      // Pop in, one after another
+      card.animate([
+        { opacity: 0, transform: tilt + " translateY(40px) scale(0.6)" },
+        { opacity: 1, transform: tilt + " translateY(-6px) scale(1.05)", offset: 0.7 },
+        { opacity: 1, transform: tilt + " scale(1)" }
+      ], { duration: 600, delay: 150 + i * 200 + Math.random() * 120, easing: "cubic-bezier(.2,.8,.3,1.2)", fill: "forwards" });
+      // Then float forever ("add" = on top of the tilt, not instead of it)
+      const dx = (Math.random() * 16 - 8).toFixed(1), dy = (10 + Math.random() * 14).toFixed(1), dr = (Math.random() * 4 - 2).toFixed(1);
+      card.animate([
+        { transform: "translate(0,0) rotate(0deg)" },
+        { transform: "translate(" + dx + "px,-" + dy + "px) rotate(" + dr + "deg)" }
+      ], { duration: 2800 + Math.random() * 2200, delay: Math.random() * 1000, iterations: Infinity,
+           direction: "alternate", easing: "ease-in-out", composite: "add" });
+    });
+
+    // Progress bar, then the two buttons
+    const total = reduceMotion ? 600 : 150 + cards.length * 220 + 400;
+    bar.animate([{ width: "0%" }, { width: "100%" }], { duration: total, easing: "ease-in-out", fill: "forwards" }).onfinish = () => {
+      const enter = el("div", "wd-enter");
+      const withMusic = el("button", "music", "Come in with music ♫");
+      const quiet = el("button", "quiet", "Come in quietly");
+      // EVENT LISTENERS: the click itself is what allows the music to start
+      withMusic.addEventListener("click", () => { music.play(); closeIntro(); });
+      quiet.addEventListener("click", closeIntro);
+      enter.append(withMusic, quiet);
+      msg.replaceWith(enter);
+      withMusic.focus();
+    };
+  });
+
+  function closeIntro() {
+    intro.animate([{ opacity: 1, transform: "scale(1)" }, { opacity: 0, transform: "scale(1.04)" }],
+                  { duration: reduceMotion ? 1 : 600, easing: "ease-in", fill: "forwards" }).onfinish = () => {
+      intro.remove();
+      document.body.classList.remove("intro-open");
+    };
+  }
+}
+
 /* =================================================================
    11. START-UP
    ================================================================= */
 document.getElementById("author-name").textContent = PROFILE.name;
 document.getElementById("footer-linkedin").href = PROFILE.linkedin;
 showPage();
+showIntro();          // the polaroid loading screen, on every visit
 </script>
 </body>
 </html>

@@ -18,11 +18,11 @@ Following the workflow from the LaunchLab guest session:
 2. **Store the code on GitHub**: every change is a commit pushed to this repository.
 3. **Deploy with Vercel**: Vercel watches this repository, so every push updates the live site automatically.
 
-I didn't use Claude Design (the "Design" step of the workflow) because I didn't need it: I chose the colour palette, the fonts and the floating stickers myself, and asked Claude Code to build them directly.
+For most of the site I skipped Claude Design (the "Design" step of the workflow) because I didn't need it: I chose the colour palette, the fonts and the floating stickers myself, and asked Claude Code to build them directly. For the Welcome page, I used Claude Design: I designed the new page, the polaroid loading screen and the music player there, then handed it off to Claude Code.
 
 **Main features:** one tab per session, a game inside each guest lecture tab, quizzes by theme, Pinkle, Hangman, Akinator, responsive design for phones, keyboard accessibility.
 
-**My prompt journey (short version):** a pink quiz page → a site for my lecture analyses → welcome page and menu → real content from the slides → games by theme → luxury pink redesign → live on GitHub + Vercel → CV, portrait and bio → guest speaker cards → stickers and new fonts → Pinkle, Hangman, Akinator → games inside the guest tabs. The full journey is on the website's "How I built it" page.
+**My prompt journey (short version):** a pink quiz page → a site for my lecture analyses → welcome page and menu → real content from the slides → games by theme → luxury pink redesign → live on GitHub + Vercel → CV, portrait and bio → guest speaker cards → stickers and new fonts → Pinkle, Hangman, Akinator → games inside the guest tabs → Welcome page redesigned in Claude Design. The full journey is on the website's "How I built it" page.
 
 ## Built with
 Plain HTML, CSS and vanilla JavaScript, no frameworks: `index.html`, plus `games/pinkle-words.js` (word list), `images/` and `fonts/`.
