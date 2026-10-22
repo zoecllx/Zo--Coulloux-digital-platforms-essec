@@ -2,3 +2,5 @@
 .DS_Store
 # Local Claude Code preview settings (not part of the website)
 .claude/
+# Node modules
+node_modules/
