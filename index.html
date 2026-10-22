@@ -222,54 +222,12 @@
       .menu.is-open { display: flex; animation: fadeUp 0.3s var(--ease); }
     }
 
-    /* =========================================================
-       HEADER BANNER (changes title on each page)
-       ========================================================= */
-    .banner {
-      position: relative;
-      background:
-        radial-gradient(ellipse at 15% 0%, rgba(255, 158, 196, 0.45), transparent 55%),
-        radial-gradient(ellipse at 90% 100%, rgba(227, 201, 154, 0.30), transparent 50%),
-        linear-gradient(135deg, var(--ink), var(--berry) 55%, var(--rose-deep));
-      color: var(--ivory);
-      padding: clamp(3.5rem, 9vw, 6rem) 1.25rem clamp(5.5rem, 11vw, 8rem);
-      text-align: center;
-    }
-    /* Decorative ornament above the title */
-    .banner::before {
-      content: "✦";
-      display: block;
-      color: var(--gold-soft);
-      font-size: 0.85rem;
-      letter-spacing: 1rem;
-      margin-bottom: 1.25rem;
-    }
-    .banner h1 {
-      margin: 0;
-      color: var(--ivory);
-      font-size: clamp(2.2rem, 6.5vw, 4.2rem);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: 0;
-    }
-    .banner p {
-      margin: 1.25rem auto 0;
-      max-width: 640px;
-      color: var(--gold-soft);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.25em;
-      line-height: 1.9;
-    }
-
     main {
       flex: 1;
       width: 100%;
       max-width: 1120px;
-      margin: -3.5rem auto 3rem;   /* pulls the content up over the banner */
+      margin: 0 auto;
       padding: 0 1.25rem;
-      position: relative;          /* sits above the banner, not behind it */
-      z-index: 1;
     }
 
     /* Pages: only one is visible at a time */
@@ -1019,60 +977,6 @@
     }
     .toast.show { transform: translate(-50%, 0); }
 
-    /* =========================================================
-       FLOATING STICKERS
-       .stickers is fixed to the screen. Each sticker:
-       - floats on its own (CSS animation "sticker-float")
-       - moves when you scroll (JavaScript changes its "top": parallax)
-       Layering: z-index 0 puts them above the pink background and the
-       banner, but below main (z-index 1), the footer and the menu.
-       ========================================================= */
-    .stickers { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-    .sticker {
-      position: absolute;
-      left: var(--x);
-      top: 0;                          /* set by JavaScript while scrolling */
-      width: var(--size);
-      height: var(--size);
-      animation:
-        sticker-in 1s var(--ease) var(--delay) backwards,
-        sticker-float var(--speed) ease-in-out var(--delay) infinite;
-    }
-    /* Just the drawing, no circle. A soft glow keeps it readable
-       on both the light pink background and the dark banner. */
-    .sticker svg {
-      display: block;
-      width: 100%;
-      height: 100%;
-      fill: none;
-      stroke: var(--rose);
-      stroke-width: 1.6;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      filter: drop-shadow(0 0 2px rgba(255, 250, 252, 0.7));
-    }
-    .sticker.course svg { stroke: var(--gold); }     /* course stickers in gold, mine in rose */
-    @keyframes sticker-in { from { opacity: 0; transform: scale(0.5); } }
-    /* Floating: a slow figure-of-eight drift with a gentle sway */
-    @keyframes sticker-float {
-      0%, 100% { transform: translate(0, 0) rotate(var(--tilt)); }
-      25%      { transform: translate(var(--drift), -10px) rotate(0deg); }
-      50%      { transform: translate(0, -18px) rotate(calc(var(--tilt) * -1)); }
-      75%      { transform: translate(calc(var(--drift) * -1), -8px) rotate(0deg); }
-    }
-    /* The banner text stays above the stickers */
-    .banner h1, .banner p { position: relative; z-index: 1; }
-    footer { position: relative; z-index: 1; }
-
-    /* Phones: even smaller */
-    @media (max-width: 700px) {
-      .sticker { --size: 22px !important; }
-    }
-    /* Reduced motion: still shown, but they don't float or move */
-    @media (prefers-reduced-motion: reduce) {
-      .sticker { animation: none; transform: rotate(var(--tilt)); }
-    }
-
     /* ---------- Footer ---------- */
     footer {
       text-align: center;
@@ -1170,8 +1074,6 @@
     footer.site-footer a { color: #fff; font-weight: 600; border-bottom: none; }
 
     /* ----- Welcome page: no banner, wider content ----- */
-    body.is-home .banner { display: none; }
-    body.is-home .stickers { display: none; }   /* the Welcome page has its own bobbing stickers */
     body.is-home main { margin-top: 0; max-width: 1180px; padding: 24px 20px 80px; }
     .wd-home { display: flex; flex-direction: column; gap: 28px; font-family: var(--wd-body); color: var(--wd-ink); }
     .wd-home h1, .wd-home h2 { font-family: var(--wd-display); font-weight: 400; font-style: normal; letter-spacing: 0; color: var(--wd-ink); margin: 0; }
@@ -1307,6 +1209,363 @@
     .wd-enter .music { border: none; background: var(--wd-ink); color: #fff; }
     .wd-enter .quiet { border: 1.5px solid oklch(0.88 0.05 355); background: #fff; color: var(--wd-ink); }
 
+    /* =========================================================
+       ALL PAGES REDESIGN (designed in Claude Design: "Pages",
+       handed off to Claude Code). Same identity as the Welcome
+       page: pink tag chips, big Instrument Serif titles with one
+       word in italic, rounded tinted cards, pill buttons.
+       ========================================================= */
+    body { font-family: var(--wd-body); font-weight: 400; color: var(--wd-ink); line-height: 1.6; }
+    h1, h2, h3, h4 { font-family: var(--wd-display); font-weight: 400; font-style: normal; letter-spacing: 0; color: inherit; }
+    h1 em, h2 em, h3 em { font-style: italic; color: var(--accent); }
+    strong { font-weight: 600; }
+    a { color: var(--accent); }
+    li::marker { color: var(--accent); }
+    .muted { color: oklch(0.45 0.07 355); }
+    main { max-width: 1180px; padding: 24px 20px 80px; }
+    .page { display: flex; flex-direction: column; gap: 28px; }
+    .page[hidden] { display: none; }
+
+    /* Rotating soft tints: pink, peach, lilac */
+    .tint-0 { background: oklch(0.94 0.04 355); }
+    .tint-1 { background: oklch(0.94 0.04 40); }
+    .tint-2 { background: oklch(0.94 0.04 320); }
+
+    /* Page header: tag chips + big title */
+    .pg-head { display: flex; flex-direction: column; gap: 18px; padding: 32px 0 8px; }
+    .wd-hero .pg-head { padding: 0; }
+    .pg-title { margin: 0; font-size: clamp(52px, 7vw, 92px); line-height: 0.95; letter-spacing: -0.02em; text-wrap: balance; }
+    .pg-intro { display: flex; flex-direction: column; gap: 20px; max-width: 820px; }
+    .pg-intro .pg-head { padding-bottom: 0; }
+    .pg-lead { margin: 0; font-size: 17px; line-height: 1.65; color: oklch(0.4 0.07 355); max-width: 780px; text-wrap: pretty; }
+    .pg-tagline { margin: 0; font-family: var(--wd-display); font-style: italic; font-size: 26px; color: oklch(0.45 0.1 355); }
+    .pg-h2 { margin: 0; font-size: clamp(34px, 4vw, 48px); line-height: 1; }
+    .pg-section { display: flex; flex-direction: column; gap: 18px; }
+    .pg-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 20px; align-items: start; }
+    .ab-focus { margin: 0; font-size: 15px; font-weight: 600; color: oklch(0.45 0.08 355); }
+
+    /* Cards: soft white, rounded */
+    .card {
+      background: #fffafc;
+      border: 1.5px solid oklch(0.92 0.035 355);
+      border-radius: 32px;
+      box-shadow: none;
+      padding: clamp(24px, 4vw, 40px);
+      margin-bottom: 0;
+    }
+    .card > h2 { font-size: 40px; line-height: 1; margin: 0 0 14px; }
+    .card > h3 { font-size: clamp(30px, 3.6vw, 42px); line-height: 1.05; margin: 0 0 6px; }
+    .card-intro { margin: 0 0 18px; font-size: 15px; color: oklch(0.45 0.07 355); }
+    .grid-2 { gap: 20px; }
+
+    /* Small pink label chip */
+    .eyebrow {
+      align-self: flex-start;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--wd-soft);
+      color: oklch(0.4 0.12 355);
+      font-family: var(--wd-body);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .eyebrow::before, .eyebrow::after, .center .eyebrow::after, .embedded-head .eyebrow::after { display: none; }
+
+    /* Pill buttons */
+    .btn {
+      font-family: var(--wd-body);
+      font-size: 15px;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0;
+      border-radius: 999px;
+      padding: 13px 22px;
+      background: #fff;
+      border: 1.5px solid oklch(0.88 0.05 355);
+      color: var(--wd-ink);
+      transition: transform var(--speed), background var(--speed), color var(--speed);
+    }
+    .btn:hover { background: var(--wd-hover); color: var(--wd-ink); transform: translateY(-2px); }
+    .btn-primary, .btn[aria-pressed="true"] { background: var(--wd-ink); border-color: var(--wd-ink); color: #fff; }
+    .btn-primary { box-shadow: 0 4px 0 oklch(0.55 0.19 358 / 0.35); }
+    .btn-primary:hover, .btn[aria-pressed="true"]:hover { background: var(--wd-ink); color: #fff; }
+    .btn-row { gap: 12px; margin-top: 22px; }
+    :focus-visible { box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--accent); }
+
+    /* Chips: white pills */
+    .chips { gap: 8px; margin: 0; }
+    .chips li { border: none; background: #fff; padding: 7px 13px; border-radius: 999px; font-size: 13px; font-weight: 600; letter-spacing: 0; line-height: 1.4; color: oklch(0.35 0.09 355); }
+
+    /* ---------- About ---------- */
+    .tl-item { display: flex; flex-direction: column; gap: 4px; padding: 16px 0 16px 20px; border-left: 2px dashed oklch(0.88 0.05 355); position: relative; }
+    .tl-item::before { content: ""; position: absolute; left: -7px; top: 22px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+    .tl-item.ink::before { background: var(--wd-ink); }
+    .tl-when { font-size: 13px; font-weight: 600; color: var(--accent); }
+    .tl-what { font-family: var(--wd-display); font-weight: 400; font-size: 24px; line-height: 1.15; }
+    .tl-where { font-size: 14px; color: oklch(0.45 0.07 355); }
+    .tl-point { font-size: 14px; line-height: 1.5; color: oklch(0.4 0.07 355); }
+    .ink-panel { display: flex; flex-direction: column; gap: 16px; padding: clamp(24px, 4vw, 40px); border-radius: 32px; background: var(--wd-ink); color: #fff; }
+    .ink-panel h2 { margin: 0; color: #fff; font-size: 40px; line-height: 1; }
+    .ink-panel h2 em { color: oklch(0.8 0.1 355); }
+    .ink-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 12px; }
+    .ink-tile { display: flex; flex-direction: column; gap: 4px; padding: 18px; border-radius: 20px; background: oklch(0.36 0.1 355); }
+    .ink-tile strong { font-size: 15px; }
+    .ink-tile span { font-size: 13px; color: oklch(0.85 0.04 355); }
+    .chip-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+    .chip-card { display: flex; flex-direction: column; gap: 14px; padding: 26px; border-radius: 28px; }
+    .chip-card-head { display: flex; align-items: center; gap: 10px; }
+    .chip-card-head strong { font-family: var(--wd-display); font-weight: 400; font-size: 28px; line-height: 1.1; }
+    .round-icon { width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%; background: #fff; display: grid; place-items: center; color: var(--accent); font-weight: 700; }
+
+    /* ---------- Course ---------- */
+    .num-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 14px; }
+    .num-tile { display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: 28px; min-height: 130px; }
+    .num-tile .num { font-family: var(--wd-display); font-size: 34px; line-height: 1; color: var(--accent); }
+    .num-tile .txt { margin-top: auto; font-size: 17px; font-weight: 600; line-height: 1.35; }
+    .grade + .grade { margin-top: 18px; }
+    .grade-top strong { font-size: 16px; }
+    .grade-pct { font-family: var(--wd-display); font-size: 32px; line-height: 1; color: var(--accent); }
+    .grade-bar { height: 10px; border-radius: 999px; background: oklch(0.93 0.035 355); overflow: hidden; margin-top: 8px; }
+    .grade-bar span { background: var(--accent); border-radius: 999px; }
+    .grade p { margin: 8px 0 0; font-size: 14px; color: oklch(0.45 0.07 355); }
+    .format-title { margin: 28px 0 8px; font-size: 28px; }
+    .fmt-item { display: block; font-size: 15px; line-height: 1.5; color: oklch(0.4 0.07 355); padding: 3px 0; }
+    .pill-accent { align-self: flex-start; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; background: var(--accent); color: #fff; }
+    .ink-panel > h2 + .prof-sub { margin-top: -6px; }
+    .prof-sub { font-size: 14px; color: oklch(0.8 0.1 355); font-weight: 600; }
+    .fact { font-size: 15px; line-height: 1.5; color: oklch(0.9 0.03 355); padding: 12px 0; border-bottom: 1px solid oklch(0.4 0.09 355); }
+    .fact:last-child { border-bottom: none; }
+
+    /* ---------- Schedule ---------- */
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+    .sched { list-style: none; margin: -10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+    .sched-row { display: grid; grid-template-columns: minmax(90px, 120px) minmax(0, 1fr) auto; gap: 20px; align-items: center; padding: 22px 26px; border-radius: 28px; color: var(--wd-ink); text-decoration: none; transition: transform 0.25s; }
+    .sched-row:hover { transform: translateX(6px); color: var(--wd-ink); }
+    .sched-date { display: flex; flex-direction: column; line-height: 1; }
+    .sched-day { font-family: var(--wd-display); font-size: 44px; color: var(--accent); }
+    .sched-month { margin-top: 4px; font-size: 13px; font-weight: 600; color: oklch(0.45 0.07 355); }
+    .sched-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .sched-label { font-size: 13px; font-weight: 600; color: var(--accent); }
+    .sched-title { font-family: var(--wd-display); font-weight: 400; font-size: 26px; line-height: 1.15; }
+    .sched-speaker { font-size: 14px; color: oklch(0.45 0.07 355); }
+    .status-pill { font-size: 13px; font-weight: 600; padding: 7px 13px; border-radius: 999px; white-space: nowrap; }
+    .status-pill.done { background: var(--wd-ink); color: #fff; }
+    .status-pill.upcoming { background: var(--accent); color: #fff; }
+    .status-pill.tbc { background: #fff; color: oklch(0.45 0.08 355); }
+    @media (max-width: 560px) {
+      .sched-row { grid-template-columns: auto minmax(0, 1fr); gap: 14px 18px; padding: 20px; }
+      .sched-row .status-pill { grid-column: 1 / -1; justify-self: start; }
+    }
+
+    /* ---------- Big tabs (Sessions, Games) + small pill tabs ---------- */
+    .group-tabs { display: flex; flex-wrap: wrap; gap: 10px; background: none; border: none; box-shadow: none; margin: -10px 0 0; }
+    .group-tab { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 14px 22px; border-radius: 22px; border: 1.5px solid var(--wd-border); background: #fff; color: var(--wd-ink); font-family: var(--wd-body); transition: background var(--speed); }
+    .group-tab:hover { background: var(--wd-hover); }
+    .group-tab[aria-selected="true"] { background: var(--wd-ink); color: #fff; }
+    .group-name { font-family: var(--wd-body); font-style: normal; font-weight: 700; font-size: 16px; line-height: 1.3; }
+    .group-note, .group-tab[aria-selected="true"] .group-note { margin-top: 0; font-size: 13px; text-transform: none; letter-spacing: 0; color: inherit; opacity: 0.8; }
+    #page-games .group-tabs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+    #page-games .group-tab { padding: 16px 20px; }
+    #page-games .group-name { font-family: var(--wd-display); font-weight: 400; font-size: 26px; line-height: 1.1; }
+    .tablist { display: flex; flex-wrap: wrap; gap: 8px; overflow: visible; background: none; border: none; box-shadow: none; margin-top: 16px; }
+    .tab, .tab:last-child { flex: 0 0 auto; border: 1.5px solid var(--wd-border); border-radius: 999px; background: #fff; color: var(--wd-ink); font-family: var(--wd-body); font-size: 14px; font-weight: 600; text-transform: none; letter-spacing: 0; padding: 10px 18px; }
+    .tab::after { display: none; }
+    .tab:hover { background: var(--wd-hover); color: var(--wd-ink); }
+    .tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .tab .tab-soon { color: inherit; opacity: 0.75; font-style: normal; letter-spacing: 0; }
+    .panel { margin-top: 24px; display: flex; flex-direction: column; gap: 28px; }
+    .panel[hidden] { display: none; }
+
+    /* ---------- Sessions: lecture header + sections ---------- */
+    .lecture-head { display: flex; flex-direction: column; gap: 14px; padding: clamp(26px, 4vw, 44px); }
+    .card.lecture-head > h2 { margin: 0; font-size: clamp(34px, 4.4vw, 54px); line-height: 1.02; text-wrap: balance; }
+    .lecture-speaker { font-size: 15px; font-weight: 600; color: oklch(0.45 0.08 355); }
+    .lecture-head .btn-row { margin-top: 4px; }
+    .soon-note { margin: 0; font-family: var(--wd-display); font-style: italic; font-size: 24px; color: var(--accent); }
+    .soon-dots { justify-content: flex-start; margin: 0; }
+    .soon-dots span { transform: none; border-radius: 50%; background: var(--accent); }
+    .card.lecture-sec { background: none; border: none; border-radius: 0; padding: 0; }
+    .lecture-sec > h3, .lecture-sec .card-head h3 { font-size: clamp(30px, 3.6vw, 42px); line-height: 1.05; margin: 0 0 6px; }
+    .lecture-sec .card-intro { margin-bottom: 16px; }
+    .card-head { align-items: center; margin-bottom: 4px; }
+
+    .concepts { grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 12px; align-items: start; background: none; border: none; }
+    .concept { border-radius: 24px; box-shadow: none; }
+    .concept:nth-child(3n+1), .person:nth-child(3n+1) { background: oklch(0.94 0.04 355); }
+    .concept:nth-child(3n+2), .person:nth-child(3n+2) { background: oklch(0.94 0.04 40); }
+    .concept:nth-child(3n),   .person:nth-child(3n)   { background: oklch(0.94 0.04 320); }
+    .concept-toggle { font-family: var(--wd-body); font-size: 16px; font-weight: 600; line-height: 1.35; padding: 20px 22px; align-items: center; color: var(--wd-ink); border-radius: 24px; }
+    .concept-toggle .icon { width: 30px; height: 30px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-family: var(--wd-body); font-size: 18px; font-weight: 400; color: var(--accent); }
+    .concept-body { padding: 0 22px 20px; font-size: 15px; line-height: 1.55; color: oklch(0.4 0.07 355); }
+
+    .stats { grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 12px; background: none; border: none; }
+    .stat { display: flex; flex-direction: column; gap: 6px; padding: 22px; border-radius: 24px; background: #fff; border: 1.5px solid oklch(0.92 0.035 355); box-shadow: none; }
+    .stat-number { font-family: var(--wd-display); font-size: 44px; color: var(--accent); }
+    .stat-label { margin-top: 0; font-size: 15px; font-weight: 600; line-height: 1.35; }
+    .stat-note { margin-top: 0; font-size: 13px; letter-spacing: 0; color: oklch(0.5 0.06 355); }
+
+    .compare-box { display: flex; flex-direction: column; gap: 14px; padding: 22px; border-radius: 28px; background: oklch(0.94 0.04 40); }
+    .switch { align-self: flex-start; gap: 4px; padding: 4px; border-radius: 999px; background: #fff; border: none; }
+    .switch .btn { border: none; padding: 10px 18px; font-size: 14px; background: transparent; box-shadow: none; }
+    .switch .btn:hover { transform: none; background: var(--wd-hover); }
+    .switch .btn[aria-pressed="true"] { background: var(--wd-ink); color: #fff; }
+    .switch .btn[data-view="after"][aria-pressed="true"] { background: var(--accent); }
+    .compare-list { margin: 0; border: none; display: flex; flex-direction: column; gap: 10px; }
+    .compare-list li { grid-template-columns: minmax(110px, 180px) minmax(0, 1fr); gap: 16px; padding: 14px 16px; border-radius: 18px; background: #fff; border: none; font-size: 15px; line-height: 1.5; }
+    .compare-list li span { padding-top: 0; font-size: 14px; font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--accent); }
+
+    .people { grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 14px; }
+    .person { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 26px; border-radius: 28px; }
+    .person .avatar, .person img.avatar { width: 96px; height: 96px; margin: 0; border: 4px solid #fff; box-shadow: none; }
+    .person strong { font-family: var(--wd-display); font-weight: 400; font-size: 26px; line-height: 1.1; }
+    .person span { font-size: 13px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--accent); }
+    .person p { margin: 0; font-size: 14px; line-height: 1.5; color: oklch(0.4 0.07 355); }
+    .person .btn { margin-top: auto; padding: 10px 18px; font-size: 14px; background: var(--wd-ink); border-color: var(--wd-ink); color: #fff; }
+    .source-line { margin-top: 14px; font-size: 13px; color: oklch(0.45 0.07 355); }
+
+    .gallery { grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+    .gallery figure { padding: 10px 10px 16px; border-radius: 24px; background: #fff; box-shadow: 0 10px 30px oklch(0.5 0.15 355 / 0.1); }
+    .gallery-open { border: none; border-radius: 16px; }
+    .gallery figcaption { margin-top: 10px; padding: 0 6px; font-family: var(--signature); font-style: normal; font-size: 22px; line-height: 1.2; color: var(--wd-ink); }
+    .lightbox { border: 6px solid #fff; border-radius: 24px; background: #fffafc; padding: 14px; }
+    .lightbox::backdrop { background: oklch(0.2 0.06 355 / 0.85); }
+    .lightbox img { border-radius: 16px; }
+    .lightbox-close { padding: 8px 16px; font-size: 13px; }
+    .lightbox-caption { font-family: var(--signature); font-style: normal; font-size: 24px; color: var(--wd-ink); }
+
+    .analysis-block { padding: 22px; border-radius: 24px; background: #fff; border: 1.5px dashed oklch(0.85 0.06 355); }
+    .analysis-block + .analysis-block { margin-top: 12px; }
+    .analysis-block h4 { font-size: 24px; color: var(--wd-ink); }
+    .analysis-block p { font-size: 15px; line-height: 1.6; color: oklch(0.4 0.07 355); }
+
+    .card.quote { background: var(--wd-ink); border: none; color: #fff; padding: clamp(30px, 5vw, 56px); }
+    .quote .eyebrow { align-self: center; background: oklch(0.36 0.1 355); color: oklch(0.9 0.03 355); }
+    .quote p { font-family: var(--wd-display); font-style: italic; font-size: clamp(26px, 3.4vw, 40px); line-height: 1.2; text-wrap: balance; }
+
+    .embedded-game { margin-top: 8px; }
+    .embedded-head { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .embedded-head h3 { margin: 0; font-size: clamp(30px, 4vw, 42px); }
+
+    /* ---------- Games ---------- */
+    .pg-head .wd-tiles { margin-bottom: -4px; }
+    .game { min-height: 340px; }
+    .game h2, .game h3 { font-family: var(--wd-display); font-weight: 400; font-style: normal; }
+    .game h2 { font-size: clamp(32px, 4vw, 46px); line-height: 1.05; }
+    .game h3 { font-size: clamp(26px, 3vw, 34px); line-height: 1.15; text-wrap: balance; }
+    .game .score-pill { font-family: var(--wd-body); font-style: normal; font-size: 14px; font-weight: 700; padding: 8px 14px; border-radius: 999px; background: var(--wd-ink); color: #fff; }
+    @keyframes bump { 50% { transform: scale(1.15); background: var(--accent); } }
+    .progress { height: 8px; border-radius: 999px; background: oklch(0.93 0.035 355); overflow: hidden; margin-bottom: 24px; }
+    .progress span { background: var(--accent); border-radius: 999px; }
+    .game .stat-guess { font-family: var(--wd-display); font-weight: 400; color: var(--accent); }
+    .round-source { margin-left: 8px; padding: 3px 10px; border-radius: 999px; background: var(--wd-soft); color: oklch(0.4 0.12 355); font-size: 12px; font-weight: 600; text-transform: none; letter-spacing: 0; }
+    .round-breakdown { border-top: none; display: flex; flex-direction: column; gap: 6px; }
+    .round-breakdown li { border: none; border-radius: 14px; padding: 10px 14px; background: var(--wd-soft); }
+    .option { font-family: var(--wd-body); font-size: 15px; font-weight: 600; padding: 16px 18px; border-radius: 18px; border: 1.5px solid var(--wd-border); background: #fff; transition: transform 0.2s, border-color var(--speed), background var(--speed); }
+    .option:hover:not(:disabled) { border-color: var(--accent); background: #fff; transform: translateY(-2px); }
+    .option.is-correct { background: oklch(0.93 0.06 160); border-color: oklch(0.6 0.1 160); color: var(--wd-ink); }
+    .option.is-wrong { background: oklch(0.93 0.05 20); border-color: oklch(0.6 0.15 20); color: var(--wd-ink); }
+    .option.is-dimmed { opacity: 0.5; }
+    .options.two-up .option { font-size: 16px; text-transform: none; letter-spacing: 0; }
+    .text-answer input { padding: 14px 18px; border: 1.5px solid oklch(0.88 0.05 355); border-radius: 999px; background: #fff; }
+    .text-answer input:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 3px oklch(0.55 0.19 358 / 0.15); }
+    .feedback { border: none; border-radius: 20px; padding: 18px 20px; }
+    .feedback.good { background: oklch(0.95 0.04 160); color: oklch(0.42 0.1 160); }
+    .feedback.bad { background: oklch(0.95 0.03 20); color: oklch(0.5 0.15 20); }
+    .game .feedback strong { font-family: var(--wd-body); font-size: 16px; font-weight: 700; }
+    .feedback p { color: var(--wd-ink); }
+    .badge { background: var(--accent); color: #fff; border: none; box-shadow: 0 0 0 8px #fffafc, 0 0 0 10px var(--wd-soft); }
+    .game .badge-name { font-family: var(--wd-display); font-weight: 400; font-size: 44px; line-height: 1; color: var(--wd-ink); }
+    .game .big-score { font-family: var(--wd-display); font-weight: 400; font-size: 64px; color: var(--accent); }
+    .takeaway { border: none; border-radius: 20px; padding: 18px 22px; background: var(--wd-butter); }
+    .takeaway strong { font-size: 14px; font-weight: 700; text-transform: none; letter-spacing: 0; color: oklch(0.35 0.07 60); }
+    .game .takeaway p { font-family: var(--wd-body); font-style: normal; font-size: 16px; line-height: 1.6; color: oklch(0.35 0.07 60); }
+
+    /* Pinkle */
+    .game h2.pinkle-title { font-family: var(--wd-display); font-weight: 400; }
+    .pinkle-title span { color: var(--accent); }
+    .wg-tile { border-radius: 12px; border: 2px solid var(--wd-border); background: #fff; font-family: var(--wd-body); font-weight: 700; color: var(--wd-ink); }
+    .wg-tile.filled { border-color: oklch(0.7 0.08 355); }
+    .correct { background: var(--accent) !important; border-color: var(--accent) !important; color: #fff !important; }
+    .present { background: var(--wd-butter2) !important; border-color: var(--wd-butter2) !important; color: oklch(0.3 0.07 60) !important; }
+    .absent  { background: oklch(0.72 0.03 355) !important; border-color: oklch(0.72 0.03 355) !important; color: #fff !important; }
+    .wg-message { color: oklch(0.45 0.1 355); font-weight: 600; }
+    .wg-key { height: 50px; border-radius: 10px; background: oklch(0.92 0.05 355); color: var(--wd-ink); font-family: var(--wd-body); font-weight: 700; }
+    .wg-key:hover:not(:disabled) { background: oklch(0.88 0.06 355); }
+    .wg-key.wide { letter-spacing: 0; }
+    .wg-stats, .pk-dist-title, .pk-numbers span { text-transform: none; letter-spacing: 0; font-weight: 600; color: oklch(0.45 0.08 355); }
+    .wg-stats { font-size: 13px; }
+    .pk-bar { background: oklch(0.72 0.03 355); }
+    .pk-bar.hit { background: var(--accent); }
+
+    /* Hangman */
+    .hm-base { stroke: var(--wd-ink); }
+    .hm-part { stroke: var(--accent); }
+    .hm-hint { display: inline-block; padding: 6px 12px; border-radius: 999px; background: var(--wd-soft); color: oklch(0.4 0.12 355); font-size: 13px; font-weight: 600; text-transform: none; letter-spacing: 0; }
+    .hm-slot { border-bottom: 3px solid var(--wd-ink); font-family: var(--wd-display); font-weight: 400; font-size: clamp(26px, 4vw, 36px); line-height: 1; }
+    .hm-slot.missed { color: var(--accent); }
+
+    /* Akinator */
+    .ak-lamp svg { stroke: var(--accent); }
+    @keyframes ak-glow { 50% { filter: drop-shadow(0 0 6px oklch(0.55 0.19 358 / 0.5)); transform: translateY(-3px); } }
+    .ak-bubble { padding: 16px 20px; border: none; border-radius: 22px 22px 22px 6px; background: var(--wd-ink); color: #fff; }
+    .ak-bubble::before { display: none; }
+    .ak-label { font-size: 13px; font-weight: 700; text-transform: none; letter-spacing: 0; color: oklch(0.45 0.08 355); }
+    .ak-q { padding: 12px 16px; border: 1.5px solid var(--wd-border); border-radius: 16px; background: #fff; font-family: var(--wd-body); font-size: 14px; }
+    .ak-q:hover:not(:disabled) { border-color: var(--accent); background: var(--wd-hover); }
+    .ak-q.yes { border-color: oklch(0.6 0.1 160); }
+    .ak-answer { font-size: 12px; text-transform: none; letter-spacing: 0; }
+    .ak-q.yes .ak-answer, .ak-log li.yes b { color: oklch(0.45 0.12 160); }
+    .ak-q.no .ak-answer { color: var(--accent); }
+    .ak-card { border-radius: 14px; border: 1.5px solid transparent; font-family: var(--wd-body); font-weight: 600; }
+    .ak-card:nth-child(3n+1) { background: oklch(0.94 0.04 355); }
+    .ak-card:nth-child(3n+2) { background: oklch(0.94 0.04 40); }
+    .ak-card:nth-child(3n)   { background: oklch(0.94 0.04 320); }
+    .ak-card:hover { border-color: var(--accent); }
+    .ak-card.wrong-guess { background: oklch(0.93 0.05 20); border-color: oklch(0.6 0.15 20); }
+    .ak-card.secret { background: oklch(0.93 0.06 160); border-color: oklch(0.6 0.1 160); color: var(--wd-ink); }
+    .guess-mode .ak-card:not(.crossed) { border-color: var(--accent); box-shadow: none; }
+    .guess-mode .ak-board-head .ak-label { color: var(--accent); }
+
+    /* ---------- How I built it ---------- */
+    .step-tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 14px; }
+    .step-tile { display: flex; flex-direction: column; gap: 12px; padding: 28px; border-radius: 28px; }
+    .step-tile .num { font-family: var(--wd-display); font-size: 54px; line-height: 1; color: var(--accent); }
+    .step-tile strong { font-family: var(--wd-display); font-weight: 400; font-size: 28px; line-height: 1.1; }
+    .step-tile .txt { font-size: 15px; line-height: 1.55; color: oklch(0.4 0.07 355); }
+    .design-choices { grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 12px; margin: 22px 0; }
+    .design-choices > div { border: none; padding: 18px; border-radius: 20px; background: oklch(0.94 0.04 355); }
+    .design-choices strong { font-size: 15px; font-weight: 700; }
+    .design-choices p { margin: 6px 0 0; font-size: 14px; line-height: 1.5; color: oklch(0.4 0.07 355); }
+    .feature-pills { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+    .feature-pills li { font-size: 13px; font-weight: 600; padding: 7px 13px; border-radius: 999px; background: var(--wd-butter); color: oklch(0.35 0.07 60); }
+    .journey-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+    .journey-row { display: grid; grid-template-columns: minmax(40px, 64px) minmax(0, 1fr); gap: 16px; padding: 22px 24px; border-radius: 26px; }
+    .journey-row .num { font-family: var(--wd-display); font-size: 38px; line-height: 1; color: var(--accent); }
+    .journey-row .body { display: flex; flex-direction: column; gap: 8px; }
+    .journey-row .step { font-size: 14px; font-weight: 700; color: oklch(0.45 0.1 355); }
+    .journey-row q { font-family: var(--wd-display); font-style: italic; font-size: 22px; line-height: 1.3; }
+    .journey-row p { margin: 0; font-size: 15px; line-height: 1.5; color: oklch(0.4 0.07 355); }
+
+    /* ---------- Contact ---------- */
+    .contact-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .contact-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 20px 22px; border-radius: 26px; }
+    .contact-row .round-icon { width: 46px; height: 46px; font-size: 19px; }
+    .contact-row .txt { flex: 1 1 150px; min-width: 0; display: flex; flex-direction: column; }
+    .contact-row .label { font-size: 13px; font-weight: 600; color: oklch(0.45 0.08 355); }
+    .contact-row .value { font-size: 16px; overflow-wrap: anywhere; }
+    .contact-row .btn { padding: 10px 16px; font-size: 13px; background: var(--wd-ink); border-color: var(--wd-ink); color: #fff; }
+    .contact-form h2 { margin: 0 0 4px; font-size: 36px; line-height: 1; }
+    form label { margin: 14px 0 6px; font-size: 13px; font-weight: 600; text-transform: none; letter-spacing: 0; color: oklch(0.45 0.08 355); }
+    form input, form textarea { padding: 14px 16px; border: 1.5px solid var(--wd-border); border-radius: 16px; background: #fff; font-size: 16px; }
+    form input:focus-visible, form textarea:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 3px oklch(0.55 0.19 358 / 0.15); }
+    .form-msg { min-height: 20px; font-family: var(--wd-body); font-style: normal; font-size: 14px; font-weight: 600; color: var(--accent); }
+
+    /* Small pop-up message ("Copied") */
+    .toast { border: none; border-radius: 999px; background: var(--wd-ink); color: #fff; font-family: var(--wd-body); font-size: 14px; font-weight: 600; text-transform: none; letter-spacing: 0; padding: 12px 22px; z-index: 95; }
+
     /* Respect users who prefer less motion */
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -1342,28 +1601,16 @@
     </div>
   </nav>
 
-  <!-- Banner: its title and subtitle change for each page -->
-  <header class="banner">
-    <h1 id="banner-title"></h1>
-    <p id="banner-subtitle"></p>
-  </header>
-
-  <!-- Floating stickers (filled by JavaScript, see section 2b).
-       Placed after the banner so they float OVER the banner and the pink
-       background, but UNDER the content (main has a higher z-index).
-       aria-hidden: purely decorative, screen readers skip them -->
-  <div class="stickers" id="stickers" aria-hidden="true"></div>
-
   <!-- Each page is an empty <section>; JavaScript fills them in -->
   <main id="main" tabindex="-1">
-    <section class="page" id="page-home"     aria-labelledby="banner-title"></section>
-    <section class="page" id="page-about"    aria-labelledby="banner-title" hidden></section>
-    <section class="page" id="page-course"   aria-labelledby="banner-title" hidden></section>
-    <section class="page" id="page-schedule" aria-labelledby="banner-title" hidden></section>
-    <section class="page" id="page-lectures" aria-labelledby="banner-title" hidden></section>
-    <section class="page" id="page-games"    aria-labelledby="banner-title" hidden></section>
-    <section class="page" id="page-built"    aria-labelledby="banner-title" hidden></section>
-    <section class="page" id="page-contact"  aria-labelledby="banner-title" hidden></section>
+    <section class="page" id="page-home"    ></section>
+    <section class="page" id="page-about"    hidden></section>
+    <section class="page" id="page-course"   hidden></section>
+    <section class="page" id="page-schedule" hidden></section>
+    <section class="page" id="page-lectures" hidden></section>
+    <section class="page" id="page-games"    hidden></section>
+    <section class="page" id="page-built"    hidden></section>
+    <section class="page" id="page-contact"  hidden></section>
   </main>
 
   <footer class="site-footer">
@@ -1511,16 +1758,17 @@ const COURSE = {
       text: "Vercel is connected to the repository: every push to GitHub updates the live website automatically, within a minute." }
   ],
   // Why I skipped Claude Design (step 1 of the LaunchLab workflow)
-  designNote: "For most of the site I didn't need Claude Design: I had a clear vision of the look I wanted, made the design choices myself, and asked Claude Code to build them directly, refining the result prompt by prompt. For the Welcome page, I did use it: I designed the new page, the polaroid loading screen and the music player in Claude Design, then used \"Handoff to Claude Code\" to add them to the site.",
+  // Design: my own choices first, then a full redesign in Claude Design
+  designNote: "I didn't use Claude Design for the first version: I had a clear vision and asked Claude Code to build it directly. Later, I used Claude Design to redesign the whole site into a cuter, more qualitative pink look, then handed it off to Claude Code.",
   designChoices: [
-    { what: "Colour palette", detail: "Blush pink, raspberry and deep berry with champagne gold: pink, but luxury coded." },
-    { what: "Fonts", detail: "Playfair Display bold italic for titles, Poppins for text, and Amoresa for my name, like a signature. The Welcome page uses Instrument Serif and Figtree." },
-    { what: "Floating stickers", detail: "Little drawings of my passions (music, travel, art, baking…) and of the course, floating and moving as you scroll." },
-    { what: "Layout & details", detail: "Fine gold lines, small-caps labels, rounded game tiles inspired by my own Pinkle game." }
+    { what: "Colour palette", detail: "Soft blush background, raspberry accent and deep berry ink, with peach, lilac and butter-yellow tints: pink, but cute and high quality." },
+    { what: "Fonts", detail: "Instrument Serif for titles (with one word in italic), Figtree for text, and Amoresa for my name, like a signature." },
+    { what: "Loading screen", detail: "Polaroids of my life (my cat, family, Paris, London, Madrid, Singapore…) pop in at random places and float, before you enter the site." },
+    { what: "Playful details", detail: "Rounded pill buttons, stickers that change words, little hearts, notes and cakes when you click, and music that plays as you browse." }
   ],
 
-  features: ["Polaroid loading screen", "Music player", "Click sprinkles", "One tab per session", "Lectures & guest lectures", "Quizzes by theme", "Pinkle (my Wordle)", "Hangman", "Akinator",
-             "Game inside each guest tab", "Responsive on phones", "Keyboard accessible", "Floating parallax stickers"],
+  features: ["One tab per session", "Lectures & guest lectures", "Quizzes by theme", "Pinkle (my Wordle)", "Hangman", "Akinator",
+             "Photo loading screen", "Music player", "Click sprinkles", "Moving words", "Responsive on phones", "Keyboard accessible"],
 
   // My prompt journey: how the site evolved, prompt by prompt (summarised)
   journey: [
@@ -1548,114 +1796,16 @@ const COURSE = {
       result: "Pinkle, Hangman and Akinator, each in its own category." },
     { step: "Meeting the brief", prompt: "Put each guest session's game inside its tab and explain how I built this.",
       result: "This section, and a playable game in every guest lecture tab." },
-    { step: "Claude Design", prompt: "Redesign my Welcome page in Claude Design, then hand it off to Claude Code.",
-      result: "A softer pink Welcome page, a polaroid loading screen, music, click sprinkles and moving lines of words." }
+    { step: "A new look", prompt: "Keep the pink theme but make it cuter and more qualitative.",
+      result: "A full redesign in Claude Design: new fonts, rounded shapes and soft pink tints." },
+    { step: "Fun touches", prompt: "Make buttons jiggle with hearts, music notes and cakes, add moving words about the course and me, and stickers that change.",
+      result: "Click sprinkles, two moving lines of words and rotating stickers." },
+    { step: "Music & memories", prompt: "Add music and a loading page with lots of pictures of me that pop and float.",
+      result: "A random YouTube playlist with a vibrating speaker button, and 18 floating polaroids." },
+    { step: "One identity", prompt: "Match every page to the visual identity of the loading and welcome pages.",
+      result: "All pages redesigned in the same style, then handed off to Claude Code." }
   ]
 };
-
-
-/* =================================================================
-   2b. FLOATING STICKERS
-   -----------------------------------------------------------------
-   group "me"     → my passions (rose drawings)
-   group "course" → the course (gold drawings)
-   Each "icon" is the name of a drawing in STICKER_ICONS below: tiny
-   SVG line drawings on a 24 × 24 grid. They float (CSS animation) and
-   move at different speeds when you scroll (parallax, in JavaScript).
-   ================================================================= */
-const STICKERS = [
-  { icon: "music",    group: "me",     label: "Music & musicals" },
-  { icon: "code",     group: "course", label: "Coding" },
-  { icon: "plane",    group: "me",     label: "Travel" },
-  { icon: "sparkle",  group: "course", label: "AI" },
-  { icon: "palette",  group: "me",     label: "Art" },
-  { icon: "phone",    group: "course", label: "Social media" },
-  { icon: "leaf",     group: "me",     label: "Sustainability" },
-  { icon: "chart",    group: "course", label: "Analytics" },
-  { icon: "cake",     group: "me",     label: "Baking & cooking" },
-  { icon: "hashtag",  group: "course", label: "Hashtags" },
-  { icon: "camera",   group: "me",     label: "Content creation" },
-  { icon: "cap",      group: "course", label: "ESSEC MSc" },
-  { icon: "eiffel",   group: "me",     label: "Paris" },
-  { icon: "heart",    group: "me",     label: "Influence" },
-  { icon: "bag",      group: "me",     label: "Luxury" },
-  { icon: "globe",    group: "course", label: "Digital platforms" }
-];
-
-const STICKER_ICONS = {
-  music:   '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
-  code:    '<path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/>',
-  plane:   '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>',
-  sparkle: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15v4"/><path d="M17 17h4"/>',
-  palette: '<path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.7 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.7 1.7-1.7h2c3 0 5.5-2.5 5.5-5.5C22 6 17.5 2 12 2z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="10.5" cy="6.5" r="1"/><circle cx="15.5" cy="7.5" r="1"/>',
-  phone:   '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/>',
-  leaf:    '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6C9.5 14.5 12 13 13 12"/>',
-  chart:   '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
-  cake:    '<path d="M5 11h14l-1.8 10H6.8z"/><path d="M4 11a4 4 0 0 1 4-4 4 4 0 0 1 8 0 4 4 0 0 1 4 4"/><path d="M12 3V1"/>',
-  hashtag: '<path d="M4 9h16"/><path d="M4 15h16"/><path d="M10 3 8 21"/><path d="M16 3l-2 18"/>',
-  camera:  '<rect x="2" y="6" width="20" height="14" rx="3"/><circle cx="12" cy="13" r="4"/><path d="M8 6l1.5-3h5L16 6"/>',
-  cap:     '<path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/><path d="M22 10v6"/>',
-  eiffel:  '<path d="M12 2v3"/><path d="M10 5h4"/><path d="M10.5 5 8 13h8l-2.5-8"/><path d="M7 13h10"/><path d="M8 13 5 22"/><path d="M16 13l3 9"/><path d="M9.5 22a2.5 2.5 0 0 1 5 0"/>',
-  heart:   '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>',
-  bag:     '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
-  globe:   '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/>'
-};
-
-// Creates the stickers: 24 small ones spread over the whole screen
-// (the 16 designs above, some used twice), each with its own size,
-// floating speed, tilt and parallax "depth".
-const stickerEls = [];
-
-function renderStickers() {
-  const box = document.getElementById("stickers");
-  const count = 24;
-  for (let i = 0; i < count; i++) {
-    const sticker = STICKERS[i % STICKERS.length];
-    const span = el("span", "sticker " + sticker.group);
-    span.title = sticker.label;
-    // Spread evenly but not in a grid: the golden ratio gives a natural-looking scatter
-    const x = ((i * 0.618034) % 1) * 94 + 1;                          // 1%–95% of the width
-    span.style.setProperty("--x", x + "%");
-    span.style.setProperty("--size", (24 + (i * 7) % 13) + "px");   // 24–36px
-    span.style.setProperty("--speed", (6 + (i * 5) % 7) + "s");     // 6–12s
-    span.style.setProperty("--delay", ((i * 0.37) % 3) + "s");
-    span.style.setProperty("--tilt", ((i % 5) - 2) * 6 + "deg");     // -12° to 12°
-    span.style.setProperty("--drift", (i % 2 ? 10 : -10) + "px");
-    span.innerHTML = '<svg viewBox="0 0 24 24">' + STICKER_ICONS[sticker.icon] + "</svg>";
-    box.append(span);
-    stickerEls.push({
-      span,
-      start: i / count,                    // starting height, as a share of the screen
-      depth: 0.15 + ((i * 3) % 7) * 0.08   // 0.15–0.63: how fast it moves when scrolling
-    });
-  }
-  placeStickers();
-}
-
-// PARALLAX: when the page scrolls, each sticker moves up at its own
-// speed (depth). "%" makes them loop: one that leaves the top of the
-// screen comes back in at the bottom, so there are always stickers.
-function placeStickers() {
-  const loop = window.innerHeight + 120;   // 60px of extra room above and below
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const scroll = reduce ? 0 : window.scrollY;
-  stickerEls.forEach(s => {
-    const y = (s.start * loop - scroll * s.depth) % loop;
-    s.span.style.top = ((y + loop) % loop - 60) + "px";
-  });
-}
-
-// EVENT LISTENERS: re-place the stickers on scroll and resize.
-// requestAnimationFrame = at most once per screen refresh, so it stays smooth.
-let stickerFrame = null;
-function onScrollStickers() {
-  if (stickerFrame) return;
-  stickerFrame = requestAnimationFrame(() => { placeStickers(); stickerFrame = null; });
-}
-window.addEventListener("scroll", onScrollStickers, { passive: true });
-window.addEventListener("resize", onScrollStickers);
-
-renderStickers();
 
 
 /* =================================================================
@@ -2885,7 +3035,9 @@ function renderCompare(section) {
     return b;
   });
 
-  card.append(switcher, list);
+  const box = el("div", "compare-box");
+  box.append(switcher, list);
+  card.append(box);
   show("before");
   return card;
 }
@@ -3019,7 +3171,7 @@ const RENDERERS = {
    8. PAGE BUILDERS
    -----------------------------------------------------------------
    One function per page in the main menu. Each fills its <section>.
-   PAGES (section 9) says which banner text and builder go with
+   PAGES (section 9) says which builder and tab title go with
    each menu link.
    ================================================================= */
 
@@ -3040,23 +3192,34 @@ function pillLink(text, href, kind) {
   return a;
 }
 
-function buildHome(page) {
-  page.classList.add("wd-home");
+// Page header used by every page except Welcome: pink tag chips and a
+// big Instrument Serif title with one word in italic (titleAccent)
+function pageHead(page, tags, titleStart, titleAccent, titleEnd) {
+  const head = el("header", "pg-head");
+  const tagRow = el("div", "wd-tags");
+  tags.forEach((t, i) => tagRow.append(el("span", "wd-tag " + (i ? "outline" : "soft"), t)));
+  const h1 = el("h1", "pg-title", titleStart);
+  h1.id = page.id + "-title";
+  h1.append(el("em", "", titleAccent));
+  if (titleEnd) h1.append(document.createTextNode(titleEnd));
+  page.setAttribute("aria-labelledby", h1.id);
+  head.append(tagRow, h1);
+  return head;
+}
 
-  /* ----- Hero: title, intro, buttons + my photo in an arch ----- */
-  const hero = el("section", "wd-hero");
-  const text = el("div", "wd-hero-text");
-  const tags = el("div", "wd-tags");
-  tags.append(el("span", "wd-tag soft", "✿ " + COURSE.semester), el("span", "wd-tag outline", "ESSEC · " + COURSE.programme));
-  const title = el("h1", "wd-title", "Digital Platforms ");
-  title.append(el("em", "", "Test Drive"));                 //   = non-breaking space
-  const buttons = el("div", "wd-btns");
-  const play = el("a", "wd-btn white");
-  play.href = "#games";
-  play.append(letterTiles("PLAY", ["accent", "butter", "ink", "accent"]), el("span", "", "Think you can beat my games?"));
-  buttons.append(pillLink("Read my lecture notes →", "#lectures", "ink"), play);
-  text.append(tags, title, el("p", "wd-lead", HOME.lead), buttons);
+// A heading with one word in italic pink: heading("h2", "What we ", "learn")
+function heading(tag, start, accent, className) {
+  const h = el(tag, className || "", start);
+  h.append(el("em", "", accent));
+  return h;
+}
 
+// Soft tints that rotate pink → peach → lilac
+function tint(i) { return "tint-" + (i % 3); }
+
+// My photo in an arch, with three bobbing stickers that change words
+// and my signature. Used on the Welcome and About pages.
+function archPortrait() {
   const portrait = el("div", "wd-portrait");
   const photo = el("img");
   photo.src = PROFILE.photo;
@@ -3070,13 +3233,12 @@ function buildHome(page) {
   const sig = el("span", "signature wd-signature", "Zoé");
   sig.setAttribute("aria-hidden", "true");
   portrait.append(sig);
-  hero.append(text, portrait);
-  page.append(hero);
 
   // Every 2.6s one sticker (taking turns) fades out, swaps its word, fades back in.
   // Only the text changes, so the bobbing animation never restarts.
   let tick = 0;
   setInterval(() => {
+    if (portrait.offsetParent === null) return;          // page not visible: skip
     tick++;
     const i = tick % 3;
     const words = HOME.heroStickers[i];
@@ -3086,6 +3248,27 @@ function buildHome(page) {
       stickers[i].animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, fill: "forwards" });
     };
   }, 2600);
+  return portrait;
+}
+
+function buildHome(page) {
+  page.classList.add("wd-home");
+
+  /* ----- Hero: title, intro, buttons + my photo in an arch ----- */
+  const hero = el("section", "wd-hero");
+  const text = el("div", "wd-hero-text");
+  const tags = el("div", "wd-tags");
+  tags.append(el("span", "wd-tag soft", "✿ " + COURSE.semester), el("span", "wd-tag outline", "ESSEC · " + COURSE.programme));
+  const title = el("h1", "wd-title", "Digital Platforms ");
+  title.append(el("em", "", "Test\u00a0Drive"));
+  const buttons = el("div", "wd-btns");
+  const play = el("a", "wd-btn white");
+  play.href = "#games";
+  play.append(letterTiles("PLAY", ["accent", "butter", "ink", "accent"]), el("span", "", "Think you can beat my games?"));
+  buttons.append(pillLink("Read my lecture notes →", "#lectures", "ink"), play);
+  text.append(tags, title, el("p", "wd-lead", HOME.lead), buttons);
+  hero.append(text, archPortrait());
+  page.append(hero);
 
   /* ----- Info bar ----- */
   const info = el("section", "wd-info");
@@ -3156,204 +3339,212 @@ function buildHome(page) {
 
 /* ---------- About me ---------- */
 function buildAbout(page) {
-  // Profile card: photo, name, bio, buttons
-  const profileCard = makeCard();
-  const profile = el("div", "profile");
-  let avatar;
-  if (PROFILE.photo) {
-    avatar = el("img", "avatar");
-    avatar.src = PROFILE.photo;
-    avatar.alt = "Photo of " + PROFILE.name;
-  } else {
-    avatar = el("div", "avatar", PROFILE.initials);
-    avatar.setAttribute("aria-hidden", "true");
-  }
-  const text = el("div");
-  text.append(
-    el("span", "eyebrow", PROFILE.focus),
-    el("h2", "signature", PROFILE.name),            // my name in Amoresa
-    el("p", "muted", PROFILE.headline + " · " + PROFILE.location)
-  );
-  PROFILE.bio.forEach(p => text.append(el("p", "", p)));
-  const row = el("div", "btn-row");
-  row.append(linkButton("LinkedIn", PROFILE.linkedin, true, true));
+  // Hero: hello, bio and buttons, with my photo in an arch
+  const hero = el("section", "wd-hero");
+  const text = el("div", "wd-hero-text");
+  const head = pageHead(page, ["♡ About me"], "Hi, I'm ", "Zoé");
+  text.append(head, el("p", "ab-focus", PROFILE.focus + " · " + PROFILE.location));
+  PROFILE.bio.forEach(p => text.append(el("p", "pg-lead", p)));
+  const buttons = el("div", "wd-btns");
+  const linkedin = pillLink("Connect on LinkedIn ↗", PROFILE.linkedin, "ink");
+  linkedin.target = "_blank";
+  linkedin.rel = "noopener";
+  buttons.append(linkedin);
   // The CV button only appears if a CV file is set in PROFILE
-  if (PROFILE.cvFile) row.append(linkButton("Download my CV", PROFILE.cvFile, false, true));
-  row.append(linkButton("Contact me", "#contact"));
-  text.append(row);
-  profile.append(avatar, text);
-  profileCard.append(profile);
-  page.append(profileCard);
+  if (PROFILE.cvFile) {
+    const cv = pillLink("Download my CV", PROFILE.cvFile, "white");
+    cv.target = "_blank";
+    buttons.append(cv);
+  }
+  buttons.append(pillLink("Say hi ♡", "#contact", "white"));
+  text.append(buttons);
+  hero.append(text, archPortrait());
+  page.append(hero);
 
   // Education + experience side by side
-  const grid = el("div", "grid-2");
-  grid.append(timelineCard("Education", PROFILE.education), timelineCard("Experience", PROFILE.experience));
-  page.append(grid);
+  const split = el("section", "pg-split");
+  split.append(timelineCard(heading("h2", "Educa", "tion"), PROFILE.education, ""),
+               timelineCard(heading("h2", "Experi", "ence"), PROFILE.experience, "ink"));
+  page.append(split);
 
-  // Activities, then skills, tools, languages, certifications, interests
-  const activities = timelineCard("Activities & volunteering", PROFILE.activities);
-  activities.style.marginTop = "1.5rem";
-  page.append(activities);
+  // Activities & volunteering on a deep berry panel
+  const beyond = el("section", "ink-panel");
+  const tiles = el("div", "ink-tiles");
+  PROFILE.activities.forEach(a => {
+    const tile = el("div", "ink-tile");
+    tile.append(el("strong", "", a.what), el("span", "", a.when));
+    if (a.where) tile.append(el("span", "", a.where));
+    tiles.append(tile);
+  });
+  beyond.append(heading("h2", "Beyond the ", "classroom"), tiles);
+  page.append(beyond);
 
-  const extras = el("div", "grid-2");
-  extras.style.marginTop = "1.5rem";
-  [["Skills", PROFILE.skills], ["Tools", PROFILE.tools], ["Languages", PROFILE.languages],
-   ["Certifications", PROFILE.certifications], ["Interests", PROFILE.interests]]
-    .forEach(([title, list]) => {
-      const card = makeCard(title);
-      card.append(chips(list));
-      extras.append(card);
-    });
-  page.append(extras);
+  // Skills, tools, languages, certifications, interests
+  const chipCards = el("section", "chip-cards");
+  [["✦", "Skills", PROFILE.skills], ["⌘", "Tools", PROFILE.tools], ["✎", "Languages", PROFILE.languages],
+   ["☆", "Certifications", PROFILE.certifications], ["♡", "What I love", PROFILE.interests]]
+    .forEach(([icon, title, list], i) => chipCards.append(chipCard(icon, title, list, tint(i))));
+  page.append(chipCards);
 }
 
-function timelineCard(title, items) {
-  const card = makeCard(title);
-  const ul = el("ul", "timeline");
+// A tinted card with a round icon, a title and white chips
+function chipCard(icon, title, list, tintClass) {
+  const card = el("div", "chip-card " + tintClass);
+  const head = el("div", "chip-card-head");
+  const round = el("span", "round-icon", icon);
+  round.setAttribute("aria-hidden", "true");
+  head.append(round, el("strong", "", title));
+  card.append(head, chips(list));
+  return card;
+}
+
+// A timeline card: a dashed line with one dot per entry
+function timelineCard(title, items, dotClass) {
+  const card = el("div", "card");
+  card.append(title);
   items.forEach(item => {
-    const li = el("li");
-    li.append(el("div", "when", item.when), el("div", "what", item.what));
-    if (item.where) li.append(el("div", "muted", item.where));
-    // Bullet points under the entry (optional)
-    if (item.points) {
-      const points = el("ul", "points");
-      item.points.forEach(p => points.append(el("li", "", p)));
-      li.append(points);
-    }
-    ul.append(li);
+    const entry = el("div", "tl-item " + dotClass);
+    entry.append(el("span", "tl-when", item.when), el("strong", "tl-what", item.what));
+    if (item.where) entry.append(el("span", "tl-where", item.where));
+    (item.points || []).forEach(p => entry.append(el("span", "tl-point", "✿ " + p)));
+    card.append(entry);
   });
-  card.append(ul);
   return card;
 }
 
 /* ---------- The course ---------- */
 function buildCourse(page) {
-  const main = makeCard();
-  main.append(el("span", "eyebrow", COURSE.programme), el("h2", "", COURSE.name));
-  COURSE.description.forEach(p => main.append(el("p", "", p)));
-  const meta = el("div", "meta");
-  meta.append(
-    el("span", "", "" + COURSE.professor),
-    el("span", "", "" + COURSE.school),
-    el("span", "", "" + COURSE.semester)
-  );
-  main.append(meta);
-  page.append(main);
+  const intro = el("section", "pg-intro");
+  intro.append(pageHead(page, ["✎ The course", COURSE.semester, "ESSEC · " + COURSE.programme], "Digital Platforms ", "Test\u00a0Drive"),
+               el("p", "pg-tagline", COURSE.tagline));
+  COURSE.description.forEach(p => intro.append(el("p", "pg-lead", p)));
+  page.append(intro);
 
-  // Helper: a card with a numbered list
-  function listCard(title, items) {
-    const card = makeCard(title);
-    const ol = el("ol");
-    items.forEach(text => ol.append(el("li", "", text)));
-    card.append(ol);
-    return card;
-  }
+  // What we learn: numbered tiles
+  const learn = el("section", "pg-section");
+  const tiles = el("div", "num-tiles");
+  COURSE.objectives.forEach((text, i) => {
+    const tile = el("div", "num-tile " + tint(i));
+    tile.append(el("span", "num", String(i + 1).padStart(2, "0")), el("span", "txt", text));
+    tiles.append(tile);
+  });
+  learn.append(heading("h2", "What we ", "learn", "pg-h2"), tiles);
+  page.append(learn);
 
-  const grid = el("div", "grid-2");
-  grid.append(listCard("Course structure", COURSE.structure), listCard("Outcomes", COURSE.objectives));
-  page.append(grid);
-
-  // Grading: each bar's width is set from its percentage
-  const grading = makeCard("Grading");
-  grading.style.marginTop = "1.25rem";
+  // Grading bars + the format, next to the professor card
+  const split = el("section", "pg-split");
+  const grading = el("div", "card");
+  grading.append(heading("h2", "How it's ", "graded"));
   COURSE.grading.forEach(g => {
     const row = el("div", "grade");
     const top = el("div", "grade-top");
     top.append(el("strong", "", g.label), el("span", "grade-pct", g.percent + "%"));
     const bar = el("div", "grade-bar");
     const fill = el("span");
-    fill.style.width = g.percent + "%";
+    fill.style.width = g.percent + "%";          // each bar's width is its percentage
     bar.append(fill);
     row.append(top, bar);
-    if (g.detail) row.append(el("p", "muted", g.detail));
+    if (g.detail) row.append(el("p", "", g.detail));
     grading.append(row);
   });
-  page.append(grading);
+  grading.append(el("h3", "format-title", "The format"));
+  COURSE.structure.forEach(st => grading.append(el("span", "fmt-item", "✿ " + st)));
 
-  const grid2 = el("div", "grid-2");
-  const prof = makeCard("" + COURSE.professor, "Course lecturer, ranked #1 lecturer at ESSEC Asia");
-  const ul = el("ul");
-  COURSE.professorFacts.forEach(f => ul.append(el("li", "", f)));
-  prof.append(ul);
-  const code = makeCard("What we build with", "The skills and tools used to make this website:");
-  code.append(chips(COURSE.skills));
-  grid2.append(prof, code);
-  page.append(grid2);
+  const prof = el("div", "ink-panel");
+  prof.append(el("span", "pill-accent", "Professor"), el("h2", "", COURSE.professor),
+              el("span", "prof-sub", "Course lecturer, ranked #1 lecturer at ESSEC Asia"));
+  COURSE.professorFacts.forEach(f => prof.append(el("span", "fact", "✦ " + f)));
+  split.append(grading, prof);
+  page.append(split);
 
+  page.append(chipCard("⌘", "Skills I'm picking up", COURSE.skills, "tint-2"));
 }
 
 /* ---------- How I built it ----------
-   Three cards: the LaunchLab workflow (3 steps), the main features,
-   and my prompt journey (a timeline of the prompts that shaped the site). */
+   The LaunchLab workflow (3 steps), a note on design, the main
+   features, and my prompt journey (the prompts that shaped the site). */
 function buildBuilt(page) {
+  const intro = el("section", "pg-intro");
+  intro.append(pageHead(page, ["⌘ How I built it"], "From prompt to ", "live site"),
+               el("p", "pg-lead", "The workflow from the LaunchLab guest session (Design → Build → Deploy), applied to this site."));
+  page.append(intro);
+
   // 1. The workflow
-  const how = makeCard("The workflow", "From the LaunchLab guest session (Design → Build → Deploy), applied to this site. For the Design step, see below.");
-  const steps = el("ol", "build-steps");
-  COURSE.buildSteps.forEach((s, i) => {
-    const li = el("li");
-    li.append(el("span", "build-num", String(i + 1).padStart(2, "0")), el("strong", "", s.title), el("p", "", s.text));
+  const steps = el("ol", "step-tiles");
+  COURSE.buildSteps.forEach((st, i) => {
+    const li = el("li", "step-tile " + tint(i));
+    li.append(el("span", "num", String(i + 1).padStart(2, "0")), el("strong", "", st.title), el("span", "txt", st.text));
     steps.append(li);
   });
-  how.append(steps);
-  page.append(how);
+  page.append(steps);
 
-  // 1b. Why no Claude Design: my own design choices
-  const design = makeCard("Design: my choices + Claude Design");
-  design.append(el("p", "", COURSE.designNote));
+  // 2. Design: my own choices, then Claude Design
+  const design = el("section", "card");
+  design.append(heading("h2", "A note on ", "design"), el("p", "pg-lead", COURSE.designNote));
   const choices = el("div", "design-choices");
   COURSE.designChoices.forEach(c => {
     const box = el("div");
     box.append(el("strong", "", c.what), el("p", "", c.detail));
     choices.append(box);
   });
-  design.append(choices);
+  const features = el("ul", "feature-pills");
+  features.setAttribute("aria-label", "Main features");
+  COURSE.features.forEach(f => features.append(el("li", "", "✦ " + f)));
+  design.append(choices, features);
   page.append(design);
 
-  // 2. The features
-  const features = makeCard("Main features", "What the site does, all in plain HTML, CSS and JavaScript.");
-  features.append(chips(COURSE.features));
-  page.append(features);
-
   // 3. The prompt journey, in full
-  const journeyCard = makeCard("My prompt journey",
-    "How the website evolved, prompt by prompt: what I asked (summarised) and what it produced.");
-  const journey = el("ol", "journey");
-  COURSE.journey.forEach(j => {
-    const li = el("li");
-    li.append(el("span", "journey-step", j.step), el("q", "", j.prompt), el("p", "", "→ " + j.result));
-    journey.append(li);
+  const journey = el("section", "pg-section");
+  const list = el("ol", "journey-list");
+  COURSE.journey.forEach((j, i) => {
+    const li = el("li", "journey-row " + tint(i));
+    const body = el("div", "body");
+    body.append(el("span", "step", j.step), el("q", "", j.prompt), el("p", "", "→ " + j.result));
+    li.append(el("span", "num", String(i + 1).padStart(2, "0")), body);
+    list.append(li);
   });
-  journeyCard.append(journey);
-  page.append(journeyCard);
+  journey.append(heading("h2", "My prompt ", "journey", "pg-h2"),
+                 el("p", "pg-lead", "How the website evolved, prompt by prompt: what I asked (summarised) and what it produced."), list);
+  page.append(journey);
 }
 
 /* ---------- Schedule ---------- */
 function buildSchedule(page) {
-  const card = makeCard("All sessions", "In date order. Click a session to read my analysis.");
+  page.append(pageHead(page, ["◷ Schedule"], "The semester ", "at a glance"));
 
   // Filter buttons: All / Done / Upcoming
   const filters = el("div", "filters");
   filters.setAttribute("role", "group");
   filters.setAttribute("aria-label", "Filter sessions");
-  const list = el("ol", "schedule");
+  const list = el("ol", "sched");
   const today = new Date().toISOString().slice(0, 10);   // "YYYY-MM-DD"
 
-  // A session is "done" if its date is today or in the past
   // Sort by date (sessions without a date go last), but remember each
   // session's position in SESSIONS so the link opens the right tab
   const ordered = SESSIONS
     .map((s, index) => ({ s, index }))
     .sort((a, b) => (a.s.date || "9999").localeCompare(b.s.date || "9999"));
 
-  const rows = ordered.map(({ s, index }) => {
+  const rows = ordered.map(({ s, index }, k) => {
+    // A session is "done" if its date is today or in the past
     const done = s.date !== "" && s.date <= today;
-    const li = el("li", done ? "done" : "");
-    const info = el("div");
-    const titleLink = el("a", "title", s.title);
-    titleLink.href = "#lectures/" + (index + 1);    // opens that lecture's tab
-    info.append(titleLink, el("div", "speaker", s.tabLabel + " · " + s.speaker));
-    li.append(el("div", "date", formatDate(s.date)), info,
-              el("span", "status", done ? "Done" : s.date ? "Upcoming" : "TBC"));
+    const li = el("li");
+    const a = el("a", "sched-row " + tint(k));
+    a.href = "#lectures/" + (index + 1);            // opens that lecture's tab
+    const date = el("div", "sched-date");
+    if (s.date) {
+      const d = new Date(s.date + "T00:00:00");
+      date.append(el("span", "sched-day", String(d.getDate())),
+                  el("span", "sched-month", d.toLocaleDateString("en-GB", { month: "short", year: "numeric" })));
+    } else {
+      date.append(el("span", "sched-day", "TBA"), el("span", "sched-month", "date to come"));
+    }
+    const info = el("div", "sched-info");
+    info.append(el("span", "sched-label", s.tabLabel), el("strong", "sched-title", s.title),
+                el("span", "sched-speaker", s.speaker));
+    const status = done ? ["done", "✓ Done"] : s.date ? ["upcoming", "Upcoming"] : ["tbc", "Coming soon"];
+    a.append(date, info, el("span", "status-pill " + status[0], status[1]));
+    li.append(a);
     list.append(li);
     return { li, done };
   });
@@ -3372,8 +3563,7 @@ function buildSchedule(page) {
     return b;
   });
 
-  card.append(filters, list);
-  page.append(card);
+  page.append(filters, list);
 }
 
 /* ---------- Reusable sub-tabs ----------
@@ -3548,6 +3738,7 @@ function createGroupedTabs(options) {
 
 /* ---------- Sessions page: Lectures / Guest lectures ---------- */
 function buildLectures(page) {
+  page.append(pageHead(page, ["✦ Sessions"], "My lecture ", "notes"));
   TABSETS.lectures = createGroupedTabs({
     page,
     hashName: "lectures",
@@ -3566,15 +3757,17 @@ function buildLectures(page) {
   });
 }
 
+// "Guest lecture · 9 October 2026"
+function sessionMeta(session) {
+  const kind = session.kind === "guest" ? "Guest lecture" : "Lecture";
+  if (!session.date) return kind + " · " + session.tabLabel;
+  return kind + " · " + new Date(session.date + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+}
+
 function renderLecture(panel, session) {
-  const intro = makeCard();
-  intro.append(
-    el("span", "eyebrow", session.tabLabel + " · " + formatDate(session.date)),
-    el("h2", "", session.title)
-  );
-  const meta = el("div", "meta");
-  meta.append(el("span", "", "" + session.speaker), el("span", "", "" + formatDate(session.date)));
-  intro.append(meta, el("p", "", session.data.summary));
+  const intro = el("section", "card lecture-head");
+  intro.append(el("span", "eyebrow", sessionMeta(session)), el("h2", "", session.title),
+               el("span", "lecture-speaker", session.speaker), el("p", "pg-lead", session.data.summary));
 
   // If this session has a game, add a button to play it
   // Buttons to every game theme that uses questions from this session
@@ -3590,7 +3783,9 @@ function renderLecture(panel, session) {
     const render = RENDERERS[section.type];
     if (!render) return console.warn("Unknown section type:", section.type);
     const node = render(section);
-    if (node) panel.append(node);              // a renderer may return nothing (e.g. empty analysis)
+    if (!node) return;
+    if (section.type !== "quote") node.classList.add("lecture-sec");   // sections sit straight on the page
+    panel.append(node);              // a renderer may return nothing (e.g. empty analysis)
   });
 
   // GUEST SESSIONS: the game made only of this session's questions is
@@ -3613,11 +3808,12 @@ function renderLecture(panel, session) {
 }
 
 function renderComingSoon(panel, session) {
-  const card = el("section", "card soon");
+  const card = el("section", "card lecture-head soon");
   card.append(
-    el("span", "eyebrow", session.tabLabel + " · " + formatDate(session.date)),
-    el("h2", "", "Coming soon – guest speaker session"),
-    el("p", "muted", "My analysis of this lecture will appear here.")
+    el("span", "eyebrow", sessionMeta(session)),
+    el("h2", "", session.title),
+    el("span", "lecture-speaker", session.speaker),
+    el("p", "soon-note", "Notes coming soon ✿")
   );
   const dots = el("div", "soon-dots");
   dots.setAttribute("aria-hidden", "true");
@@ -3628,6 +3824,12 @@ function renderComingSoon(panel, session) {
 
 /* ---------- Games ---------- */
 function buildGames(page) {
+  const head = el("header", "pg-head");
+  const h1 = heading("h1", "Think you can ", "beat my games?", "pg-title");
+  h1.id = "page-games-title";
+  page.setAttribute("aria-labelledby", h1.id);
+  head.append(letterTiles("PLAY", ["accent", "butter", "ink", "accent"], true), h1);
+  page.append(head);
   TABSETS.games = createGroupedTabs({
     page,
     hashName: "games",
@@ -4542,44 +4744,44 @@ function createAkinator(panel, game) {
 
 /* ---------- Contact me ---------- */
 function buildContact(page) {
-  const grid = el("div", "grid-2");
+  const intro = el("section", "pg-intro");
+  intro.append(pageHead(page, ["✉ Say hi"], "Let's ", "connect", " ♡"),
+               el("p", "pg-lead", "I'm happy to talk about digital marketing, internships or this course."));
+  page.append(intro);
+
+  const split = el("section", "pg-split");
 
   // Left: direct contact details
-  const details = makeCard("Get in touch", "I'm happy to connect about digital marketing, internships or this course.");
-  const list = el("ul", "contact-list");
-
-  const emailItem = contactItem("", "Email", PROFILE.email);
+  const list = el("ul", "contact-rows");
   const copyBtn = el("button", "btn", "Copy");
   // EVENT LISTENER: copies the email address to the clipboard
   copyBtn.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(PROFILE.email);
-      showToast("Email copied ");
+      showToast("Email copied ♡");
     } catch {
       showToast("Couldn't copy, please select the address instead");
     }
   });
-  emailItem.append(copyBtn);
-
-  const linkedinItem = contactItem("", "LinkedIn", "linkedin.com/in/zoecoulloux");
-  linkedinItem.append(linkButton("Open", PROFILE.linkedin, false, true));
-
-  list.append(emailItem, linkedinItem, contactItem("", "Based in", PROFILE.location));
-  details.append(list);
+  const open = linkButton("Open ↗", PROFILE.linkedin, false, true);
+  open.setAttribute("aria-label", "Open my LinkedIn (new tab)");
+  list.append(contactItem("✉", "Email", PROFILE.email, copyBtn, 0),
+              contactItem("in", "LinkedIn", "linkedin.com/in/zoecoulloux", open, 1),
+              contactItem("✈", "Based in", PROFILE.location, null, 2));
 
   // Right: message form. It opens the visitor's own email app
   // with the message ready to send (no server needed).
-  const formCard = makeCard("Send me a message");
-  const form = el("form");
+  const form = el("form", "card contact-form");
   form.noValidate = true;     // we check the fields ourselves below
   form.innerHTML = `
+    <h2>Send me a <em>message</em></h2>
     <label for="c-name">Your name</label>
     <input id="c-name" name="name" autocomplete="name" required>
     <label for="c-subject">Subject</label>
     <input id="c-subject" name="subject" required>
     <label for="c-message">Message</label>
-    <textarea id="c-message" name="message" required></textarea>
-    <div class="btn-row"><button class="btn btn-primary" type="submit">Open in my email app </button></div>
+    <textarea id="c-message" name="message" rows="5" required></textarea>
+    <div class="btn-row"><button class="btn btn-primary" type="submit">Open in my email app ✉</button></div>
     <p class="form-msg" role="status" aria-live="polite"></p>`;
 
   // EVENT LISTENER: "submit" fires on button click AND on pressing Enter
@@ -4597,20 +4799,22 @@ function buildContact(page) {
     const body = message + "\n\nFrom " + name;
     window.location.href = "mailto:" + PROFILE.email +
       "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-    msg.textContent = "Your email app should open now. Thank you! ";
+    msg.textContent = "Your email app should open now. Thank you! ♡";
   });
 
-  formCard.append(form);
-  grid.append(details, formCard);
-  page.append(grid);
+  split.append(list, form);
+  page.append(split);
 }
 
-function contactItem(icon, label, value) {
-  const li = el("li");
-  const text = el("div");
-  text.append(el("div", "label", label), el("div", "value", value));
-  li.append(el("span", "icon", icon), text);
-  li.firstChild.setAttribute("aria-hidden", "true");
+// One tinted contact row: round icon, label + value, optional button
+function contactItem(icon, label, value, action, i) {
+  const li = el("li", "contact-row " + tint(i));
+  const round = el("span", "round-icon", icon);
+  round.setAttribute("aria-hidden", "true");
+  const text = el("div", "txt");
+  text.append(el("span", "label", label), el("strong", "value", value));
+  li.append(round, text);
+  if (action) li.append(action);
   return li;
 }
 
@@ -4619,22 +4823,14 @@ function contactItem(icon, label, value) {
    9. BUILD ALL PAGES ONCE
    ================================================================= */
 const PAGES = {
-  home:     { build: buildHome,     title: "Digital Platforms Test Drive",
-              subtitle: "My guest lecture notes · MSc Marketing Management & Digital · ESSEC Business School" },
-  about:    { build: buildAbout,    title: "About me",
-              subtitle: "Who I am, what I've done and where I'm going" },
-  course:   { build: buildCourse,   title: "The course",
-              subtitle: COURSE.name + " · " + COURSE.programme },
-  schedule: { build: buildSchedule, title: "Schedule",
-              subtitle: "All sessions this semester" },
-  lectures: { build: buildLectures, title: "Sessions",
-              subtitle: "Lectures and guest lectures · my notes and analysis" },
-  games:    { build: buildGames,    title: "Games",
-              subtitle: "Quizzes, Pinkle, Hangman and Akinator, all about the course" },
-  built:    { build: buildBuilt,    title: "How I built it",
-              subtitle: "Claude Code, GitHub and Vercel · my prompt journey" },
-  contact:  { build: buildContact,  title: "Contact me",
-              subtitle: "Let's connect" }
+  home:     { build: buildHome,     title: "Digital Platforms Test Drive" },
+  about:    { build: buildAbout,    title: "About me" },
+  course:   { build: buildCourse,   title: "The course" },
+  schedule: { build: buildSchedule, title: "Schedule" },
+  lectures: { build: buildLectures, title: "Sessions" },
+  games:    { build: buildGames,    title: "Games" },
+  built:    { build: buildBuilt,    title: "How I built it" },
+  contact:  { build: buildContact,  title: "Contact me" }
 };
 
 Object.keys(PAGES).forEach(name => PAGES[name].build(document.getElementById("page-" + name)));
@@ -4660,7 +4856,7 @@ function showPage() {
   const [name, sub] = location.hash.slice(1).split("/");
   const pageName = PAGES[name] ? name : "home";
 
-  // The Welcome page has its own hero instead of the banner
+  // The Welcome page is a little wider than the other pages
   document.body.classList.toggle("is-home", pageName === "home");
 
   // Show one page, hide the others
@@ -4674,9 +4870,7 @@ function showPage() {
     else link.removeAttribute("aria-current");
   });
 
-  // Update the banner and the browser tab title
-  document.getElementById("banner-title").textContent = PAGES[pageName].title;
-  document.getElementById("banner-subtitle").textContent = PAGES[pageName].subtitle;
+  // Update the browser tab title
   document.title = PAGES[pageName].title + " – " + PROFILE.name;
 
   // Pages with sub-tabs: "#games/2" opens tab number 2
