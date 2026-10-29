@@ -1339,27 +1339,6 @@
     .fact { font-size: 15px; line-height: 1.5; color: oklch(0.9 0.03 355); padding: 12px 0; border-bottom: 1px solid oklch(0.4 0.09 355); }
     .fact:last-child { border-bottom: none; }
 
-    /* ---------- Schedule ---------- */
-    .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
-    .sched { list-style: none; margin: -10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-    .sched-row { display: grid; grid-template-columns: minmax(90px, 120px) minmax(0, 1fr) auto; gap: 20px; align-items: center; padding: 22px 26px; border-radius: 28px; color: var(--wd-ink); text-decoration: none; transition: transform 0.25s; }
-    .sched-row:hover { transform: translateX(6px); color: var(--wd-ink); }
-    .sched-date { display: flex; flex-direction: column; line-height: 1; }
-    .sched-day { font-family: var(--wd-display); font-size: 44px; color: var(--accent); }
-    .sched-month { margin-top: 4px; font-size: 13px; font-weight: 600; color: oklch(0.45 0.07 355); }
-    .sched-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-    .sched-label { font-size: 13px; font-weight: 600; color: var(--accent); }
-    .sched-title { font-family: var(--wd-display); font-weight: 400; font-size: 26px; line-height: 1.15; }
-    .sched-speaker { font-size: 14px; color: oklch(0.45 0.07 355); }
-    .status-pill { font-size: 13px; font-weight: 600; padding: 7px 13px; border-radius: 999px; white-space: nowrap; }
-    .status-pill.done { background: var(--wd-ink); color: #fff; }
-    .status-pill.upcoming { background: var(--accent); color: #fff; }
-    .status-pill.tbc { background: #fff; color: oklch(0.45 0.08 355); }
-    @media (max-width: 560px) {
-      .sched-row { grid-template-columns: auto minmax(0, 1fr); gap: 14px 18px; padding: 20px; }
-      .sched-row .status-pill { grid-column: 1 / -1; justify-self: start; }
-    }
-
     /* ---------- Big tabs (Sessions, Games) + small pill tabs ---------- */
     .group-tabs { display: flex; flex-wrap: wrap; gap: 10px; background: none; border: none; box-shadow: none; margin: -10px 0 0; }
     .group-tab { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 14px 22px; border-radius: 22px; border: 1.5px solid var(--wd-border); background: #fff; color: var(--wd-ink); font-family: var(--wd-body); transition: background var(--speed); }
@@ -1566,6 +1545,90 @@
     /* Small pop-up message ("Copied") */
     .toast { border: none; border-radius: 999px; background: var(--wd-ink); color: #fff; font-family: var(--wd-body); font-size: 14px; font-weight: 600; text-transform: none; letter-spacing: 0; padding: 12px 22px; z-index: 95; }
 
+    /* =========================================================
+       HANDOFF v2: sub-tabs, About portfolio teaser, Sessions &
+       schedule cards, player profiles and leaderboard
+       ========================================================= */
+    /* White pill switcher: Overview / Sessions & schedule, About me / How I built this site */
+    .sub-tabs { align-self: flex-start; display: flex; flex-wrap: wrap; gap: 4px; padding: 5px; border-radius: 999px; background: #fff; border: 1.5px solid oklch(0.9 0.04 355); margin-bottom: -18px; }
+    .sub-tabs a { padding: 10px 18px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--wd-ink); text-decoration: none; transition: background var(--speed); }
+    .sub-tabs a:hover { background: var(--wd-hover); }
+    .sub-tabs a[aria-current="page"] { background: var(--wd-ink); color: #fff; }
+
+    /* "Hi, I'm Zoé": my name in Amoresa */
+    .title-sig { font-family: var(--signature); font-style: normal; font-size: 1.15em; letter-spacing: 0; color: var(--accent); }
+
+    /* Portfolio teaser: blurred folder "shadow" behind white text */
+    .teaser { position: relative; overflow: hidden; border-radius: 32px; background: var(--wd-soft); min-height: 420px; display: grid; place-items: center; padding: 56px 24px; }
+    .teaser-shape { position: absolute; }
+    .teaser-shape.folder { left: 50%; top: 50%; width: min(62%, 380px); aspect-ratio: 4 / 5; transform: translate(-46%, -52%) rotate(-7deg); border-radius: 18px 18px 28px 28px; background: oklch(0.45 0.1 355 / 0.55); filter: blur(10px); }
+    .teaser-shape.folder-tab { left: 50%; top: 50%; width: min(28%, 170px); height: 34px; transform: translate(-80%, -310%) rotate(-7deg); border-radius: 12px 12px 0 0; background: oklch(0.45 0.1 355 / 0.5); filter: blur(10px); }
+    .teaser-shape.glow { right: -4%; bottom: -6%; width: 62%; height: 120px; transform: rotate(-10deg); border-radius: 80px; background: oklch(0.45 0.1 355 / 0.35); filter: blur(22px); }
+    .teaser-text { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; color: #fff; transform: rotate(-4deg); }
+    .teaser-name { font-size: 44px; line-height: 1; color: #fff; }
+    .teaser-sub { font-family: var(--wd-display); font-style: italic; font-size: 28px; line-height: 1; }
+    .teaser-big { font-family: var(--wd-display); font-size: clamp(54px, 8vw, 92px); line-height: 0.88; letter-spacing: -0.01em; text-transform: uppercase; }
+    .teaser-pill { margin-top: 14px; padding: 10px 20px; border-radius: 999px; background: #fff; color: var(--accent); font-size: 14px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+
+    /* Sessions & schedule: one card per session, in date order */
+    .sess-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 10px; }
+    .sess-card { height: 100%; box-sizing: border-box; display: flex; gap: 16px; align-items: center; padding: 16px 18px; border-radius: 22px; background: var(--tint); color: var(--wd-ink); border: 1.5px solid transparent; text-decoration: none; transition: transform 0.25s; }
+    .sess-card:hover { transform: translateY(-3px); color: var(--wd-ink); }
+    .sess-date { display: flex; flex-direction: column; align-items: center; line-height: 1; min-width: 52px; }
+    .sess-day { font-family: var(--wd-display); font-size: 36px; color: var(--accent); }
+    .sess-month { margin-top: 2px; font-size: 12px; font-weight: 600; opacity: 0.8; }
+    .sess-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .sess-top { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .sess-label { font-size: 12px; font-weight: 700; }
+    .sess-status { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; }
+    .sess-status.done { background: var(--wd-ink); color: #fff; }
+    .sess-status.upcoming { background: var(--accent); color: #fff; }
+    .sess-status.tbc, .sess-status.reflection { background: #fff; color: oklch(0.45 0.08 355); }
+    .sess-status.reflection { color: var(--accent); }
+    .sess-title { font-family: var(--wd-display); font-weight: 400; font-size: 19px; line-height: 1.15; text-wrap: pretty; }
+    /* Guest lectures pop */
+    .sess-card.guest { background: var(--accent); color: #fff; border-color: oklch(0.45 0.19 358); box-shadow: 0 10px 28px oklch(0.55 0.19 358 / 0.35); }
+    .sess-card.guest:hover { color: #fff; }
+    .sess-card.guest .sess-day { color: #fff; }
+    /* The selected session */
+    .sess-card.on { background: var(--wd-ink); color: #fff; border-color: var(--wd-ink); }
+    .sess-card.guest.on { border-color: var(--accent); }
+    .sess-card.on .sess-day { color: #fff; }
+    .sess-card.on .sess-status { background: #fff; color: var(--wd-ink); }
+    #page-lectures .panel { margin-top: 0; }
+
+    /* Player profile bar (lilac) */
+    .player-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 20px; border-radius: 22px; background: oklch(0.94 0.04 320); margin-top: -10px; }
+    .player-who { display: flex; align-items: center; gap: 12px; }
+    .player-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--wd-ink); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 17px; flex-shrink: 0; }
+    .player-text { display: flex; flex-direction: column; gap: 2px; max-width: 340px; }
+    .player-text strong { font-size: 15px; }
+    .player-text span { font-size: 13px; line-height: 1.45; color: oklch(0.45 0.07 355); }
+    .player-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .player-form input { width: 150px; padding: 11px 14px; border-radius: 999px; border: 1.5px solid oklch(0.88 0.05 355); background: #fff; font: inherit; font-size: 14px; color: var(--wd-ink); }
+    .player-form input[name="pin"] { width: 110px; }
+    .player-form .btn, .player-bar > .btn { padding: 11px 18px; font-size: 14px; box-shadow: none; }
+    .player-msg { flex-basis: 100%; margin: 0; font-size: 13px; font-weight: 600; color: oklch(0.5 0.17 358); }
+    .player-msg:empty { display: none; }
+
+    /* Leaderboard (ink) */
+    .leaderboard { display: flex; flex-direction: column; gap: 12px; padding: 22px 24px; border-radius: 22px; background: var(--wd-ink); color: #fff; }
+    .lb-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .lb-head h2 { margin: 0; font-size: 34px; line-height: 1; color: #fff; }
+    .lb-head h2 em { color: oklch(0.78 0.12 355); }
+    .lb-head span { font-size: 13px; color: oklch(0.85 0.04 355); }
+    .lb-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .lb-empty { font-size: 15px; color: oklch(0.9 0.03 355); }
+    .lb-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 10px 14px; border-radius: 16px; background: oklch(0.34 0.09 355); }
+    .lb-row.mine { background: var(--accent); }
+    .lb-rank { font-family: var(--wd-display); font-size: 30px; line-height: 1; color: oklch(0.8 0.1 355); }
+    .lb-rank.first { color: oklch(0.85 0.1 85); }
+    .lb-who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .lb-who strong { font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lb-who span { font-size: 12px; color: oklch(0.85 0.04 355); }
+    .lb-row.mine .lb-who span { color: #fff; }
+    .lb-points { font-family: var(--wd-display); font-size: 28px; line-height: 1; }
+
     /* Respect users who prefer less motion */
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -1592,10 +1655,7 @@
         <li><a href="#home">Welcome</a></li>
         <li><a href="#about">About me</a></li>
         <li><a href="#course">The course</a></li>
-        <li><a href="#schedule">Schedule</a></li>
-        <li><a href="#lectures">Sessions</a></li>
         <li><a href="#games">Games</a></li>
-        <li><a href="#built">How I built it</a></li>
         <li><a href="#contact" class="say-hi">Say hi ♡</a></li>
       </ul>
     </div>
@@ -1606,7 +1666,6 @@
     <section class="page" id="page-home"    ></section>
     <section class="page" id="page-about"    hidden></section>
     <section class="page" id="page-course"   hidden></section>
-    <section class="page" id="page-schedule" hidden></section>
     <section class="page" id="page-lectures" hidden></section>
     <section class="page" id="page-games"    hidden></section>
     <section class="page" id="page-built"    hidden></section>
@@ -1641,6 +1700,7 @@ const PROFILE = {
   name: "Zoé Coulloux",
   initials: "ZC",
   photo: "photo.jpg",      // the file next to index.html. Empty "" = initials circle instead.
+  portrait: "images/portrait.jpg",   // the About page photo in its arch (black and white, 4:5)
   headline: "MSc Marketing Management & Digital · ESSEC Business School",
   focus: "Strategic Marketing · Consulting · Influence · Creation",
   location: "Singapore",
@@ -1832,12 +1892,9 @@ const HOME = {
   },
   // "Have a little look around": tints rotate pink → peach → lilac
   pages: [
-    { href: "#about",    icon: "♡", title: "About me",       text: "My background, CV and LinkedIn." },
-    { href: "#course",   icon: "✎", title: "The course",     text: "What Digital Platforms Test Drive covers." },
-    { href: "#schedule", icon: "◷", title: "Schedule",       text: "All session dates at a glance." },
-    { href: "#lectures", icon: "✦", title: "Sessions",       text: "Lectures and guest lectures, with my analysis." },
-    { href: "#built",    icon: "⌘", title: "How I built it", text: "The tools, the workflow and my prompt journey." },
-    { href: "#contact",  icon: "✉", title: "Contact me",     text: "Get in touch or connect on LinkedIn." }
+    { href: "#about",   icon: "♡", title: "About me",   text: "My background, CV, and how I built this site." },
+    { href: "#course",  icon: "✎", title: "The course", text: "What the course covers, every session date, and my notes." },
+    { href: "#contact", icon: "✉", title: "Contact me", text: "Get in touch or connect on LinkedIn." }
   ],
   // The two moving lines of words
   courseWords: ["Digital Platforms", "Audience segmentation", "Test · tweak · improve", "AI tools", "Guest speakers",
@@ -2056,18 +2113,21 @@ const GUEST_1 = {
       type: "analysis",
       title: "My analysis",
       blocks: [
+        { heading: "What impressed me",
+          prompt: "",
+          text: ["The three of them were VERY impressive. Their eloquence at just 17 really struck me, along with their motivation and their passion for what they build. They presented with the confidence of seasoned founders."] },
         { heading: "Key insights",
           prompt: "What did you learn about building with AI tools that you didn't know before?",
-          text: [] },
+          text: ["I loved discovering how easy it is to create a website. My favourite part is Claude Design: I am having so much fun with it, and developing this new skill has made building this site a real pleasure."] },
         { heading: "How I used it",
           prompt: "How did you use Claude Design, Claude Code, GitHub or Vercel to build this website?",
-          text: [] },
+          text: ["I started in Claude Design, describing what I wanted in plain words: a pink website with a tab per guest lecture, then a welcome page, games and my CV. I iterated prompt by prompt, from a first quiz to a full redesign with my own fonts, music and a loading page full of my photos. Claude Code then turned the design into a real project, GitHub keeps every version safe, and Vercel puts it online, so each update I push goes live in minutes. As someone who usually works in Figma and Canva, seeing my ideas become a working site this fast was a real revelation."] },
         { heading: "Why it matters for marketers",
           prompt: "How can vibe coding help a marketer (landing pages, prototypes, campaign microsites…)?",
-          text: [] },
+          text: ["For a marketer, vibe coding removes the wait between an idea and something people can actually click. At Storyz I spent a lot of time briefing content and campaigns; with these tools I could have shown a client a landing page or a campaign microsite the same day instead of a mock-up. It makes it easy to test several versions of a message, prototype an influencer activation or build an event page for a launch, all without depending on a developer's agenda. In luxury and culture, where the experience matters as much as the product, being able to craft that experience myself is a real advantage."] },
         { heading: "Limits & risks",
           prompt: "What should you still check yourself when AI writes your code?",
-          text: [] }
+          text: ["AI builds fast, but it doesn't know my brand or my audience the way I do. I still check every piece of copy for tone and accuracy, make sure facts, names and dates are right, and look at the site on different screens to catch layout issues. I also stay careful with personal data: logins, forms and photos need proper security and consent, especially for a brand. Finally, I try to understand what the code does rather than accept it blindly, because when something breaks I need to know where to look."] }
       ]
     },
 
@@ -3192,6 +3252,24 @@ function pillLink(text, href, kind) {
   return a;
 }
 
+// White pill switcher at the top of merged pages:
+// The course = Overview + Sessions & schedule, About me = About + How I built it
+const SUB_TABS = {
+  course: [["Overview", "course"], ["Sessions & schedule", "lectures"]],
+  about:  [["About me", "about"], ["How I built this site", "built"]]
+};
+function subTabs(group, current) {
+  const nav = el("nav", "sub-tabs");
+  nav.setAttribute("aria-label", group === "course" ? "The course" : "About me");
+  SUB_TABS[group].forEach(([label, key]) => {
+    const a = el("a", "", label);
+    a.href = "#" + key;
+    if (key === current) a.setAttribute("aria-current", "page");
+    nav.append(a);
+  });
+  return nav;
+}
+
 // Page header used by every page except Welcome: pink tag chips and a
 // big Instrument Serif title with one word in italic (titleAccent)
 function pageHead(page, tags, titleStart, titleAccent, titleEnd) {
@@ -3218,11 +3296,11 @@ function heading(tag, start, accent, className) {
 function tint(i) { return "tint-" + (i % 3); }
 
 // My photo in an arch, with three bobbing stickers that change words
-// and my signature. Used on the Welcome and About pages.
-function archPortrait() {
+// and my signature. Used on the About page.
+function archPortrait(src) {
   const portrait = el("div", "wd-portrait");
   const photo = el("img");
-  photo.src = PROFILE.photo;
+  photo.src = src;
   photo.alt = "Portrait of " + PROFILE.name;
   portrait.append(el("div", "wd-arch-bg"), photo);
   const stickers = HOME.heroStickers.map((words, i) => {
@@ -3267,7 +3345,7 @@ function buildHome(page) {
   play.append(letterTiles("PLAY", ["accent", "butter", "ink", "accent"]), el("span", "", "Think you can beat my games?"));
   buttons.append(pillLink("Read my lecture notes →", "#lectures", "ink"), play);
   text.append(tags, title, el("p", "wd-lead", HOME.lead), buttons);
-  hero.append(text, archPortrait());
+  hero.append(text);
   page.append(hero);
 
   /* ----- Info bar ----- */
@@ -3339,10 +3417,13 @@ function buildHome(page) {
 
 /* ---------- About me ---------- */
 function buildAbout(page) {
+  page.append(subTabs("about", "about"));
+
   // Hero: hello, bio and buttons, with my photo in an arch
   const hero = el("section", "wd-hero");
   const text = el("div", "wd-hero-text");
   const head = pageHead(page, ["♡ About me"], "Hi, I'm ", "Zoé");
+  head.querySelector("em").replaceWith(el("span", "title-sig", "Zoé"));   // my name in Amoresa
   text.append(head, el("p", "ab-focus", PROFILE.focus + " · " + PROFILE.location));
   PROFILE.bio.forEach(p => text.append(el("p", "pg-lead", p)));
   const buttons = el("div", "wd-btns");
@@ -3358,8 +3439,25 @@ function buildAbout(page) {
   }
   buttons.append(pillLink("Say hi ♡", "#contact", "white"));
   text.append(buttons);
-  hero.append(text, archPortrait());
+  hero.append(text, archPortrait(PROFILE.portrait));
   page.append(hero);
+
+  // Portfolio teaser: the blurred "shadow" of a portfolio folder behind the text.
+  // Not clickable yet: when the portfolio exists, turn this <section> into a link.
+  const teaser = el("section", "teaser");
+  teaser.setAttribute("aria-label", "New portfolio, launching soon");
+  ["folder", "folder-tab", "glow"].forEach(shape => {
+    const div = el("div", "teaser-shape " + shape);
+    div.setAttribute("aria-hidden", "true");
+    teaser.append(div);
+  });
+  const words = el("div", "teaser-text");
+  const big = el("span", "teaser-big", "Launching");
+  big.append(el("br"), document.createTextNode("soon"));
+  words.append(el("span", "signature teaser-name", "Zoé"), el("span", "teaser-sub", "New portfolio"),
+               big, el("span", "teaser-pill", "Stay tuned ♡"));
+  teaser.append(words);
+  page.append(teaser);
 
   // Education + experience side by side
   const split = el("section", "pg-split");
@@ -3414,6 +3512,7 @@ function timelineCard(title, items, dotClass) {
 
 /* ---------- The course ---------- */
 function buildCourse(page) {
+  page.append(subTabs("course", "course"));
   const intro = el("section", "pg-intro");
   intro.append(pageHead(page, ["✎ The course", COURSE.semester, "ESSEC · " + COURSE.programme], "Digital Platforms ", "Test\u00a0Drive"),
                el("p", "pg-tagline", COURSE.tagline));
@@ -3464,6 +3563,7 @@ function buildCourse(page) {
    The LaunchLab workflow (3 steps), a note on design, the main
    features, and my prompt journey (the prompts that shaped the site). */
 function buildBuilt(page) {
+  page.append(subTabs("about", "built"));
   const intro = el("section", "pg-intro");
   intro.append(pageHead(page, ["⌘ How I built it"], "From prompt to ", "live site"),
                el("p", "pg-lead", "The workflow from the LaunchLab guest session (Design → Build → Deploy), applied to this site."));
@@ -3506,64 +3606,6 @@ function buildBuilt(page) {
   journey.append(heading("h2", "My prompt ", "journey", "pg-h2"),
                  el("p", "pg-lead", "How the website evolved, prompt by prompt: what I asked (summarised) and what it produced."), list);
   page.append(journey);
-}
-
-/* ---------- Schedule ---------- */
-function buildSchedule(page) {
-  page.append(pageHead(page, ["◷ Schedule"], "The semester ", "at a glance"));
-
-  // Filter buttons: All / Done / Upcoming
-  const filters = el("div", "filters");
-  filters.setAttribute("role", "group");
-  filters.setAttribute("aria-label", "Filter sessions");
-  const list = el("ol", "sched");
-  const today = new Date().toISOString().slice(0, 10);   // "YYYY-MM-DD"
-
-  // Sort by date (sessions without a date go last), but remember each
-  // session's position in SESSIONS so the link opens the right tab
-  const ordered = SESSIONS
-    .map((s, index) => ({ s, index }))
-    .sort((a, b) => (a.s.date || "9999").localeCompare(b.s.date || "9999"));
-
-  const rows = ordered.map(({ s, index }, k) => {
-    // A session is "done" if its date is today or in the past
-    const done = s.date !== "" && s.date <= today;
-    const li = el("li");
-    const a = el("a", "sched-row " + tint(k));
-    a.href = "#lectures/" + (index + 1);            // opens that lecture's tab
-    const date = el("div", "sched-date");
-    if (s.date) {
-      const d = new Date(s.date + "T00:00:00");
-      date.append(el("span", "sched-day", String(d.getDate())),
-                  el("span", "sched-month", d.toLocaleDateString("en-GB", { month: "short", year: "numeric" })));
-    } else {
-      date.append(el("span", "sched-day", "TBA"), el("span", "sched-month", "date to come"));
-    }
-    const info = el("div", "sched-info");
-    info.append(el("span", "sched-label", s.tabLabel), el("strong", "sched-title", s.title),
-                el("span", "sched-speaker", s.speaker));
-    const status = done ? ["done", "✓ Done"] : s.date ? ["upcoming", "Upcoming"] : ["tbc", "Coming soon"];
-    a.append(date, info, el("span", "status-pill " + status[0], status[1]));
-    li.append(a);
-    list.append(li);
-    return { li, done };
-  });
-
-  const buttons = [["all", "All"], ["done", "Done"], ["upcoming", "Upcoming"]].map(([key, label]) => {
-    const b = el("button", "btn", label);
-    b.setAttribute("aria-pressed", String(key === "all"));   // "All" starts selected
-    // EVENT LISTENER: show only the rows that match the filter
-    b.addEventListener("click", () => {
-      rows.forEach(r => {
-        r.li.hidden = (key === "done" && !r.done) || (key === "upcoming" && r.done);
-      });
-      buttons.forEach(other => other.setAttribute("aria-pressed", String(other === b)));
-    });
-    filters.append(b);
-    return b;
-  });
-
-  page.append(filters, list);
 }
 
 /* ---------- Reusable sub-tabs ----------
@@ -3736,25 +3778,77 @@ function createGroupedTabs(options) {
   };
 }
 
-/* ---------- Sessions page: Lectures / Guest lectures ---------- */
+/* ---------- Sessions & schedule ----------
+   Every session as a small card in date order (the schedule). The cards
+   work like tabs: "#lectures/N" selects SESSIONS[N-1], its card turns ink
+   and its notes appear below. Guest lectures pop in raspberry. */
 function buildLectures(page) {
-  page.append(pageHead(page, ["✦ Sessions"], "My lecture ", "notes"));
-  TABSETS.lectures = createGroupedTabs({
-    page,
-    hashName: "lectures",
-    label: "Type of session",
-    allEntries: SESSIONS,
-    groups: SESSION_GROUPS.map(group => {
-      const entries = SESSIONS.filter(s => s.kind === group.kind);
-      const done = entries.filter(s => s.data).length;
-      return { key: group.kind, label: group.label, entries,
-               note: group.note + " · " + done + " of " + entries.length + " written up" };
-    }),
-    tabLabel: s => s.tabLabel,
-    isSoon: s => !s.data,
-    render: (panel, s) => s.data ? renderLecture(panel, s) : renderComingSoon(panel, s),
-    onSelect: panel => countUp(panel)        // replay the number animation
+  page.append(subTabs("course", "lectures"));
+  const intro = el("section", "pg-intro");
+  intro.append(pageHead(page, ["✦ Sessions & schedule"], "The semester, ", "session by session"),
+               el("p", "pg-lead", "Every lecture and guest lecture in date order. Pick one to read my notes below."));
+  page.append(intro);
+
+  const today = new Date().toISOString().slice(0, 10);   // "YYYY-MM-DD"
+  const grid = el("ol", "sess-grid");
+  grid.setAttribute("aria-label", "All sessions, in date order");
+  const panels = el("div");
+  page.append(grid, panels);
+
+  // Sort by date (sessions without a date go last), keeping each session's
+  // position in SESSIONS so its link opens the right notes
+  const ordered = SESSIONS
+    .map((s, index) => ({ s, index }))
+    .sort((a, b) => (a.s.date || "9999").localeCompare(b.s.date || "9999"));
+
+  const cards = [], boxes = [];
+  ordered.forEach(({ s, index }, k) => {
+    const done = s.date !== "" && s.date <= today;   // today or in the past
+    const guest = s.kind === "guest";
+    const li = el("li");
+    const a = el("a", "sess-card" + (guest ? " guest" : ""));
+    a.href = "#lectures/" + (index + 1);
+    a.style.setProperty("--tint", "oklch(0.94 0.045 " + Math.round((355 + k * 47) % 360) + ")");   // each card its own tint
+    const date = el("div", "sess-date");
+    if (s.date) {
+      const d = new Date(s.date + "T00:00:00");
+      date.append(el("span", "sess-day", String(d.getDate())),
+                  el("span", "sess-month", d.toLocaleDateString("en-GB", { month: "short", year: "numeric" })));
+    } else {
+      date.append(el("span", "sess-day", "TBA"), el("span", "sess-month", "date to come"));
+    }
+    const status = guest ? ["reflection", "My reflection"] : done ? ["done", "✓ Done"] : s.date ? ["upcoming", "Upcoming"] : ["tbc", "Coming soon"];
+    const top = el("div", "sess-top");
+    top.append(el("span", "sess-label", (guest ? "★ " : "") + s.tabLabel), el("span", "sess-status " + status[0], status[1]));
+    const info = el("div", "sess-info");
+    info.append(top, el("strong", "sess-title", s.title));
+    a.append(date, info);
+    li.append(a);
+    grid.append(li);
+    cards[index] = a;
   });
+
+  SESSIONS.forEach((s, index) => {
+    const panel = el("section", "panel");
+    panel.setAttribute("aria-label", s.tabLabel + ": " + s.title);
+    panel.hidden = true;
+    s.data ? renderLecture(panel, s) : renderComingSoon(panel, s);
+    panels.append(panel);
+    boxes[index] = panel;
+  });
+
+  TABSETS.lectures = {
+    count: SESSIONS.length,
+    select(index) {
+      SESSIONS.forEach((s, i) => {
+        cards[i].classList.toggle("on", i === index);
+        if (i === index) cards[i].setAttribute("aria-current", "true");
+        else cards[i].removeAttribute("aria-current");
+        boxes[i].hidden = i !== index;
+      });
+      countUp(boxes[index]);        // replay the number animation
+    }
+  };
 }
 
 // "Guest lecture · 9 October 2026"
@@ -3823,6 +3917,149 @@ function renderComingSoon(panel, session) {
 }
 
 /* ---------- Games ---------- */
+/* ---------- Player profiles, saved scores and leaderboard ----------
+   Everything is stored in this browser (localStorage), so the board only
+   covers profiles made on this device. The PIN hash is NOT secure: it
+   only stops someone casually signing in as another player.
+     zc-profiles            → { [name in lower case]: { name, pin, created } }
+     zc-player              → the current player's name
+     zc-games-v1:<name>     → that player's results per game: { played, wins, best }
+     zc-games-v1            → results while playing as a guest */
+const SAVE_KEY = "zc-games-v1", PROFILES_KEY = "zc-profiles", PLAYER_KEY = "zc-player";
+function lsGet(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch { return fallback; } }
+function lsSet(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
+const saveKeyFor = name => name ? SAVE_KEY + ":" + name.toLowerCase() : SAVE_KEY;
+const hashPin = pin => Array.from(pin + "zc").reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7).toString(36);
+const sumOf = (list, field) => list.reduce((total, v) => total + (v[field] || 0), 0);
+
+const players = {
+  current: lsGet(PLAYER_KEY, null),
+  listeners: [],                     // redraw functions (profile bar, leaderboard)
+  save(name = this.current) { return lsGet(saveKeyFor(name), {}); },
+  // Called by every game when a round ends: quizzes pass their score
+  record(game, won, score) {
+    const all = this.save();
+    const entry = all[game.tabLabel] || { kind: game.kind || "quiz" };
+    entry.played = (entry.played || 0) + 1;
+    if (won) entry.wins = (entry.wins || 0) + 1;
+    if (score != null) entry.best = Math.max(entry.best || 0, score);
+    all[game.tabLabel] = entry;
+    lsSet(saveKeyFor(this.current), all);
+    this.changed();
+  },
+  // Switches the save: from now on results go to this player's key (null = guest)
+  login(name) {
+    this.current = name;
+    if (name) lsSet(PLAYER_KEY, name);
+    else { try { localStorage.removeItem(PLAYER_KEY); } catch {} }
+    this.changed();
+  },
+  changed() { this.listeners.forEach(draw => draw()); }
+};
+
+// The lilac bar: sign in / create a profile, or "Playing as …"
+function buildPlayerBar() {
+  const bar = el("section", "player-bar");
+  bar.setAttribute("aria-label", "Player profile");
+
+  function draw() {
+    bar.innerHTML = "";
+    if (players.current) {
+      const results = Object.values(players.save());
+      const played = sumOf(results, "played"), wins = sumOf(results, "wins");
+      const who = el("div", "player-who");
+      const avatar = el("span", "player-avatar", players.current.charAt(0).toUpperCase());
+      avatar.setAttribute("aria-hidden", "true");
+      const text = el("div", "player-text");
+      text.append(el("strong", "", "Playing as " + players.current),
+                  el("span", "", played ? played + " game" + (played > 1 ? "s" : "") + " finished · " + wins + " won"
+                                        : "No games finished yet. Progress saves automatically."));
+      who.append(avatar, text);
+      const out = el("button", "btn", "Sign out");
+      // EVENT LISTENER: back to playing as a guest
+      out.addEventListener("click", () => players.login(null));
+      bar.append(who, out);
+      return;
+    }
+
+    const text = el("div", "player-text");
+    text.append(el("strong", "", "Save your progress"),
+                el("span", "", "Create a player profile to keep your scores and pick up where you left off on your next visit."));
+    const form = el("form", "player-form");
+    form.noValidate = true;
+    form.innerHTML = `
+      <input name="player" placeholder="Player name" maxlength="20" autocomplete="username" aria-label="Player name">
+      <input name="pin" type="password" placeholder="4-digit PIN" inputmode="numeric" maxlength="4" autocomplete="current-password" aria-label="4-digit PIN">
+      <button class="btn" type="submit" value="signin">Sign in</button>
+      <button class="btn btn-primary" type="submit" value="create">Create profile</button>`;
+    const msg = el("p", "player-msg");
+    msg.setAttribute("role", "status");
+
+    // EVENT LISTENER: both buttons submit; event.submitter says which one
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const action = (event.submitter && event.submitter.value) || "signin";
+      const name = form.elements.player.value.trim();
+      const pin = form.elements.pin.value.trim();
+      const id = name.toLowerCase();
+      if (!name || !/^\d{4}$/.test(pin)) return (msg.textContent = "Enter a name and a 4-digit PIN.");
+      const profiles = lsGet(PROFILES_KEY, {});
+      if (action === "create") {
+        if (profiles[id]) return (msg.textContent = "That name is taken. Sign in instead, or pick another.");
+        profiles[id] = { name, pin: hashPin(pin), created: new Date().toISOString() };
+        lsSet(PROFILES_KEY, profiles);
+        lsSet(saveKeyFor(name), players.save(null));     // keep what was played as a guest
+        players.login(name);
+      } else {
+        if (!profiles[id]) return (msg.textContent = "No profile with that name yet. Create one?");
+        if (profiles[id].pin !== hashPin(pin)) return (msg.textContent = "Wrong PIN, try again.");
+        players.login(profiles[id].name);
+      }
+    });
+    bar.append(text, form, msg);
+  }
+
+  players.listeners.push(draw);
+  draw();
+  return bar;
+}
+
+// The ink leaderboard: best quiz scores + 5 points per win, top 5
+function buildLeaderboard() {
+  const board = el("section", "leaderboard");
+  const head = el("div", "lb-head");
+  head.append(heading("h2", "Leaderboard ", "top 5"), el("span", "", "Best quiz scores + 5 pts per win"));
+  const list = el("ol", "lb-list");
+  board.append(head, list);
+
+  function draw() {
+    list.innerHTML = "";
+    const profiles = lsGet(PROFILES_KEY, {});
+    const me = (players.current || "").toLowerCase();
+    const rows = Object.keys(profiles).map(id => {
+      const results = Object.values(players.save(profiles[id].name));
+      const wins = sumOf(results, "wins");
+      return { name: profiles[id].name, wins, played: sumOf(results, "played"),
+               points: sumOf(results, "best") + wins * 5, mine: id === me };
+    }).filter(r => r.points > 0).sort((a, b) => b.points - a.points).slice(0, 5);
+
+    if (!rows.length) list.append(el("li", "lb-empty", "No scores yet. Create a profile and claim the top spot!"));
+    rows.forEach((r, i) => {
+      const li = el("li", "lb-row" + (r.mine ? " mine" : ""));
+      const rank = el("span", "lb-rank" + (i === 0 ? " first" : ""), "①②③④⑤"[i]);
+      rank.setAttribute("aria-label", "Rank " + (i + 1));
+      const who = el("div", "lb-who");
+      who.append(el("strong", "", r.name), el("span", "", (r.mine ? "You · " : "") + r.played + " played · " + r.wins + " won"));
+      li.append(rank, who, el("span", "lb-points", r.points + " pts"));
+      list.append(li);
+    });
+  }
+
+  players.listeners.push(draw);
+  draw();
+  return board;
+}
+
 function buildGames(page) {
   const head = el("header", "pg-head");
   const h1 = heading("h1", "Think you can ", "beat my games?", "pg-title");
@@ -3849,6 +4086,8 @@ function buildGames(page) {
       game.kind === "akinator" ? createAkinator(panel, game) :
                                  createGame(panel, game)
   });
+  // Profile bar and leaderboard sit right under the game category tiles
+  page.querySelector(".group-tabs").after(buildPlayerBar(), buildLeaderboard());
 }
 
 // Shuffles a copy of an array (Fisher–Yates shuffle)
@@ -4102,6 +4341,7 @@ function createGame(panel, game) {
 
   /* ----- Screen: Results ----- */
   function renderResults() {
+    players.record(game, state.score === maxScore, state.score);
     const card = newScreen("center");
     const percent = Math.round((state.score / maxScore) * 100);
     const badge = BADGES.find(b => percent >= b.min);
@@ -4375,6 +4615,7 @@ function createWordGame(panel, game) {
 
   function finish(won) {
     over = true;
+    players.record(game, won);
     stats.played++;
     if (won) {
       stats.won++;
@@ -4529,6 +4770,7 @@ function createHangman(panel, game) {
   }
 
   function finish(won) {
+    players.record(game, won);
     stats.played++;
     if (won) { stats.won++; stats.streak++; } else { stats.streak = 0; }
     statsEl.textContent = statsLine(stats);
@@ -4714,6 +4956,7 @@ function createAkinator(panel, game) {
 
   function finish(won) {
     over = true;
+    players.record(game, won);
     setGuessing(false);
     stats.played++;
     if (won) {
@@ -4826,7 +5069,6 @@ const PAGES = {
   home:     { build: buildHome,     title: "Digital Platforms Test Drive" },
   about:    { build: buildAbout,    title: "About me" },
   course:   { build: buildCourse,   title: "The course" },
-  schedule: { build: buildSchedule, title: "Schedule" },
   lectures: { build: buildLectures, title: "Sessions" },
   games:    { build: buildGames,    title: "Games" },
   built:    { build: buildBuilt,    title: "How I built it" },
@@ -4854,6 +5096,8 @@ const menuToggle = document.getElementById("menu-toggle");
 function showPage() {
   // "#lectures/2" → name = "lectures", sub = "2"
   const [name, sub] = location.hash.slice(1).split("/");
+  // The old Schedule page is now part of "Sessions & schedule"
+  if (name === "schedule") { location.replace("#lectures"); return; }
   const pageName = PAGES[name] ? name : "home";
 
   // The Welcome page is a little wider than the other pages
@@ -4864,9 +5108,11 @@ function showPage() {
     document.getElementById("page-" + key).hidden = key !== pageName;
   });
 
-  // Highlight the current menu link
+  // Highlight the current menu link. Merged pages light up their parent:
+  // Sessions & schedule → The course, How I built it → About me
+  const navName = { lectures: "course", built: "about" }[pageName] || pageName;
   menuLinks.forEach(link => {
-    if (link.getAttribute("href") === "#" + pageName) link.setAttribute("aria-current", "page");
+    if (link.getAttribute("href") === "#" + navName) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   });
 
