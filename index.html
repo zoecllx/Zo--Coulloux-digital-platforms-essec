@@ -5768,10 +5768,20 @@ function showPage() {
     tabSet.select(index);
   }
 
-  // Close the phone menu and go back to the top
+  // Close the phone menu
   menu.classList.remove("is-open");
   menuToggle.setAttribute("aria-expanded", "false");
-  window.scrollTo({ top: 0, behavior: "instant" });
+
+  // "#lectures/N": the notes sit below the session cards, so scroll down
+  // to them (otherwise clicking a card seems to do nothing). Any other
+  // page: back to the top.
+  const notes = pageName === "lectures" && sub ? document.querySelector("#page-lectures .panel:not([hidden])") : null;
+  if (notes) {
+    const top = notes.getBoundingClientRect().top + window.scrollY - 110;   // room for the sticky menu
+    window.scrollTo({ top, behavior: reduceMotion ? "instant" : "smooth" });
+  } else {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
 }
 
 // EVENT LISTENER: runs every time the URL hash changes
