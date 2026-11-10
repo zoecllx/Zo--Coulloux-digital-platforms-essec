@@ -1881,14 +1881,15 @@ const HOME = {
     ["✿ baking", "✿ art", "❀ sustainability", "♡ cooking", "✦ creation"]
   ],
   latest: {
-    tag: "● Latest guest session · 9 Oct 2026",
-    image: "images/launchlab-team.jpg",
-    imageAlt: "The LaunchLab team presenting at ESSEC",
-    titleStart: "Vibe coding, from idea to ",
-    titleAccent: "live website",
-    text: "The LaunchLab team showed us how to go from an idea to a live site with AI: design in Claude Design, build with Claude Code, store on GitHub, deploy with Vercel. They also set the task of building this website.",
-    speakers: "Yibo, Rishabh & Nirvan · LaunchLab",
-    link: "#lectures/1"
+    session: 3,                                   // its position in SESSIONS (avatars come from its "people")
+    tag: "● Latest guest session · 30 Oct 2026",
+    image: "images/ai-marketing-1.jpg",
+    imageAlt: "Our class with Nick Goh after his session on building an AI marketing team",
+    titleStart: "Building an ",
+    titleAccent: "AI marketing team",
+    text: "Nick Goh, CMO of Yellow Pages Singapore, built a whole AI marketing team live in Claude, from the brief to the key visuals, around a fictional Louis Vuitton launch. AI drafts, humans decide.",
+    speakers: "Nick Goh · Yellow Pages Singapore",
+    link: "#lectures/4"
   },
   // "Have a little look around": tints rotate pink → peach → lilac
   pages: [
@@ -2541,6 +2542,256 @@ const LECTURE_3 = {
   ]
 };
 
+/* ---------- SESSION 4: Managing Media Campaigns (30 Oct 2026) ---------- */
+const LECTURE_4 = {
+  summary: "Who does what in a media team, and how AI is changing each role; why the brief is the most important " +
+           "document of any campaign, and what to add to it in the AI era; and a real agency proposal, M&C Saatchi's " +
+           "campaign for WWF Singapore's Together Possible @ Work, from insight to media plan.",
+
+  sections: [
+    {
+      type: "cards",
+      title: "Key roles in a media team",
+      intro: "Five roles, and how AI is changing each of them. Click each one.",
+      items: [
+        { name: "The strategist",
+          detail: "Develops the media strategy: the best channels, budgets and tactics for the client's objectives. Now uses AI for research, audience insight and scenario planning, but still owns the objective and the big idea." },
+        { name: "The buyer",
+          detail: "Negotiates and buys ad placements across media channels for the best value and reach. Less manual bidding today; more setting goals, budgets, data and guardrails for AI campaigns (Advantage+, Performance Max, Smart+, Accelerate)." },
+        { name: "The trader",
+          detail: "Runs programmatic buying on automated platforms, optimising bids and placements in real time." },
+        { name: "The analyst",
+          detail: "Tracks and evaluates performance and recommends optimisations. Moving from platform reports to incrementality tests and marketing-mix models (Google Meridian, Meta Robyn)." },
+        { name: "The manager",
+          detail: "Oversees execution, timelines, budgets and stakeholders. Now adds AI governance: where AI may be used, disclosure, brand safety and data privacy." },
+        { name: "New roles",
+          detail: "Creative-automation specialists, data engineers and measurement leads. Job postings asking for AI agent skills grew 1,587% in 2025 (Randstad)." }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "The brief: the most important document",
+      intro: "It's like a quest: everyone needs the same map before setting off.",
+      items: [
+        { name: "What it is",
+          detail: "The starting point of a media campaign: objectives, budget, dates, target audience, business KPIs and more." },
+        { name: "Why it matters",
+          detail: "The brand needs everyone aligned on its goals and vision; agencies need to understand what they are working towards before they can recommend anything." },
+        { name: "The reverse brief",
+          detail: "If the brief lacks clarity, or the team spots an opportunity outside it, go back to the client with a reverse brief to confirm objectives, requirements and alignment." },
+        { name: "Add to every brief in the AI era",
+          detail: "First-party data and conversion signals (Pixel, Conversions API, CRM), how much creative the AI needs to test, and a measurement plan (incrementality, MMM, lead quality)." },
+        { name: "AI rules and new touchpoints",
+          detail: "Where AI may be used, disclosure and approvals, brand-safety and privacy limits (Singapore's PDPA), and how the brand shows up in AI answers: ChatGPT Ads and Google AI Overviews ads." },
+        { name: "AI drafts, humans decide",
+          detail: "Use an AI assistant to stress-test the brief for gaps and risks, then confirm them with the client. Objectives, budget and the big idea stay with the team and the client." }
+      ]
+    },
+
+    {
+      type: "compare",
+      title: "Case study: WWF Together Possible @ Work",
+      intro: "M&C Saatchi's proposal to make Singapore companies choose WWF's purpose-led workplace programmes. Switch between the thinking and the campaign.",
+      labels: ["The thinking", "The campaign"],
+      items: [
+        { topic: "Brief",
+          before: "Show what makes working with WWF unique, the benefits of employee engagement, and change behaviour on workplace giving.",
+          after:  "Raise awareness of TP@W, drive traffic to its website and drive catalogue downloads." },
+        { topic: "Audience",
+          before: "Senior decision makers aged 30–50 (C-level, HR directors) who lost touch with remote teams and face burnout.",
+          after:  "Targeted on Meta by interests (HR, sustainability…) and on LinkedIn by job title (CXOs, people leaders)." },
+        { topic: "Insight",
+          before: "For employees it's purpose, happiness and wellbeing over money; yet CSR and team building are still seen as extracurricular.",
+          after:  "Move leaders from pleasure-driven team bonding to purpose-driven engagement that helps people and nature." },
+        { topic: "Brand shift",
+          before: "WWF: the world's largest conservation organisation.",
+          after:  "WWF: a partner that helps employers and employees make a positive change at work. Creative line: Purpose is ours to create." },
+        { topic: "Content",
+          before: "Three messaging pillars: brand-led, product-led and consumer-led stories.",
+          after:  "Organic posts documenting workshops (250 solar lights in 2 hours), provocative sponsored posts, lead forms, LinkedIn Conversation Ads and Google Search." },
+        { topic: "Media plan",
+          before: "12 weeks on Meta, LinkedIn and Google Search.",
+          after:  "US$22,217 media (US$25,550 with the 15% handling fee), with US$3k A/B tests per platform before shifting budget to the best cost per lead." }
+      ]
+    },
+
+    {
+      type: "stats",
+      title: "B2B buying in 2026",
+      intro: "What has changed since the 2022 proposal (Forrester, 6sense).",
+      items: [
+        { value: 94, suffix: "%", label: "B2B buyers using AI chatbots", note: "GenAI search now starts the journey" },
+        { value: 13, label: "Internal stakeholders per purchase", note: "plus 9 external influencers" },
+        { value: 53, suffix: "%", label: "Buying cycles where procurement decides", note: "60%+ of buyers want a trial first" },
+        { value: 10, prefix: "US$", label: "Planned cost per lead on Meta", note: "vs US$60 on LinkedIn, US$8 on Google Search" }
+      ]
+    },
+
+    {
+      type: "analysis",
+      title: "My analysis",
+      blocks: [
+        { heading: "Key insights",
+          prompt: "What are the 2–3 most important ideas from this lecture, in your own words?",
+          text: [] },
+        { heading: "A brief I would rewrite",
+          prompt: "Think of a brief you received: what was missing, and what would your reverse brief ask?",
+          text: [] },
+        { heading: "Lessons from the WWF case",
+          prompt: "What would you reuse in our group project?",
+          text: [] }
+      ]
+    },
+
+    {
+      type: "quote",
+      text: "AI drafts, humans decide: objectives, budget and the big idea stay with the team and the client."
+    }
+  ]
+};
+
+/* ---------- GUEST 2: Building an AI Marketing Team, Yellow Pages Singapore (30 Oct 2026) ---------- */
+const GUEST_2 = {
+  summary: "Nick Goh, CMO of Yellow Pages Singapore, showed how to build an AI marketing team with a lightweight, " +
+           "human-guided agentic workflow in Claude. Live, around a fictional Louis Vuitton handbag launch called " +
+           "Terra, his AI team wrote and validated the brief, built the strategy and the messaging, created key " +
+           "visuals and scored its own work, with a human approving every step.",
+
+  sections: [
+    {
+      type: "people",
+      title: "Meet the guest speaker",
+      intro: "Marketing strategist, business leader, AI practitioner and educator.",
+      items: [
+        { name: "Nick Goh", role: "CMO, Yellow Pages Singapore", photo: "images/nick-goh.jpg",
+          description: "CEO of INSPIRO Consulting and Marketing Lead of YP Academy, leading Yellow Pages Singapore's transformation into an AI-driven training and martech ecosystem. Former agency leader at Lowe & Partners and Euro RSCG (now Havas), working with SAP, Red Hat, Prudential and UOB. MSc in Marketing with Distinction from King's College London, Fellow of the Chartered Institute of Marketing, and a judge for the Effie Awards Singapore and the Singapore Media Awards." }
+      ]
+    },
+
+    {
+      type: "gallery",
+      title: "The session in pictures",
+      source: { label: "Nick Goh's LinkedIn post" },
+      intro: "Our class with Nick Goh and Madina Kalyayeva, ESSEC Asia-Pacific, 30 October 2026. Click a photo to enlarge it.",
+      items: [
+        { src: "images/ai-marketing-1.jpg",
+          alt: "The class standing in the lecture theatre with Nick Goh in front of the slide \"Building an AI Marketing Team: a lite agentic workflow with Claude\"",
+          caption: "The whole class after the session" },
+        { src: "images/ai-marketing-2.jpg",
+          alt: "Selfie taken by Nick Goh with Madina Kalyayeva and the class behind them",
+          caption: "Nick's selfie with Madina and the class" },
+        { src: "images/ai-marketing-3.jpg",
+          alt: "Another selfie of Nick Goh and Madina Kalyayeva with the smiling class",
+          caption: "Smiles all round" },
+        { src: "images/ai-marketing-4.jpg",
+          alt: "Selfie of Nick Goh and Madina Kalyayeva with the class, Madina waving at the camera",
+          caption: "One more for the road" }
+      ]
+    },
+
+    {
+      type: "stats",
+      title: "Why it's a people problem, not a tool problem",
+      intro: "Shared in class to introduce the session (BCG, Gartner, Microsoft, IMDA, Marketing AI Institute).",
+      items: [
+        { value: 86, suffix: "%", label: "Workers using AI at work", note: "only 37% trained in the past year" },
+        { value: 8, suffix: "%", label: "CMOs running campaigns with connected agents", note: "though 96% say they transform with AI" },
+        { value: 15.3, decimals: 1, suffix: "%", label: "Of marketing budgets now on AI", note: "only 30% have the skills to scale it" },
+        { value: 23.4, decimals: 1, suffix: "%", label: "AI adoption by Singapore SMEs (2025)", note: "vs 70.4% for large firms" },
+        { value: 67, suffix: "%", label: "Of AI impact explained by culture and managers", note: "individual skills: only 32%" }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "The AI marketing team",
+      intro: "Each role is a Claude skill inside one Project that holds the brand guide and research. Click each one.",
+      items: [
+        { name: "1. Brief Writer",
+          detail: "Drafts the brief from the project context: goal, audience, budget, timing. A scheduled skill even reads the client's brief email every day and starts the draft on its own." },
+        { name: "2. Brief Validator",
+          detail: "Critiques the brief in a fresh chat, with fresh eyes: objective, audience, message, metric. Output: a verdict and the top fixes." },
+        { name: "3. Strategist",
+          detail: "Digests the validated brief, researches the brand and its rivals, and shapes the Big Idea one-pager." },
+        { name: "4. You",
+          detail: "The human checkpoint: you approve the work and save it to the knowledge base before production starts." },
+        { name: "5. Designer & Copywriter",
+          detail: "Turn the Big Idea into key visuals (with connectors like Higgsfield) and a messaging hierarchy adapted to each channel." },
+        { name: "6. Reviewer",
+          detail: "Checks the work against brand voice and the brief, then signs off, or sends it back." }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "The demo: launching Terra",
+      intro: "A fictional Louis Vuitton bag for affluent women in Singapore: S$5,800, 1,000 pieces, plant-based leather and recycled materials.",
+      items: [
+        { name: "The challenge",
+          detail: "Create awareness, desirability and boutique visits while proving environmental credentials, without becoming promotional, mass-market or preachy." },
+        { name: "The hidden motivation",
+          detail: "The research found she doesn't want a sustainable bag: she wants a bag she never has to justify. Beauty is the reason to buy; verified materials are only the permission." },
+        { name: "The Big Idea: Nothing to Explain",
+          detail: "Core promise: a bag so beautifully made you never have to explain it. Supporting messages: Is this really Louis Vuitton? What is it made of, and can I trust it? Why this bag, and will it last?" },
+        { name: "Guardrails",
+          detail: "Every unverified green claim was marked [to verify]. Claude refused to put a real ambassador's face on the AI model or to fake an official LV product shot." },
+        { name: "The reveal",
+          detail: "A model in the Sahara at sunset with the bag, and the lines: Nothing to explain. Terra. Louis Vuitton craft, since 1854. Discover Terra." },
+        { name: "The creative score",
+          detail: "The AI reviewer judged its own work like BBH, Ogilvy and McCann: the desert story 5.7/10, the post 4.3/10, too generic. A close-up of a hand on the bag's clasp scored higher: 6.7/10." }
+      ]
+    },
+
+    {
+      type: "cards",
+      title: "Building an AI team for real",
+      intro: "The 6-step roadmap and the new team shape (McKinsey, BCG, Microsoft, LinkedIn).",
+      items: [
+        { name: "Map the work, group it into agent jobs",
+          detail: "List every activity (briefs, content, media, CRM, reporting), then group them into reusable agent archetypes: content, localisation, analysis, planning, operations." },
+        { name: "Redesign, don't bolt on",
+          detail: "Rebuild the workflow with clear human checkpoints. Only 21% of companies have redesigned any workflow, yet it's the biggest driver of profit." },
+        { name: "Start small, upskill, measure",
+          detail: "Roll out in waves, let managers model AI use and set policies, and track KPIs from day one (fewer than 1 in 5 companies do)." },
+        { name: "Pods, not channels",
+          detail: "75% of CMOs are moving to small pods built around goals or customer segments, with AI governance in a central hub." },
+        { name: "Everyone is an agent boss",
+          detail: "Each marketer builds, delegates to and manages agents like staff: identity, permissions and a review cycle." },
+        { name: "The skills that matter most",
+          detail: "Checking AI output (50%) and critical thinking (46%), then AI literacy, data fluency and performance analysis." }
+      ]
+    },
+
+    {
+      type: "analysis",
+      title: "My analysis",
+      blocks: [
+        { heading: "What impressed me",
+          prompt: "",
+          text: ["Nick chose a fictional Louis Vuitton launch, so I felt right at home: luxury, storytelling and a bag in the Sahara at sunset. What impressed me most was seeing a whole agency appear in one afternoon, from the brief writer to the reviewer, each one a skill working from the same brand guide. And the moment Claude refused to put a real ambassador's face on the AI model showed me that the tool already has a sense of what a brand must never do."] },
+        { heading: "Key insights",
+          prompt: "",
+          text: ["An AI marketing team is a workflow, not a tool. The most valuable steps were the least glamorous ones: a validator reading the brief in a fresh chat, placeholders marked [to confirm] instead of invented facts, and a human approving before any visual is made. It echoed Madina's lecture the same day: the brief is still the most important document, and AI drafts while humans decide."] },
+        { heading: "Through my luxury lens",
+          prompt: "",
+          text: ["The research insight was beautiful: she doesn't want a sustainable bag, she wants a bag she never has to justify. That is exactly how luxury talks about responsibility, quietly, through craft. But the first visuals fell into the easy cliché of luxury in the desert, and the AI's own reviewer scored them lower than a simple hand on the clasp. For me that's the lesson: in luxury, desire lives in the details, and taste is still the human job."] },
+        { heading: "How I would use it",
+          prompt: "",
+          text: ["At Storyz I led content and editorial strategy for influence campaigns, and I can picture my own team of skills: a brief builder for creator campaigns, a validator before anything goes to a creator, and a reviewer that checks tone of voice and disclosure (#ad, paid partnership labels). For our group project, it's the perfect AI component: we could run our brief through a validator, test our Big Idea and disclose exactly what the AI did and what we changed by hand."] },
+        { heading: "What I'm prepared to let AI do",
+          prompt: "",
+          text: ["Nick ended his post with a question I keep thinking about: not what AI can do, but what we are prepared to let it do. My answer for now: let it draft, research, test and score, never let it decide a brand's taste, make claims nobody has verified, or use a real person's face without consent. At the Opéra national de Paris I saw how carefully an institution's image is protected, and that care is exactly what we must keep when AI joins the team."] }
+      ]
+    },
+
+    {
+      type: "quote",
+      text: "AI may expand the boundaries of what's possible, but human creativity and judgement must determine what's worth pursuing. (Nick Goh)"
+    }
+  ]
+};
+
 /* -----------------------------------------------------------------
    PASTE THE NEXT LECTURE HERE
    Copy LECTURE_1, rename it LECTURE_2, and change the text.
@@ -2572,14 +2823,21 @@ const SESSIONS = [
     title: "Digital Marketing Tools & Their Use for Marketers",
     speaker: "Madina Kalyayeva, ESSEC Business School",
     data: LECTURE_2 },
-  { kind: "guest", tabLabel: "Guest 2", date: "", title: "Guest speaker session", speaker: "To be announced", data: null },
+  { kind: "guest", tabLabel: "Guest 2 · Yellow Pages", date: "2026-10-30",
+    title: "Building an AI Marketing Team: a Lite Agentic Workflow with Claude",
+    speaker: "Nick Goh, CMO · Yellow Pages Singapore (guest speaker)",
+    data: GUEST_2 },
   { kind: "guest", tabLabel: "Guest 3", date: "", title: "Guest speaker session", speaker: "To be announced", data: null },
   // New sessions go at the END of the list, so existing links keep working
   // (the page sorts the cards by date anyway)
   { kind: "lecture", tabLabel: "Session 3", date: "2026-10-23",
     title: "Media Buying & Campaign Objectives",
     speaker: "Madina Kalyayeva, ESSEC Business School",
-    data: LECTURE_3 }
+    data: LECTURE_3 },
+  { kind: "lecture", tabLabel: "Session 4", date: "2026-10-30",
+    title: "Managing Media Campaigns & the Brief",
+    speaker: "Madina Kalyayeva, ESSEC Business School",
+    data: LECTURE_4 }
 ];
 
 // The two big tabs on the Sessions page, in the order they appear
@@ -2953,10 +3211,110 @@ const BANK_SESSION_3 = {
   ]
 };
 
+const BANK_SESSION_4 = {
+  session: SESSIONS[6],
+  rounds: [
+    {
+      type: "match",
+      title: "Who Does What?",
+      instructions: "Which role in the media team does this?",
+      choices: ["Strategist", "Buyer", "Trader", "Analyst", "Manager"],
+      questions: [
+        { prompt: "Chooses the best channels, budgets and tactics for the client's objectives", answer: "Strategist",
+          explain: "The strategist owns the media strategy, and still the big idea." },
+        { prompt: "Negotiates and purchases ad placements for the best value", answer: "Buyer",
+          explain: "Today buyers also set goals and guardrails for AI campaigns." },
+        { prompt: "Optimises programmatic bids and placements in real time", answer: "Trader",
+          explain: "Traders work on automated buying platforms." },
+        { prompt: "Runs incrementality tests and marketing-mix models", answer: "Analyst",
+          explain: "Analysts move from platform reports to proof of real impact." },
+        { prompt: "Sets AI governance: disclosure, brand safety and data privacy", answer: "Manager",
+          explain: "The manager oversees execution, stakeholders and now AI rules." }
+      ]
+    }
+  ]
+};
+
+const BANK_GUEST_2 = {
+  session: SESSIONS[3],
+  rounds: [
+    {
+      type: "match",
+      title: "Meet the AI Team",
+      instructions: "Which member of the AI marketing team does this?",
+      choices: ["Brief Writer", "Brief Validator", "Strategist", "Designer", "Copywriter", "Reviewer", "You (the human)"],
+      questions: [
+        { prompt: "Drafts the brief from the project context and the client's email", answer: "Brief Writer",
+          explain: "Step 1: it needs a goal, audience, budget and timing." },
+        { prompt: "Critiques the brief in a fresh chat and lists the top fixes", answer: "Brief Validator",
+          explain: "New chat, fresh eyes." },
+        { prompt: "Digests the validated brief and shapes the Big Idea", answer: "Strategist",
+          explain: "Output: a Big Idea one-pager." },
+        { prompt: "Approves the work and saves it to the knowledge base", answer: "You (the human)",
+          explain: "Step 4: the human checkpoint before production." },
+        { prompt: "Creates the key visuals with a connector like Higgsfield", answer: "Designer",
+          explain: "The Designer / Art Director makes the KVs." },
+        { prompt: "Builds the messaging hierarchy and adapts it to each channel", answer: "Copywriter",
+          explain: "Channel-by-channel copy from one core promise." },
+        { prompt: "Checks the work against brand voice and the brief, then signs off", answer: "Reviewer",
+          explain: "The last step of the handoff chain." }
+      ]
+    },
+    {
+      type: "sort",
+      title: "AI Drafts, Humans Decide",
+      instructions: "In Nick's workflow, who should own this?",
+      buckets: ["AI can do it", "A human decides"],
+      questions: [
+        { prompt: "Write a first draft of the marketing brief", answer: "AI can do it",
+          explain: "The Brief Writer skill drafts it, marking missing facts [to confirm]." },
+        { prompt: "Approve the brief before any creative work starts", answer: "A human decides",
+          explain: "Step 4 of the chain is you." },
+        { prompt: "Research competitors' posts and positioning", answer: "AI can do it",
+          explain: "The Strategist compared LV, Hermès, Chanel, Gucci, Prada and Dior." },
+        { prompt: "Confirm that a sustainability claim is true", answer: "A human decides",
+          explain: "Every green claim stayed [to verify] until a person checked it." },
+        { prompt: "Put a real ambassador's face on an AI model", answer: "A human decides",
+          explain: "Claude refused: it needs the person's consent and the rights." },
+        { prompt: "Score creative work against the brief", answer: "AI can do it",
+          explain: "The Creative Review Scorer gave the desert post 4.3/10." }
+      ]
+    },
+    {
+      type: "higherLower",
+      title: "Higher or Lower: AI at Work",
+      instructions: "Is the real number higher or lower than our guess?",
+      questions: [
+        { prompt: "Share of workers using AI at work", guess: "60%",
+          answer: "Higher", explain: "86%, but only 37% had AI training in the past year." },
+        { prompt: "Share of CMOs running campaigns with connected agents", guess: "25%",
+          answer: "Lower", explain: "Only about 8%." },
+        { prompt: "Share of marketing budgets now going to AI", guess: "10%",
+          answer: "Higher", explain: "15.3% (Gartner)." },
+        { prompt: "Creative score of the Terra desert post", guess: "6/10",
+          answer: "Lower", explain: "4.3/10: pretty but generic. The clasp close-up scored 6.7." },
+        { prompt: "Share of AI impact explained by culture, managers and talent practices", guess: "50%",
+          answer: "Higher", explain: "67%: individual skills explain only 32%." }
+      ]
+    },
+    {
+      type: "text",
+      title: "Bonus Question",
+      instructions: "One last one, worth a bonus point!",
+      questions: [
+        { prompt: "What was the Big Idea of the Terra launch?",
+          accept: ["nothing to explain"], answer: "Nothing to Explain",
+          hint: "Hint: a bag she never has to justify…",
+          explain: "Nothing to Explain: a bag so beautifully made you never have to explain it." }
+      ]
+    }
+  ]
+};
+
 // The big tabs on the Games page, in order. A game goes in the category
 // matching its "kind"; quizzes have no kind and go under "quiz".
 const GAME_CATEGORIES = [
-  { kind: "quiz",     label: "Quizzes",  note: "5 themes · multiple choice" },
+  { kind: "quiz",     label: "Quizzes",  note: "6 themes · multiple choice" },
   { kind: "wordle",   label: "Pinkle",   note: "Word game · 6 tries" },
   { kind: "hangman",  label: "Hangman",  note: "Find the course term" },
   { kind: "akinator", label: "Akinator", note: "Guess the genie's concept" }
@@ -2997,9 +3355,15 @@ const GAMES = [
   },
   {
     tabLabel: "Media Buying",
-    intro: "Organic or paid? Pick the right Meta objective, guess the numbers behind paid social, and name the metric every media buyer watches.",
+    intro: "Organic or paid? Pick the right Meta objective, name who does what in a media team, guess the numbers behind paid social, and name the metric every media buyer watches.",
     takeaway: "Organic builds trust, paid buys reach: choose the objective first, then let AI and people optimise together.",
-    rounds: [fromBank(BANK_SESSION_3, 1), fromBank(BANK_SESSION_3, 2), fromBank(BANK_SESSION_3, 3), fromBank(BANK_SESSION_3, 4)]
+    rounds: [fromBank(BANK_SESSION_3, 1), fromBank(BANK_SESSION_3, 2), fromBank(BANK_SESSION_4, 1), fromBank(BANK_SESSION_3, 3), fromBank(BANK_SESSION_3, 4)]
+  },
+  {
+    tabLabel: "AI Marketing Team",
+    intro: "Nick Goh's lite agentic workflow: who does what in the AI team, what stays human, and the numbers behind AI at work.",
+    takeaway: "AI drafts, researches and scores; people approve, verify and keep the taste.",
+    rounds: [fromBank(BANK_GUEST_2, 1), fromBank(BANK_GUEST_2, 2), fromBank(BANK_GUEST_2, 3), fromBank(BANK_GUEST_2, 4)]
   },
 
   /* ---------- WORD GAME (Wordle style) ----------
@@ -3035,7 +3399,9 @@ const GAMES = [
       { word: "QUERY", clue: "Lazada bid on search queries like 'best Ramadan discounts' in Indonesia." },
       { word: "BOOST", clue: "Boosted posts are the simplest form of paid social." },
       { word: "SPEND", clue: "Social ad spend in Singapore grew 15.2% to US$588M in 2025." },
-      { word: "VIEWS", clue: "Video views is one of the Engagement objective's options on Meta." }
+      { word: "VIEWS", clue: "Video views is one of the Engagement objective's options on Meta." },
+      { word: "BRIEF", clue: "The most important document in a campaign: AI drafts it, humans decide." },
+      { word: "SKILL", clue: "Each member of Nick Goh's AI marketing team was a Claude skill." }
     ]
   },
 
@@ -3066,7 +3432,11 @@ const GAMES = [
       { word: "MEDIA BUYING", hint: "Session 3 · Paid media", explain: "The fast track to visibility, conversions and brand dominance." },
       { word: "ORGANIC REACH", hint: "Session 3 · Organic", explain: "In 2026 an organic post reaches only ~3–5% of Instagram followers." },
       { word: "LOOKALIKE",    hint: "Session 3 · Audiences", explain: "Not using custom and lookalike audiences is a common mistake." },
-      { word: "OMNICHANNEL",  hint: "Session 3 · Group project", explain: "Our final project: one campaign narrative across several platforms." }
+      { word: "OMNICHANNEL",  hint: "Session 3 · Group project", explain: "Our final project: one campaign narrative across several platforms." },
+      { word: "REVERSE BRIEF", hint: "Session 4 · The brief", explain: "Go back to the client to confirm objectives when the brief is unclear." },
+      { word: "MEDIA PLANNER", hint: "Session 4 · Media team", explain: "Media buyers, planners and the creative team all work from the brief." },
+      { word: "AGENTIC WORKFLOW", hint: "Yellow Pages · AI team", explain: "Nick Goh's lightweight, human-guided chain of AI agents." },
+      { word: "KEY VISUAL", hint: "Yellow Pages · Production", explain: "The Designer agent created Terra's key visuals with Higgsfield." }
     ]
   },
 
@@ -3084,6 +3454,7 @@ const GAMES = [
       { tag: "session2",  text: "Was it covered in Session 2?" },
       { tag: "launchlab", text: "Was it in the LaunchLab session?" },
       { tag: "session3",  text: "Was it covered in Session 3?" },
+      { tag: "session4",  text: "Was it covered in Session 4 or the Yellow Pages session?" },
       { tag: "type",      text: "Is it one of the 10 types of digital marketing platforms?" },
       { tag: "metric",    text: "Is it something you measure (a metric)?" },
       { tag: "feature",   text: "Is it a specific tool or ad feature?" },
@@ -3101,6 +3472,12 @@ const GAMES = [
       { tag: "tiktok",    text: "Is it a TikTok thing?" }
     ],
     concepts: [
+      { name: "Reverse Brief", tags: ["session4", "data"],
+        explain: "Going back to the client to confirm objectives when the brief is unclear or misses an opportunity." },
+      { name: "Brief Validator", tags: ["session4", "ai", "feature"],
+        explain: "The AI agent that critiques the brief in a fresh chat: objective, audience, message, metric." },
+      { name: "Higgsfield", tags: ["session4", "ai", "video", "company", "feature"],
+        explain: "The creative AI tool Nick Goh connected to Claude to generate Terra's key visuals." },
       { name: "Paid Social", tags: ["session3", "social"],
         explain: "Ad budgets that promote content to a wider, targeted audience: results last as long as you pay." },
       { name: "Organic Reach", tags: ["session3", "metric", "social"],
@@ -3390,6 +3767,7 @@ function renderQuote(section) {
 // "Photos: LinkedIn post ↗" credit line, for sections with a "source"
 function sourceLine(source) {
   const p = el("p", "source-line", "Photos: ");
+  if (!source.url) { p.append(source.label); return p; }    // a credit without a link
   const a = el("a", "", source.label + " ↗");
   a.href = source.url;
   a.target = "_blank";
@@ -3625,13 +4003,14 @@ function buildHome(page) {
   const box = el("div", "wd-latest-text");
   const h2 = el("h2", "wd-h2", L.titleStart);
   h2.append(el("em", "", L.titleAccent));
-  // Speaker avatars come from the LaunchLab "people" section
-  const people = (SESSIONS[0].data.sections.find(s => s.type === "people") || { items: [] }).items;
+  // Speaker avatars come from that session's "people" section
+  const people = (SESSIONS[L.session].data.sections.find(s => s.type === "people") || { items: [] }).items.filter(p => p.photo);
   const avatars = el("div", "wd-avatars");
   people.forEach(p => { const a = el("img"); a.src = p.photo; a.alt = p.name; avatars.append(a); });
   const row = el("div", "wd-avatars-row");
   row.append(avatars, el("span", "", L.speakers));
-  box.append(el("span", "wd-tag soft", L.tag), h2, el("p", "", L.text), row, pillLink("Meet the speakers →", L.link, "ink small"));
+  box.append(el("span", "wd-tag soft", L.tag), h2, el("p", "", L.text), row,
+             pillLink(people.length > 1 ? "Meet the speakers →" : "Meet the speaker →", L.link, "ink small"));
   latest.append(img, box);
   page.append(latest);
 
